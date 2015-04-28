@@ -1,0 +1,30 @@
+{
+    "name": "prooph/proophessor",
+    "description": "CQRS plus ES for ZF2",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "prooph",
+        "CQRS",
+        "Event Sourcing",
+        "ZF2"
+    ],
+    "homepage": "https://github.com/prooph/proophessor",
+    "require": {
+        "php": ">=5.5",
+        "zendframework/zendframework": "~2.4",
+        "prooph/service-bus": "~2.0",
+        "prooph/event-sourcing": "~1.0",
+        "prooph/event-store": "~2.1",
+        "prooph/event-store-doctrine-adapter": "~0.3",
+        "rwoverdijk/assetmanager": "~1.4",
+        "codeliner/array-reader" : "~1.1"
+    },
+    "require-dev" : {
+        "phpunit/phpunit": "~3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prooph\\Proophessor": "src"
+        }
+    }
+}
