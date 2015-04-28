@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Prooph\\Proophessor": "src"
+            "Prooph\\Proophessor\\": "src"
         }
     }
 }
