@@ -72,7 +72,52 @@ you can use the SQL located in the `scripts` folder to create the event stream t
 
 ## Configuration
 
+As a ZF2 dev you should be familiar with the way of configuring things in a ZF2 application. The module groups everything
+related to the CQRS + ES infrastructure under the root config key `proophessor`.
 
+### Event Store Adapter
 
+One of the crucial configuration points is the database connection for the event store. Proophessor assumes that you have
+a doctrine driver defined called `orm_default`, because this is the default when using the doctrine-orm-module
+mentioned above. However, you can override the default with a dedicated connection or even another adapter for the event store:
+
+#### Configure Own Doctrine Adapter Connection
+```php
+<?php
+//In your own module.config.php or in the application autoload/local.php
+return [
+    'proophessor' => [
+        'event_store' => [
+            'adapter' => [
+                'options' => [
+                    'connection' => [
+                        'dbname' => 'my_db',
+                        'driver' => 'pdo_mysql',
+                        'host' => 'localhost',
+                        'user' => 'root',
+                        'charset' => 'utf8',
+                    ]
+                ]
+            ]
+        ]
+    ]
+];
+
+#### Use Another Doctrine Connection Alias
+
+```php
+<?php
+//In your own module.config.php or in the application autoload/local.php
+return [
+    'proophessor' => [
+        'event_store' => [
+            'adapter' => [
+                'options' => [
+                    'doctrine_connection_alias' => 'event_store_default'
+                ]
+            ]
+        ]
+    ]
+];
 
 

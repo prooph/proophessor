@@ -9,5 +9,20 @@
  * Date: 3/29/15 - 10:42 PM
  */
 return [
-
+    'proophessor' => [
+        'event_store' => [
+            'adapter' => [
+                'type' => 'Prooph\\EventStore\\Adapter\\Doctrine\\DoctrineEventStoreAdapter',
+                'options' => [
+                    'doctrine_connection_alias' => 'orm_default',
+                    'serializer_adapter' => 'json',
+                ],
+            ],
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            'proophessor.event_store' => \Prooph\Proophessor\EventStore\EventStoreFactory::class,
+        ]
+    ]
 ];
