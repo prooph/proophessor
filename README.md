@@ -78,7 +78,7 @@ related to the CQRS + ES infrastructure under the root config key `proophessor`.
 ### Event Store Adapter
 
 One of the crucial configuration points is the database connection for the event store. Proophessor assumes that you have
-a doctrine driver defined called `orm_default`, because this is the default when using the doctrine-orm-module
+a doctrine connection defined called `orm_default`, because this is the default when using the doctrine-orm-module
 mentioned above. However, you can override the default with a dedicated connection or even another adapter for the event store:
 
 #### Configure Own Doctrine Adapter Connection
