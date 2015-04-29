@@ -102,6 +102,7 @@ return [
         ]
     ]
 ];
+```
 
 #### Use Another Doctrine Connection Alias
 
@@ -119,5 +120,6 @@ return [
         ]
     ]
 ];
+```
 
 
