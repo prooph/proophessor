@@ -12,10 +12,10 @@
     "require": {
         "php": ">=5.5",
         "zendframework/zendframework": "~2.4",
-        "prooph/service-bus": "~2.0",
-        "prooph/event-sourcing": "~1.0",
-        "prooph/event-store": "~2.1",
-        "prooph/event-store-doctrine-adapter": "~0.3",
+        "prooph/service-bus": "~3.0",
+        "prooph/event-sourcing": "~2.0",
+        "prooph/event-store": "~3.0",
+        "prooph/event-store-doctrine-adapter": "~1.0",
         "rwoverdijk/assetmanager": "~1.4",
         "codeliner/array-reader" : "~1.1"
     },

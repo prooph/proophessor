@@ -19,6 +19,42 @@ return [
                 ],
             ],
         ],
+        /**
+         * Define a list of utils that should be used by the command bus.
+         * Each util should be available as a service.
+         * Use the ServiceManager alias in the list.
+         */
+        'command_bus' => [
+            //Default list
+            'prooph.psb.command_router',
+            'prooph.psb.service_locator_proxy',
+            'prooph.psb.handle_command_invoke_strategy',
+        ],
+        /**
+         * Define a list of utils that should be used by the event bus.
+         * Each util should be available as a service.
+         * Use the ServiceManager alias in the list.
+         */
+        'event_bus' => [
+            //Default list
+            'prooph.psb.event_router',
+            'prooph.psb.service_locator_proxy',
+            'prooph.psb.on_event_invoke_strategy',
+        ],
+        /**
+         * Configure command routing
+         * @see https://github.com/prooph/service-bus/blob/master/docs/plugins.md#proophservicebusroutercommandrouter
+         */
+        'command_router_map' => [
+
+        ],
+        /**
+         * Configure event routing
+         * @see https://github.com/prooph/service-bus/blob/master/docs/plugins.md#proophservicebusroutereventrouter
+         */
+        'event_router_map' => [
+
+        ]
     ],
     'service_manager' => [
         'factories' => [
