@@ -13,6 +13,7 @@ namespace Prooph\Proophessor\EventStore;
 use Prooph\EventStore\Configuration\Configuration;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Feature\FeatureManager;
+use Prooph\EventStore\Feature\ZF2FeatureManager;
 use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -79,7 +80,7 @@ final class EventStoreFactory implements FactoryInterface
 
         $esConfiguration = new Configuration($config);
 
-        $featureManager = new FeatureManager($featureManagerConfig);
+        $featureManager = new ZF2FeatureManager($featureManagerConfig);
 
         $featureManager->setServiceLocator($serviceLocator);
 

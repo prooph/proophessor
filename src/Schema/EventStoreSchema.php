@@ -24,17 +24,18 @@ final class EventStoreSchema
     {
         $eventStream = $schema->createTable('proophessor_event_stream');
 
-        $eventStream->addColumn('eventId', 'string', ['length' => 36]);         //UUID of the event
+        $eventStream->addColumn('event_id', 'string', ['length' => 36]);        //UUID of the event
         $eventStream->addColumn('version', 'integer');                          //Version of the aggregate after event was recorded
-        $eventStream->addColumn('eventName', 'string', ['length' => 100]);      //Class of the event
+        $eventStream->addColumn('event_name', 'string', ['length' => 100]);     //Name of the event
+        $eventStream->addColumn('event_class', 'string', ['length' => 100]);    //Class of the event
         $eventStream->addColumn('payload', 'text');                             //Event payload
-        $eventStream->addColumn('occurredOn', 'string', ['length' => 100]);     //DateTime ISO8601 when the event was recorded
+        $eventStream->addColumn('created_at', 'string', ['length' => 100]);     //DateTime ISO8601 when the event was recorded
         $eventStream->addColumn('aggregate_id', 'string', ['length' => 36]);    //UUID of linked aggregate
         $eventStream->addColumn('aggregate_type', 'string', ['length' => 100]); //Class of the linked aggregate
         $eventStream->addColumn('causation_id', 'string', ['length' => 36]);    //UUID of the command which caused the event
-        $eventStream->addColumn('causation_name', 'string', ['length' => 100]); //Class of the command which caused the event
+        $eventStream->addColumn('causation_name', 'string', ['length' => 100]); //Name of the command which caused the event
         $eventStream->addColumn('dispatch_status', 'integer', ['length' => 1]); //EventDispatcher Status: 0 = not dispatched, 1 = in progress, 2 = success, 3 = failed
-        $eventStream->setPrimaryKey(['eventId']);
+        $eventStream->setPrimaryKey(['event_id']);
         $eventStream->addUniqueIndex(['aggregate_id', 'aggregate_type', 'version'], 'ph_es_metadata_version_uix'); //Concurrency check on database level
     }
 
