@@ -28,6 +28,6 @@ final class TransactionManagerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new TransactionManager($serviceLocator->get('proophessor.event_store'));
+        return new TransactionManager($serviceLocator->get('proophessor.event_store'), $serviceLocator->get('proophessor.event_bus'));
     }
 }

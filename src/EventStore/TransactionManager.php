@@ -17,6 +17,7 @@ use Prooph\Common\Event\DetachAggregateHandlers;
 use Prooph\Common\Messaging\Command;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Stream\DomainEventMetadataWriter;
+use Prooph\ServiceBus\EventBus;
 use Prooph\ServiceBus\Process\CommandDispatch;
 
 /**
@@ -50,10 +51,17 @@ final class TransactionManager implements ActionEventListenerAggregate
     private $currentCommand;
 
     /**
-     * @param EventStore $eventStore
+     * @var EventBus
      */
-    public function __construct(EventStore $eventStore)
+    private $eventBus;
+
+    /**
+     * @param EventStore $eventStore
+     * @param EventBus $eventBus
+     */
+    public function __construct(EventStore $eventStore, EventBus $eventBus)
     {
+        $this->eventBus = $eventBus;
         $this->eventStore = $eventStore;
         $this->eventStore->getActionEventDispatcher()->attachListener('create.pre', [$this, 'onEventStoreCreateStream'], -1000);
         $this->eventStore->getActionEventDispatcher()->attachListener('appendTo.pre', [$this, 'onEventStoreAppendToStream'], -1000);
@@ -72,6 +80,39 @@ final class TransactionManager implements ActionEventListenerAggregate
         $this->trackHandler($events->attachListener(CommandDispatch::INITIALIZE, [$this, 'onInitialize'], -1000));
         $this->trackHandler($events->attachListener(CommandDispatch::HANDLE_ERROR, [$this, 'onError']));
         $this->trackHandler($events->attachListener(CommandDispatch::FINALIZE, [$this, 'onFinalize']));
+    }
+
+    /**
+     * This method takes domain events as argument which are going to be added to the event stream.
+     *
+     * The method does two things:
+     *
+     * 1. Dispatch all events not implementing the marker interface IsProcessedAsync (sync events are dispatched within the active transaction)
+     * 2. Add meta information to each event like the causation_id and causation_name (of the command which has caused the events) and
+     *    the dispatch status: succeed for all sync events and not started for all async events
+     *
+     * @param array $recordedEvents
+     */
+    private function handleRecordedEvents(array &$recordedEvents)
+    {
+        if (is_null($this->currentCommand)) return;
+
+        $causationId = $this->currentCommand->uuid()->toString();
+        $causationName = $this->currentCommand->messageName();
+
+        foreach($recordedEvents as $recordedEvent) {
+
+            if (! $recordedEvent instanceof IsProcessedAsync) {
+                $this->eventBus->dispatch($recordedEvent);
+                $dispatchStatus = DispatchStatus::SUCCEED;
+            } else {
+                $dispatchStatus = DispatchStatus::NOT_STARTED;
+            }
+
+            DomainEventMetadataWriter::setMetadataKey($recordedEvent, 'causation_id', $causationId);
+            DomainEventMetadataWriter::setMetadataKey($recordedEvent, 'causation_name', $causationName);
+            DomainEventMetadataWriter::setMetadataKey($recordedEvent, 'dispatch_status', $dispatchStatus);
+        }
     }
 
     /**
@@ -114,7 +155,7 @@ final class TransactionManager implements ActionEventListenerAggregate
      */
     public function onEventStoreCreateStream(ActionEvent $createEvent)
     {
-        $this->addCausationInformationAndDispatchStatusToEvents($createEvent->getParam('stream')->streamEvents());
+        $this->handleRecordedEvents($createEvent->getParam('stream')->streamEvents());
     }
 
     /**
@@ -122,27 +163,6 @@ final class TransactionManager implements ActionEventListenerAggregate
      */
     public function onEventStoreAppendToStream(ActionEvent $appendToStreamEvent)
     {
-        $this->addCausationInformationAndDispatchStatusToEvents($appendToStreamEvent->getParam('streamEvents'));
-    }
-
-    /**
-     * @param array $recordedEvents
-     */
-    private function addCausationInformationAndDispatchStatusToEvents(array &$recordedEvents)
-    {
-        if (is_null($this->currentCommand)) return;
-
-        $causationId = $this->currentCommand->uuid()->toString();
-        $causationName = $this->currentCommand->messageName();
-
-        foreach($recordedEvents as $recordedEvent) {
-            //For events which are processed synchronous we set the status to succeed even if they are not processed yet.
-            //If processing fails the whole transaction will be rolled back and the event won't be stored at all.
-            $dispatchStatus = ($recordedEvent instanceof IsProcessedAsync)? DispatchStatus::NOT_STARTED : DispatchStatus::SUCCEED;
-
-            DomainEventMetadataWriter::setMetadataKey($recordedEvent, 'causation_id', $causationId);
-            DomainEventMetadataWriter::setMetadataKey($recordedEvent, 'causation_name', $causationName);
-            DomainEventMetadataWriter::setMetadataKey($recordedEvent, 'dispatch_status', $dispatchStatus);
-        }
+        $this->handleRecordedEvents($appendToStreamEvent->getParam('streamEvents'));
     }
 }
