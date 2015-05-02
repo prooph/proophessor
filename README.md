@@ -122,6 +122,37 @@ return [
 ];
 ```
 
+### Aggregate Repository
+
+Proophessor ships with a [AbstractRepositoryFactory](src/EventStore/AbstractRepositoryFactory.php) which simplifies the
+instantiation of a repository. As long as you use the defaults provided by proophessor you don't need to worry about stream
+strategies or a translator for your aggregates. Just tell proophessor which repository class is responsible for which aggregate type.
+
+```php
+<?php
+//In your own module.config.php or in the application autoload/global.php
+return [
+    'proophessor' => [
+        'event_store' => [
+            'repository_map' => [
+                'my.aggregate_repository.alias' => [
+                    'repository_class' => MyAggregateRepository::class,
+                    'aggregate_type'   => MyAggregate::class,
+                ]
+            ]
+        ]
+    ]
+];
+```
+
+A configuration like shown above allows you to retrieve a repository from the service manager:
+
+```php
+<?php
+//Somewhere in a command handler factory ...
+$myAggregateRepository = $serviceLocator->get('my.aggregate_repository.alias');
+```
+
 ### Event Store Features
 
 to be defined ....
@@ -142,7 +173,7 @@ The event bus is set up with a [EventRouter](https://github.com/prooph/service-b
 The routing map can be defined in the configuration. Checkout the [module.config.php](config/module.config.php) for details.
 
 
-## Usage
+## Registered Services
 
 ### Retrieving The EventStore
 
@@ -155,5 +186,17 @@ The ProophServiceBus command bus can be retrieved from the service manager by us
 ### Retrieving The EventBus
 
 The ProophServiceBus event bus can be retrieved from the service manager by using the alias `proophessor.event_bus`.
+
+## Working With The Command Bus
+
+to be defined ...
+
+## Working With Repositories
+
+to be defined ...
+
+## Working With The Event Bus
+
+to be defined ...
 
 
