@@ -57,8 +57,17 @@ return [
         ]
     ],
     'service_manager' => [
+        'invokables' => [
+            'prooph.psb.handle_command_invoke_strategy' => \Prooph\ServiceBus\InvokeStrategy\HandleCommandStrategy::class,
+            'prooph.psb.on_event_invoke_strategy' => \Prooph\ServiceBus\InvokeStrategy\OnEventStrategy::class,
+        ],
         'factories' => [
             'proophessor.event_store' => \Prooph\Proophessor\EventStore\EventStoreFactory::class,
+            'proophessor.command_bus' => \Prooph\Proophessor\ServiceBus\CommandBusFactory::class,
+            'proophessor.event_bus'   => \Prooph\Proophessor\ServiceBus\EventBusFactory::class,
+            'prooph.psb.command_router' => \Prooph\Proophessor\ServiceBus\CommandRouterFactory::class,
+            'prooph.psb.event_router' => \Prooph\Proophessor\ServiceBus\EventRouterFactory::class,
+            'prooph.psb.service_locator_proxy' => \Prooph\Proophessor\ServiceBus\ServiceLocatorProxyFactory::class,
         ]
     ]
 ];

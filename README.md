@@ -122,4 +122,38 @@ return [
 ];
 ```
 
+### Event Store Features
+
+to be defined ....
+
+### Service Bus Utils
+
+Command/event bus utilities like a custom invoke strategy or a logger can be added via configuration.
+Checkout the [module.config.php](config/module.config.php) for details.
+
+### Command Routing
+
+The command bus is set up with a [CommandRouter](https://github.com/prooph/service-bus/blob/master/docs/plugins.md#proophservicebusroutercommandrouter).
+The routing map can be defined in the configuration. Checkout the [module.config.php](config/module.config.php) for details.
+
+### Event Routing
+
+The event bus is set up with a [EventRouter](https://github.com/prooph/service-bus/blob/master/docs/plugins.md#proophservicebusroutereventrouter).
+The routing map can be defined in the configuration. Checkout the [module.config.php](config/module.config.php) for details.
+
+
+## Usage
+
+### Retrieving The EventStore
+
+The ProophEventStore can be retrieved from the service manager by using the alias `proophessor.event_store`.
+
+### Retrieving The CommandBus
+
+The ProophServiceBus command bus can be retrieved from the service manager by using the alias `proophessor.command_bus`.
+
+### Retrieving The EventBus
+
+The ProophServiceBus event bus can be retrieved from the service manager by using the alias `proophessor.event_bus`.
+
 
