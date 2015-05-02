@@ -230,9 +230,9 @@ return [
     ];
 ```
 
-In our example above we use the PHP 5.5 class constant feature to define the class name of the RegisterUserHandler as service name
-and map it to factory which is responsible to instantiate a RegisterUserHandler object. But again, the factory is only invoked when
-a `RegisterUser` is dispatched by the command bus.
+In our example above we use the PHP 5.5 class constant feature to define the class name of the `RegisterUserHandler` as service name
+and map it to a factory which is responsible to instantiate a `RegisterUserHandler` object. But again, the factory is only invoked when
+a `RegisterUser` command is dispatched by the command bus.
 
 ### Command
 
@@ -295,21 +295,20 @@ our domain model classes should not be used or even not be known.
 The first argument of the class constructor is the name of the command. We use the class as command name but you could
 also use another name if you don't want your command name look like a PHP namespace.
 The second argument is a payload array. It is later used in the getter methods to instantiate value objects from it if
-required by the model. The payload should only contain scalar types and arrays because only these types allow
+required by the model. `The payload should only contain scalar types and arrays` because only these types allow
 a secure way to convert a command to a remote message which can be send to a remote system or pushed on a job queue.
 Proophessor doesn't work with serializers or annotations to help you with type mapping, because they slow down the system
-and add complexity. But you are free to use a serializer if you want. You should just make sure to override the appropriate
-translation methods of `Prooph\Common\Messaging\DomainMessage`.
+and add complexity.
 
 ### Transaction Handling
 
 Proophessor automatically handles transactions for you. Each time you dispatch a command a new transaction is started.
-A successful dispatch commits the transaction and an error causes a rollback. Proophessor only opens one transaction.
+A successful dispatch commits the transaction and an error causes a rollback. `Proophessor only opens one transaction.`
 If you work with a process manager which listens on synchronous dispatched events and the process manager dispatches
-follow up commands, these commands are handled in the same transaction as the first command. If a follow up command fails
-the transaction is completely rolled back including all recorded events and potential changes in the read model.
-Again, this only happens if your events are dispatched synchronous and if the event store and the read model share the same
-database connection.
+follow up commands, these commands are handled `in the same transaction as the first command`. If a follow up command fails
+the transaction is completely rolled back including `all recorded events` and potential `changes in the read model`.
+Again, this only happens if your events are dispatched `synchronous` and if the event store and the read model `share the same
+database connection`.
 
 ## Domain Model
 
@@ -511,12 +510,17 @@ The AggregateChanged class inherits from `Prooph\Common\Messaging\DomainEvent` w
 `Prooph\Common\Messaging\Command` namely `Prooph\Common\Messaging\DomainMessage`. Other than a command the named
 constructor of an AggregateChanged domain event should take value objects of the domain model as arguments whenever possible.
 As you can see in the example we use some kind of object caching to avoid object creation of the value objects when the getter methods
-are called. But why can't we simply pass the value objects to the payload? The answer is the same as for commands.
-Proophessor doesn't use serializers or other type mapping techniques. The payload of a domain event is just json_encoded when
+are called.
+
+
+`But why can't we simply pass the value objects to the payload?` The answer is the same as for commands.
+Proophessor doesn't use serializers or other type mapping techniques. The payload of a domain event is just `json_encode`d when
 storing it in the event store or dispatching it to a remote system. `So the payload should only contain scalar values or arrays!`
 It is your job to convert your value objects into native PHP types and back. Proophessor can't know the structure of your value objects
 and we don't want to rely on generic mapping. It simplifies things in the first place but sooner or later you would run into trouble with it
 or encounter performance bottlenecks. Some seconds more work when coding the classes will save you a lot of headache later!
+
+
 The AggregateChanged class provides a named constructor which should be used internally: `AggregateChanged::occur`.
 First argument of the method should be the identifier of the related aggregate root given as a string. Second argument is the
 already mentioned payload. The message name of a AggregateChanged domain event defaults to the class name of the implementing class.
