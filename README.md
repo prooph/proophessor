@@ -319,7 +319,208 @@ event sourced aggregate roots. You should follow two rules so that proophessor i
 1. All aggregate roots should extend `Prooph\EventSourcing\AggregateRoot` and implement the protected function `AggregateRoot::aggregateId`
 2. All aggregate root domain events should extend `Prooph\EventSourcing\AggregateChanged` which inherits from `Prooph\Common\Messaging\DomainEvent`.
 
+### Aggregate Root
 
+```php
+<?php
+namespace Application\Model\User;
+
+use Assert\Assertion;
+use Prooph\EventSourcing\AggregateRoot;
+
+final class User extends AggregateRoot
+{
+    /**
+     * @var UserId
+     */
+    private $userId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var EmailAddress
+     */
+    private $emailAddress;
+
+    /**
+     * @param UserId $userId
+     * @param string $name
+     * @param EmailAddress $emailAddress
+     * @return User
+     */
+    public static function registerWithData(UserId $userId, $name, EmailAddress $emailAddress)
+    {
+        $self = new self();
+
+        $self->assertName($name);
+
+        $self->recordThat(UserWasRegistered::withData($userId, $name, $emailAddress));
+
+        return $self;
+    }
+
+    /**
+     * @return UserId
+     */
+    public function userId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return EmailAddress
+     */
+    public function emailAddress()
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     * @return string representation of the unique identifier of the aggregate root
+     */
+    protected function aggregateId()
+    {
+        return $this->userId->toString();
+    }
+
+    /**
+     * @param UserWasRegistered $event
+     */
+    protected function whenUserWasRegistered(UserWasRegistered $event)
+    {
+        $this->userId = $event->userId();
+        $this->name = $event->name();
+        $this->emailAddress = $event->emailAddress();
+    }
+
+    /**
+     * @param string $name
+     * @throws InvalidName
+     */
+    private function assertName($name)
+    {
+        try {
+            Assertion::string($name);
+            Assertion::notEmpty($name);
+        } catch (\Exception $e) {
+            throw InvalidName::reason($e->getMessage());
+        }
+    }
+}
+```
+
+An event sourced aggregate root looks different from entities you may have used in the past. `Prooph\EventSourcing\AggregateRoot`
+forces implementers to provide at least one named constructor like the `User::registerWithData` method shown in the example.
+Such a named constructor should then invoke the class constructor without any arguments and then record the first
+domain event of the aggregate root. Internally the new event is added to the list of pending events (waiting to be stored in the event stream on transaction commit)
+and then forwarded to a special setter method which has the naming convention `when<ShortEventName>`. In the example it is the method
+`User::whenUserWasRegistered`. Object properties should be first set in such a domain event setter method because the setter is also used later when reconstituting
+the aggregate root. Methods changing the state of the aggregate root should work in a similar way:
+
+1. Assert that changes can be made
+2. Record new domain event which indicates the changes
+3. Use a domain event setter method to adopt the changes
+
+### AggregateChanged Domain Event
+
+```php
+<?php
+namespace Application\Model\User;
+
+use Assert\Assertion;
+use Prooph\EventSourcing\AggregateChanged;
+use Prooph\Proophessor\EventStore\IsProcessedAsync;
+
+final class UserWasRegistered extends AggregateChanged
+{
+    private $userId;
+
+    private $username;
+
+    private $emailAddress;
+
+    /**
+     * @param UserId $userId
+     * @param string $name
+     * @param EmailAddress $emailAddress
+     * @return UserWasRegistered
+     */
+    public static function withData(UserId $userId, $name, EmailAddress $emailAddress)
+    {
+        Assertion::string($name);
+
+        $event = self::occur($userId->toString(), [
+            'name' => $name,
+            'email' => $emailAddress->toString(),
+        ]);
+
+        $event->userId = $userId;
+        $event->username = $name;
+        $event->emailAddress = $emailAddress;
+
+        return $event;
+    }
+
+    /**
+     * @return UserId
+     */
+    public function userId()
+    {
+        if (is_null($this->userId)) {
+            $this->userId = UserId::fromString($this->aggregateId);
+        }
+        return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        if (is_null($this->username)) {
+            $this->username = $this->payload['name'];
+        }
+        return $this->username;
+    }
+
+    /**
+     * @return EmailAddress
+     */
+    public function emailAddress()
+    {
+        if (is_null($this->emailAddress)) {
+            $this->emailAddress = EmailAddress::fromString($this->payload['email']);
+        }
+        return $this->emailAddress;
+    }
+}
+```
+
+The AggregateChanged class inherits from `Prooph\Common\Messaging\DomainEvent` which has the same base class as
+`Prooph\Common\Messaging\Command` namely `Prooph\Common\Messaging\DomainMessage`. Other than a command the named
+constructor of an AggregateChanged domain event should take value objects of the domain model as arguments whenever possible.
+As you can see in the example we use some kind of object caching to avoid object creation of the value objects when the getter methods
+are called. But why can't we simply pass the value objects to the payload? The answer is the same as for commands.
+Proophessor doesn't use serializers or other type mapping techniques. The payload of a domain event is just json_encoded when
+storing it in the event store or dispatching it to a remote system. `So the payload should only contain scalar values or arrays!`
+It is your job to convert your value objects into native PHP types and back. Proophessor can't know the structure of your value objects
+and we don't want to rely on generic mapping. It simplifies things in the first place but sooner or later you would run into trouble with it
+or encounter performance bottlenecks. Some seconds more work when coding the classes will save you a lot of headache later!
+The AggregateChanged class provides a named constructor which should be used internally: `AggregateChanged::occur`.
+First argument of the method should be the identifier of the related aggregate root given as a string. Second argument is the
+already mentioned payload. The message name of a AggregateChanged domain event defaults to the class name of the implementing class.
+However, you can change the name by setting the `name` property of the event to another value after instantiation.
 
 ## Working With Repositories
 
