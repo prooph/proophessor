@@ -40,6 +40,7 @@ return [
             'prooph.psb.command_router',
             'prooph.psb.service_locator_proxy',
             'prooph.psb.handle_command_invoke_strategy',
+            'proophessor.transaction_manager',
         ],
         /**
          * Define a list of utils that should be used by the event bus.
@@ -77,6 +78,7 @@ return [
             'proophessor.event_store' => \Prooph\Proophessor\EventStore\EventStoreFactory::class,
             'proophessor.command_bus' => \Prooph\Proophessor\ServiceBus\CommandBusFactory::class,
             'proophessor.event_bus'   => \Prooph\Proophessor\ServiceBus\EventBusFactory::class,
+            'proophessor.transaction_manager' => \Prooph\Proophessor\EventStore\TransactionManagerFactory::class,
             'prooph.psb.command_router' => \Prooph\Proophessor\ServiceBus\CommandRouterFactory::class,
             'prooph.psb.event_router' => \Prooph\Proophessor\ServiceBus\EventRouterFactory::class,
             'prooph.psb.service_locator_proxy' => \Prooph\Proophessor\ServiceBus\ServiceLocatorProxyFactory::class,

@@ -21,6 +21,14 @@ Proophessor combines [prooph/service-bus](https://github.com/prooph/service-bus)
   - replay event stream to a specific version
 - Snapshot functionality for aggregates
 
+## Introduction
+
+to be defined ...
+
+## Example Application
+
+to be defined ...
+
 ## Installation
 
 ### Proophessor Module
@@ -189,7 +197,129 @@ The ProophServiceBus event bus can be retrieved from the service manager by usin
 
 ## Working With The Command Bus
 
-to be defined ...
+The command bus is the gate to the domain model. It is a rule of thumb to not use domain classes outside of the model.
+The domain model should be protected by an application layer with a well defined API of actions that can be triggered in the
+domain model. In CQRS the application API is defined through commands which are messages (like DTOs) with a specific intention.
+The command bus is responsible for dispatching these commands to so called command handlers. Each command should have exactly one
+command handler and each command handler should only handle one command (1:1 relationship).
+In a proophessor system you define such a connection with a `command_router_map` in the application configuration.
+
+```php
+<?php
+//In your own module.config.php or in the application autoload/global.php
+return [
+    'proophessor' => [
+        'command_router_map' => [
+            \Application\Model\Command\RegisterUser::class => \Application\Model\User\RegisterUserHandler::class,
+        ],
+    ];
+```
+
+The target of the command (RegisterUserHandler::class in the example) should be a service name known by the service manager.
+Command handlers are only instantiated when an appropriate command is dispatched (lazy loading), so you can define hundreds
+of commands and command handlers in your application without worrying about performance issues caused by heavy object creation.
+
+```php
+<?php
+//In your own module.config.php or in the application autoload/global.php
+return [
+    'service_manager' => array(
+        'factories' => [
+            \Application\Model\User\RegisterUserHandler::class => \Application\Infrastructure\HandlerFactory\RegisterUserHandlerFactory::class,
+        ],
+    ];
+```
+
+In our example above we use the PHP 5.5 class constant feature to define the class name of the RegisterUserHandler as service name
+and map it to factory which is responsible to instantiate a RegisterUserHandler object. But again, the factory is only invoked when
+a `RegisterUser` is dispatched by the command bus.
+
+### Command
+
+All commands should extend `Prooph\Common\Messaging\Command`. The `RegisterUser` command would look something like this:
+
+```php
+<?php
+namespace Application\Model\Command;
+
+use Application\Model\User\EmailAddress;
+use Application\Model\User\UserId;
+use Prooph\Common\Messaging\Command;
+
+final class RegisterUser extends Command
+{
+    /**
+     * @param string $userId
+     * @param string $name
+     * @param string $email
+     * @return RegisterUser
+     */
+    public static function withData($userId, $name, $email)
+    {
+        return new self(__CLASS__, [
+            'user_id' => (string)$userId,
+            'name' => (string)$name,
+            'email' => (string)$email
+        ]);
+    }
+
+    /**
+     * @return UserId
+     */
+    public function userId()
+    {
+        return UserId::fromString($this->payload['user_id']);
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->payload['name'];
+    }
+
+    /**
+     * @return EmailAddress
+     */
+    public function emailAddress()
+    {
+        return EmailAddress::fromString($this->payload['email']);
+    }
+}
+```
+
+We use a named constructor to instantiate the command. The method takes only native PHP types as arguments.
+This is due to the fact that the command is instantiated in userland code (for example a controller). In userland code
+our domain model classes should not be used or even not be known.
+The first argument of the class constructor is the name of the command. We use the class as command name but you could
+also use another name if you don't want your command name look like a PHP namespace.
+The second argument is a payload array. It is later used in the getter methods to instantiate value objects from it if
+required by the model. The payload should only contain scalar types and arrays because only these types allow
+a secure way to convert a command to a remote message which can be send to a remote system or pushed on a job queue.
+Proophessor doesn't work with serializers or annotations to help you with type mapping, because they slow down the system
+and add complexity. But you are free to use a serializer if you want. You should just make sure to override the appropriate
+translation methods of `Prooph\Common\Messaging\DomainMessage`.
+
+### Transaction Handling
+
+Proophessor automatically handles transactions for you. Each time you dispatch a command a new transaction is started.
+A successful dispatch commits the transaction and an error causes a rollback. Proophessor only opens one transaction.
+If you work with a process manager which listens on synchronous dispatched events and the process manager dispatches
+follow up commands, these commands are handled in the same transaction as the first command. If a follow up command fails
+the transaction is completely rolled back including all recorded events and potential changes in the read model.
+Again, this only happens if your events are dispatched synchronous and if the event store and the read model share the same
+database connection.
+
+## Domain Model
+
+Proophessor ships with [prooph/event-sourcing](https://github.com/prooph/event-sourcing) which turns your entities into
+event sourced aggregate roots. You should follow two rules so that proophessor is able to handle your aggregate roots correctly.
+
+1. All aggregate roots should extend `Prooph\EventSourcing\AggregateRoot` and implement the protected function `AggregateRoot::aggregateId`
+2. All aggregate root domain events should extend `Prooph\EventSourcing\AggregateChanged` which inherits from `Prooph\Common\Messaging\DomainEvent`.
+
+
 
 ## Working With Repositories
 
