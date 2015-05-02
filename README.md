@@ -528,7 +528,69 @@ However, you can change the name by setting the `name` property of the event to 
 
 ## Working With Repositories
 
-to be defined ...
+Each aggregate root should have a corresponding repository. Proophessor works with `collection like repositories` that means
+you don't have to call save, persist or a similar method on the repository. Just add a aggregate root to its collection repository
+and retrieve it later when you need to trigger changes on the aggregate root.
+It is a common practice to define an interface for each repository in your domain model but put the implementation in the infrastructure
+because the implementation is connected to a data storage (in our case the event store) which should not leak into the domain model.
+A typical repository interface looks like the following:
+
+```php
+<?php
+namespace Application\Model\User;
+
+interface UserCollection
+{
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function add(User $user);
+
+    /**
+     * @param UserId $userId
+     * @return User
+     */
+    public function get(UserId $userId);
+}
+```
+
+And this is the corresponding implementation using `Prooph\EventStore\Aggregate\AggregateRepository`:
+
+```php
+<?php
+namespace Application\Infrastructure\Repository;
+
+use Application\Model\User\User;
+use Application\Model\User\UserCollection;
+use Application\Model\User\UserId;
+use Prooph\EventStore\Aggregate\AggregateRepository;
+
+final class EventStoreUserCollection extends AggregateRepository implements UserCollection
+{
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function add(User $user)
+    {
+        $this->addAggregateRoot($user);
+    }
+
+    /**
+     * @param UserId $userId
+     * @return User
+     */
+    public function get(UserId $userId)
+    {
+        $this->getAggregateRoot($userId->toString());
+    }
+}
+```
+
+Easy, isn't it?
+
+How you can configure proophessor to provide you with such a repository is explained in the [configuration](#aggregate-repository) section.
 
 ## Working With The Event Bus
 
