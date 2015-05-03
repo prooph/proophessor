@@ -666,8 +666,8 @@ How you can configure proophessor to provide you with such a repository is expla
 ## Working With The Event Bus
 
 Normally you don't need to interact with the event bus directly. Just add event handlers to the `event_router_map` like described in the [configuration](#event-routing) section.
-Like command handlers event handlers are only instantiated when an event is dispatched to which they are interested.
-One event can have many event listeners. Therefor the `event_routing_map` defines a 1:n connection:
+Like command handlers event handlers are only instantiated when an event is dispatched to a interested handler.
+One event can have many event handlers. Therefor the `event_routing_map` defines a 1:n connection:
 
 ```php
 <?php
@@ -704,7 +704,7 @@ Checkout the read model projection example below.
 
 ## Read Model Projection
 
-Proophessor doesn't provide a specific read model implementation. It is up to you how you implement it. The read model
+Proophessor doesn't provide a specific read model implementation. It is up to you to implement it. The read model
 should be as simple as possible. It is so called `throw away code` because all important information is stored in form of
 domain events in the event store. The read model can be regenerated at any time and in any form you need it to let your
 application respond fast!
