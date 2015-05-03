@@ -750,3 +750,16 @@ final class UserProjector
     }
 }
 ```
+
+Support
+-------
+
+- Ask questions on [prooph-users](https://groups.google.com/forum/?hl=de#!forum/prooph) google group.
+- File issues at [https://github.com/prooph/proophessor/issues](https://github.com/prooph/proophessor/issues).
+
+
+Contribute
+----------
+
+Please feel free to fork and extend existing or add new features and send a pull request with your changes!
+To establish a consistent code quality, please provide unit tests for all your changes and may adapt the documentation.
