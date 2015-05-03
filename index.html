@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Proophessor by prooph</title>
+    <title>proophessor by prooph</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,7 +11,7 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Proophessor</h1>
+      <h1 class="project-name">proophessor</h1>
       <h2 class="project-tagline">CQRS + ES for ZF2</h2>
       <a href="https://github.com/prooph/proophessor" class="btn">View on GitHub</a>
       <a href="https://github.com/prooph/proophessor/zipball/master" class="btn">Download .zip</a>
@@ -21,8 +21,6 @@
     <section class="main-content">
       <h1>
 <a id="proophessor" class="anchor" href="#proophessor" aria-hidden="true"><span class="octicon octicon-link"></span></a>proophessor</h1>
-
-<p>CQRS + ES for ZF2</p>
 
 <p>Proophessor combines <a href="https://github.com/prooph/service-bus">prooph/service-bus</a>, <a href="https://github.com/prooph/event-store">proop/event-store</a> and <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a> in a single ZF2 module. Goal is to simplify the set up process for a full featured CQRS + ES system.</p>
 
@@ -697,7 +695,7 @@ A typical repository interface looks like the following:</p>
 <span class="pl-s1"><span class="pl-c">     */</span></span>
 <span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">get</span>(<span class="pl-c1">UserId</span> <span class="pl-smi">$userId</span>)</span>
 <span class="pl-s1">    {</span>
-<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>getAggregateRoot(<span class="pl-smi">$userId</span><span class="pl-k">-&gt;</span>toString());</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>getAggregateRoot(<span class="pl-smi">$userId</span><span class="pl-k">-&gt;</span>toString());</span>
 <span class="pl-s1">    }</span>
 <span class="pl-s1">}</span></pre></div>
 
@@ -709,8 +707,8 @@ A typical repository interface looks like the following:</p>
 <a id="working-with-the-event-bus" class="anchor" href="#working-with-the-event-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working With The Event Bus</h2>
 
 <p>Normally you don't need to interact with the event bus directly. Just add event handlers to the <code>event_router_map</code> like described in the <a href="#event-routing">configuration</a> section.
-Like command handlers event handlers are only instantiated when an event is dispatched to which they are interested.
-One event can have many event listeners. Therefor the <code>event_routing_map</code> defines a 1:n connection:</p>
+Like command handlers event handlers are only instantiated when an event is dispatched to a interested handler.
+One event can have many event handlers. Therefor the <code>event_routing_map</code> defines a 1:n connection:</p>
 
 <div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
 <span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/global.php</span></span>
@@ -745,7 +743,7 @@ Checkout the read model projection example below.</p>
 <h2>
 <a id="read-model-projection" class="anchor" href="#read-model-projection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Read Model Projection</h2>
 
-<p>Proophessor doesn't provide a specific read model implementation. It is up to you how you implement it. The read model
+<p>Proophessor doesn't provide a specific read model implementation. It is up to you to implement it. The read model
 should be as simple as possible. It is so called <code>throw away code</code> because all important information is stored in form of
 domain events in the event store. The read model can be regenerated at any time and in any form you need it to let your
 application respond fast!</p>
@@ -790,8 +788,22 @@ scalability you can use different storage mechanisms for the event store and the
 <span class="pl-s1">    }</span>
 <span class="pl-s1">}</span></pre></div>
 
+<h2>
+<a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support</h2>
+
+<ul>
+<li>Ask questions on <a href="https://groups.google.com/forum/?hl=de#!forum/prooph">prooph-users</a> google group.</li>
+<li>File issues at <a href="https://github.com/prooph/proophessor/issues">https://github.com/prooph/proophessor/issues</a>.</li>
+</ul>
+
+<h2>
+<a id="contribute" class="anchor" href="#contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribute</h2>
+
+<p>Please feel free to fork and extend existing or add new features and send a pull request with your changes!
+To establish a consistent code quality, please provide unit tests for all your changes and may adapt the documentation.</p>
+
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/prooph/proophessor">Proophessor</a> is maintained by <a href="https://github.com/prooph">prooph</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/prooph/proophessor">proophessor</a> is maintained by <a href="https://github.com/prooph">prooph</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
