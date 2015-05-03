@@ -654,7 +654,7 @@ final class EventStoreUserCollection extends AggregateRepository implements User
      */
     public function get(UserId $userId)
     {
-        $this->getAggregateRoot($userId->toString());
+        return $this->getAggregateRoot($userId->toString());
     }
 }
 ```
