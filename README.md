@@ -32,7 +32,7 @@ to be defined ...
 ## Installation
 
 ### Proophessor Module
-Of course proophessor is available on packagist. Simply add `"prooph/proophessor" : "dev-master"` to your composer.json.
+Of course proophessor is available on packagist. Simply add `"prooph/proophessor" : "~0.1"` to your composer.json.
 As this is a ZF2 Module you need to enable it in your `application.config.php` with the module name `Prooph\Proophessor`.
 
 ### Event Store Schema
