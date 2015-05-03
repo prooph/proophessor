@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Proophessor by prooph</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Proophessor</h1>
+      <h2 class="project-tagline">CQRS + ES for ZF2</h2>
+      <a href="https://github.com/prooph/proophessor" class="btn">View on GitHub</a>
+      <a href="https://github.com/prooph/proophessor/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/prooph/proophessor/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="proophessor" class="anchor" href="#proophessor" aria-hidden="true"><span class="octicon octicon-link"></span></a>proophessor</h1>
+
+<p>CQRS + ES for ZF2</p>
+
+<p>Proophessor combines <a href="https://github.com/prooph/service-bus">prooph/service-bus</a>, <a href="https://github.com/prooph/event-store">proop/event-store</a> and <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a> in a single ZF2 module. Goal is to simplify the set up process for a full featured CQRS + ES system.</p>
+
+<h2>
+<a id="key-facts" class="anchor" href="#key-facts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Facts</h2>
+
+<ul>
+<li>[x] CQRS messaging tools</li>
+<li>[x] Event Store implementation</li>
+<li>[x] Event Sourcing base classes</li>
+<li>[x] Default configuration to get started in no time</li>
+<li>[x] Automatic transaction handling
+
+<ul>
+<li>handle command dispatch in a transaction</li>
+<li>link recorded events with causative command</li>
+<li>include synchronous dispatched events in transaction</li>
+</ul>
+</li>
+<li>[ ] Synchronous and asynchronous event dispatching
+
+<ul>
+<li>[x] Sync dispatch: within the command transaction to make sure that read model is always up to date</li>
+<li>[ ] Async dispatch: the event store will act as a job queue so that multiple worker can pull events from it</li>
+</ul>
+</li>
+<li>[x] Common command and event objects to ease communication between prooph components and reduce translation overhead</li>
+<li>[ ] Apigility support
+
+<ul>
+<li>Messagebox endpoint for commands</li>
+<li>Read access to the event store</li>
+</ul>
+</li>
+<li>[ ] ZF2 developer toolbar integration
+
+<ul>
+<li>monitor commands and recorded events</li>
+<li>replay event stream to a specific version</li>
+</ul>
+</li>
+<li>[ ] Snapshot functionality for aggregates</li>
+</ul>
+
+<h2>
+<a id="example-application" class="anchor" href="#example-application" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Application</h2>
+
+<p>to be defined ...</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<h3>
+<a id="proophessor-module" class="anchor" href="#proophessor-module" aria-hidden="true"><span class="octicon octicon-link"></span></a>Proophessor Module</h3>
+
+<p>Of course proophessor is available on packagist. Simply add <code>"prooph/proophessor" : "~0.1"</code> to your composer.json.
+As this is a ZF2 Module you need to enable it in your <code>application.config.php</code> with the module name <code>Prooph\Proophessor</code>.</p>
+
+<h3>
+<a id="event-store-schema" class="anchor" href="#event-store-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Store Schema</h3>
+
+<p>By default proophessor connects to a RDBMS using the <a href="https://github.com/prooph/event-store-doctrine-adapter">doctrine adapter</a> for prooph/event-store.
+The <a href="https://github.com/prooph/event-store#streamstrategies">stream strategy</a> defaults to a SingleStreamStrategy using a table called <code>proophessor_event_stream</code>.
+There are two ways available to create this table:</p>
+
+<h4>
+<a id="using-doctrine-migrations" class="anchor" href="#using-doctrine-migrations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Doctrine Migrations</h4>
+
+<p>The recommended way is to use doctrine migrations. Therefor you need to install the <a href="https://github.com/doctrine/DoctrineORMModule">doctrine-orm-module</a>
+and use the appropriate CLI commands of the module to create and run migrations.
+Proophessor ships with a <code>EventStoreSchema</code> class which you can use in a migrations script to set up the event stream table.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Migrations</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Doctrine\DBAL\Migrations\AbstractMigration</span>,</span>
+<span class="pl-s1">    <span class="pl-c1">Doctrine\DBAL\Schema\Schema</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Prooph\Proophessor\Schema\EventStoreSchema</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c"> * Auto-generated Migration: Please modify to your need!</span></span>
+<span class="pl-s1"><span class="pl-c"> */</span></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">Version20150429205328</span> <span class="pl-k">extends</span> <span class="pl-e">AbstractMigration</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">up</span>(<span class="pl-c1">Schema</span> <span class="pl-smi">$schema</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-c1">EventStoreSchema</span><span class="pl-k">::</span>createSchema(<span class="pl-smi">$schema</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">down</span>(<span class="pl-c1">Schema</span> <span class="pl-smi">$schema</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-c1">EventStoreSchema</span><span class="pl-k">::</span>dropSchema(<span class="pl-smi">$schema</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<h4>
+<a id="using-sql" class="anchor" href="#using-sql" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using SQL</h4>
+
+<p>If you don't want to use doctrine migrations or doctrine at all (there are also other event store adapters available)
+you can use the SQL located in the <code>scripts</code> folder to create the event stream table manually.</p>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>As a ZF2 dev you should be familiar with the way of configuring things in a ZF2 application. The module groups everything
+related to the CQRS + ES infrastructure under the root config key <code>proophessor</code>.</p>
+
+<h3>
+<a id="event-store-adapter" class="anchor" href="#event-store-adapter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Store Adapter</h3>
+
+<p>One of the crucial configuration points is the database connection for the event store. Proophessor assumes that you have
+a doctrine connection defined called <code>orm_default</code>, because this is the default when using the doctrine-orm-module
+mentioned above. However, you can override the default with a dedicated connection or even another adapter for the event store:</p>
+
+<h4>
+<a id="configure-own-doctrine-adapter-connection" class="anchor" href="#configure-own-doctrine-adapter-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configure Own Doctrine Adapter Connection</h4>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/local.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>proophessor<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>event_store<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>adapter<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                <span class="pl-s"><span class="pl-pds">'</span>options<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                    <span class="pl-s"><span class="pl-pds">'</span>connection<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                        <span class="pl-s"><span class="pl-pds">'</span>dbname<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>my_db<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">                        <span class="pl-s"><span class="pl-pds">'</span>driver<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>pdo_mysql<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">                        <span class="pl-s"><span class="pl-pds">'</span>host<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>localhost<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">                        <span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>root<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">                        <span class="pl-s"><span class="pl-pds">'</span>charset<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>utf8<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">                    ]</span>
+<span class="pl-s1">                ]</span>
+<span class="pl-s1">            ]</span>
+<span class="pl-s1">        ]</span>
+<span class="pl-s1">    ]</span>
+<span class="pl-s1">];</span></pre></div>
+
+<h4>
+<a id="use-another-doctrine-connection-alias" class="anchor" href="#use-another-doctrine-connection-alias" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use Another Doctrine Connection Alias</h4>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/local.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>proophessor<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>event_store<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>adapter<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                <span class="pl-s"><span class="pl-pds">'</span>options<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                    <span class="pl-s"><span class="pl-pds">'</span>doctrine_connection_alias<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>event_store_default<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">                ]</span>
+<span class="pl-s1">            ]</span>
+<span class="pl-s1">        ]</span>
+<span class="pl-s1">    ]</span>
+<span class="pl-s1">];</span></pre></div>
+
+<h3>
+<a id="aggregate-repository" class="anchor" href="#aggregate-repository" aria-hidden="true"><span class="octicon octicon-link"></span></a>Aggregate Repository</h3>
+
+<p>Proophessor ships with a <a href="src/EventStore/AbstractRepositoryFactory.php">AbstractRepositoryFactory</a> which simplifies the
+instantiation of a repository. As long as you use the defaults provided by proophessor you don't need to worry about stream
+strategies or a translator for your aggregates. Just tell proophessor which repository class is responsible for which aggregate type.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/global.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>proophessor<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>event_store<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>repository_map<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                <span class="pl-s"><span class="pl-pds">'</span>my.aggregate_repository.alias<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                    <span class="pl-s"><span class="pl-pds">'</span>repository_class<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">MyAggregateRepository</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">                    <span class="pl-s"><span class="pl-pds">'</span>aggregate_type<span class="pl-pds">'</span></span>   <span class="pl-k">=&gt;</span> <span class="pl-c1">MyAggregate</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">                ]</span>
+<span class="pl-s1">            ]</span>
+<span class="pl-s1">        ]</span>
+<span class="pl-s1">    ]</span>
+<span class="pl-s1">];</span></pre></div>
+
+<p>A configuration like shown above allows you to retrieve a repository from the service manager:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//Somewhere in a command handler factory ...</span></span>
+<span class="pl-s1"><span class="pl-smi">$myAggregateRepository</span> <span class="pl-k">=</span> <span class="pl-smi">$serviceLocator</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>my.aggregate_repository.alias<span class="pl-pds">'</span></span>);</span></pre></div>
+
+<h3>
+<a id="event-store-features" class="anchor" href="#event-store-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Store Features</h3>
+
+<p>to be defined ....</p>
+
+<h3>
+<a id="service-bus-utils" class="anchor" href="#service-bus-utils" aria-hidden="true"><span class="octicon octicon-link"></span></a>Service Bus Utils</h3>
+
+<p>Command/event bus utilities like a custom invoke strategy or a logger can be added via configuration.
+Checkout the <a href="config/module.config.php">module.config.php</a> for details.</p>
+
+<h3>
+<a id="command-routing" class="anchor" href="#command-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command Routing</h3>
+
+<p>The command bus is set up with a <a href="https://github.com/prooph/service-bus/blob/master/docs/plugins.md#proophservicebusroutercommandrouter">CommandRouter</a>.
+The routing map can be defined in the configuration. Checkout the <a href="config/module.config.php">module.config.php</a> for details.</p>
+
+<h3>
+<a id="event-routing" class="anchor" href="#event-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Routing</h3>
+
+<p>The event bus is set up with a <a href="https://github.com/prooph/service-bus/blob/master/docs/plugins.md#proophservicebusroutereventrouter">EventRouter</a>.
+The routing map can be defined in the configuration. Checkout the <a href="config/module.config.php">module.config.php</a> for details.</p>
+
+<h2>
+<a id="registered-services" class="anchor" href="#registered-services" aria-hidden="true"><span class="octicon octicon-link"></span></a>Registered Services</h2>
+
+<h3>
+<a id="retrieving-the-eventstore" class="anchor" href="#retrieving-the-eventstore" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieving The EventStore</h3>
+
+<p>The ProophEventStore can be retrieved from the service manager by using the alias <code>proophessor.event_store</code>.</p>
+
+<h3>
+<a id="retrieving-the-commandbus" class="anchor" href="#retrieving-the-commandbus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieving The CommandBus</h3>
+
+<p>The ProophServiceBus command bus can be retrieved from the service manager by using the alias <code>proophessor.command_bus</code>.</p>
+
+<h3>
+<a id="retrieving-the-eventbus" class="anchor" href="#retrieving-the-eventbus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieving The EventBus</h3>
+
+<p>The ProophServiceBus event bus can be retrieved from the service manager by using the alias <code>proophessor.event_bus</code>.</p>
+
+<h2>
+<a id="working-with-the-command-bus" class="anchor" href="#working-with-the-command-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working With The Command Bus</h2>
+
+<p>The command bus is the gate to the domain model. It is a rule of thumb to not use domain classes outside of the model.
+The domain model should be protected by an application layer with a well defined API of actions that can be triggered in the
+domain model. In CQRS the application API is defined through commands which are messages (like DTOs) with a specific intention.
+The command bus is responsible for dispatching these commands to so called command handlers. Each command should have exactly one
+command handler and each command handler should only handle one command (1:1 relationship).
+In a proophessor system you define such a connection with a <code>command_router_map</code> in the application configuration.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/global.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>proophessor<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>command_router_map<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-c1">\Application\Model\Command\</span><span class="pl-c1">RegisterUser</span><span class="pl-k">::</span><span class="pl-c1">class</span> <span class="pl-k">=&gt;</span> <span class="pl-c1">\Application\Model\User\</span><span class="pl-c1">RegisterUserHandler</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">        ],</span>
+<span class="pl-s1">    ];</span></pre></div>
+
+<p>The target of the command (RegisterUserHandler::class in the example) should be a service name known by the service manager.
+Command handlers are only instantiated when an appropriate command is dispatched (lazy loading), so you can define hundreds
+of commands and command handlers in your application without worrying about performance issues caused by heavy object creation.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/global.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>service_manager<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span>[</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>factories<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-c1">\Application\Model\User\</span><span class="pl-c1">RegisterUserHandler</span><span class="pl-k">::</span><span class="pl-c1">class</span> <span class="pl-k">=&gt;</span> <span class="pl-c1">\Application\Infrastructure\HandlerFactory\</span><span class="pl-c1">RegisterUserHandlerFactory</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">        ],</span>
+<span class="pl-s1">    ];</span></pre></div>
+
+<p>In our example above we use the PHP 5.5 class constant feature to define the class name of the <code>RegisterUserHandler</code> as service name
+and map it to a factory which is responsible to instantiate a <code>RegisterUserHandler</code> object. But again, the factory is only invoked when
+a <code>RegisterUser</code> command is dispatched by the command bus.</p>
+
+<h3>
+<a id="command" class="anchor" href="#command" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command</h3>
+
+<p>All commands should extend <code>Prooph\Common\Messaging\Command</code>. The <code>RegisterUser</code> command would look something like this:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Model\Command</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\User\EmailAddress</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\User\UserId</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Prooph\Common\Messaging\Command</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-en">RegisterUser</span> <span class="pl-k">extends</span> <span class="pl-e">Command</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> string $userId</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> string $name</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> string $email</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> RegisterUser</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">withData</span>(<span class="pl-smi">$userId</span>, <span class="pl-smi">$name</span>, <span class="pl-smi">$email</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-k">self</span>(<span class="pl-c1">__CLASS__</span>, [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>user_id<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> (<span class="pl-k">string</span>)<span class="pl-smi">$userId</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> (<span class="pl-k">string</span>)<span class="pl-smi">$name</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> (<span class="pl-k">string</span>)<span class="pl-smi">$email</span></span>
+<span class="pl-s1">        ]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> UserId</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">userId</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-c1">UserId</span><span class="pl-k">::</span>fromString(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">payload</span>[<span class="pl-s"><span class="pl-pds">'</span>user_id<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> string</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">name</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">payload</span>[<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>];</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> EmailAddress</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">emailAddress</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-c1">EmailAddress</span><span class="pl-k">::</span>fromString(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">payload</span>[<span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>We use a named constructor to instantiate the command. The method takes only native PHP types as arguments.
+This is due to the fact that the command is instantiated in userland code (for example a controller). In userland code
+our domain model classes should not be used or even not be known.</p>
+
+<p>The first argument of the class constructor is the name of the command. We use the class as command name but you could
+also use another name if you don't want your command name look like a PHP namespace.</p>
+
+<p>The second argument is a payload array. It is later used in the getter methods to instantiate value objects from it if
+required by the model.</p>
+
+<p><code>The payload should only contain scalar types and arrays</code> because only these types allow
+a secure way to convert a command to a remote message which can be send to a remote system or pushed on a job queue.
+Proophessor doesn't work with serializers or annotations to help you with type mapping, because they slow down the system
+and add complexity.</p>
+
+<h3>
+<a id="transaction-handling" class="anchor" href="#transaction-handling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transaction Handling</h3>
+
+<p>Proophessor automatically handles transactions for you. Each time you dispatch a command a new transaction is started.
+A successful dispatch commits the transaction and an error causes a rollback. <code>Proophessor only opens one transaction.</code>
+If you work with a process manager which listens on synchronous dispatched events and the process manager dispatches
+follow up commands, these commands are handled <code>in the same transaction as the first command</code>. If a follow up command fails
+the transaction is completely rolled back including <code>all recorded events</code> and potential <code>changes in the read model</code>.
+Again, this only happens if your events are dispatched <code>synchronous</code> and if the event store and the read model <code>share the same
+database connection</code>.</p>
+
+<h3>
+<a id="command-flow" class="anchor" href="#command-flow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command Flow</h3>
+
+<p>A command is normally dispatched from inside a MVC controller action or a process manager (when an domain event causes a follow up command).
+Because we don't need to care about transaction handling dispatching a command is relative simple:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">UserRegistrationController</span> <span class="pl-k">extends</span> <span class="pl-e">AbstractActionController</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">//The user id is generated by the controller, so that we can provide the client with</span></span>
+<span class="pl-s1">    <span class="pl-c">//the identifier to request the user data after registration</span></span>
+<span class="pl-s1">    <span class="pl-smi">$userId</span> <span class="pl-k">=</span> <span class="pl-c1">Uuid</span><span class="pl-k">::</span>uuid4()<span class="pl-k">-&gt;</span>toString();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">//We skip validation in the example for the sake of simplicity</span></span>
+<span class="pl-s1">    <span class="pl-smi">$command</span> <span class="pl-k">=</span> <span class="pl-c1">RegisterUser</span><span class="pl-k">::</span>withData(</span>
+<span class="pl-s1">        <span class="pl-smi">$userId</span>,</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>params()<span class="pl-k">-&gt;</span>fromPost(<span class="pl-s"><span class="pl-pds">'</span>username<span class="pl-pds">'</span></span>),</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>params()<span class="pl-k">-&gt;</span>fromPost(<span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">    );</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">//We directly access the service manager in the example for the sake of simplicity</span></span>
+<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>getServiceLocator()<span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>proophessor.command_bus<span class="pl-pds">'</span></span>)<span class="pl-k">-&gt;</span>dispatch(<span class="pl-smi">$command</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">//When dispatching a command you get no response from the command bus except an exception is thrown!</span></span>
+<span class="pl-s1">    <span class="pl-c">//The client has to request the user data from the read model</span></span>
+<span class="pl-s1">    <span class="pl-k">return</span> [<span class="pl-s"><span class="pl-pds">'</span>user_id<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$userId</span>];</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>Like already mentioned the receiver of such a command should always be a command handler implementing a <code>handle</code> method:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Model\User</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\Command\RegisterUser</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-en">RegisterUserHandler</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> UserCollection</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$userCollection</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserCollection $userCollection</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-c1">UserCollection</span> <span class="pl-smi">$userCollection</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userCollection</span> <span class="pl-k">=</span> <span class="pl-smi">$userCollection</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> RegisterUser $command</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">handle</span>(<span class="pl-c1">RegisterUser</span> <span class="pl-smi">$command</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$user</span> <span class="pl-k">=</span> <span class="pl-c1">User</span><span class="pl-k">::</span>registerWithData(<span class="pl-smi">$command</span><span class="pl-k">-&gt;</span>userId(), <span class="pl-smi">$command</span><span class="pl-k">-&gt;</span>name(), <span class="pl-smi">$command</span><span class="pl-k">-&gt;</span>emailAddress());</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userCollection</span><span class="pl-k">-&gt;</span>add(<span class="pl-smi">$user</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<h2>
+<a id="domain-model" class="anchor" href="#domain-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Domain Model</h2>
+
+<p>Proophessor ships with <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a> which turns your entities into
+event sourced aggregate roots. You should follow two rules so that proophessor is able to handle your aggregate roots correctly.</p>
+
+<ol>
+<li>All aggregate roots should extend <code>Prooph\EventSourcing\AggregateRoot</code> and implement the protected function <code>AggregateRoot::aggregateId</code>
+</li>
+<li>All aggregate root domain events should extend <code>Prooph\EventSourcing\AggregateChanged</code> which inherits from <code>Prooph\Common\Messaging\DomainEvent</code>.</li>
+</ol>
+
+<h3>
+<a id="aggregate-root" class="anchor" href="#aggregate-root" aria-hidden="true"><span class="octicon octicon-link"></span></a>Aggregate Root</h3>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Model\User</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Assert\Assertion</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Prooph\EventSourcing\AggregateRoot</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-en">User</span> <span class="pl-k">extends</span> <span class="pl-e">AggregateRoot</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> UserId</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$userId</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> string</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$name</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> EmailAddress</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$emailAddress</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserId $userId</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> string $name</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> EmailAddress $emailAddress</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> User</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">registerWithData</span>(<span class="pl-c1">UserId</span> <span class="pl-smi">$userId</span>, <span class="pl-smi">$name</span>, <span class="pl-c1">EmailAddress</span> <span class="pl-smi">$emailAddress</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$self</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-k">self</span>();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$self</span><span class="pl-k">-&gt;</span>assertName(<span class="pl-smi">$name</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$self</span><span class="pl-k">-&gt;</span>recordThat(<span class="pl-c1">UserWasRegistered</span><span class="pl-k">::</span>withData(<span class="pl-smi">$userId</span>, <span class="pl-smi">$name</span>, <span class="pl-smi">$emailAddress</span>));</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$self</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> UserId</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">userId</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> string</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">name</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">name</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> EmailAddress</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">emailAddress</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">emailAddress</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> string representation of the unique identifier of the aggregate root</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">protected</span> <span class="pl-k">function</span> <span class="pl-en">aggregateId</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span><span class="pl-k">-&gt;</span>toString();</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserWasRegistered $event</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">protected</span> <span class="pl-k">function</span> <span class="pl-en">whenUserWasRegistered</span>(<span class="pl-c1">UserWasRegistered</span> <span class="pl-smi">$event</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span> <span class="pl-k">=</span> <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span>userId();</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">name</span> <span class="pl-k">=</span> <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span>name();</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">emailAddress</span> <span class="pl-k">=</span> <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span>emailAddress();</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> string $name</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@throws</span> InvalidName</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-k">function</span> <span class="pl-en">assertName</span>(<span class="pl-smi">$name</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">try</span> {</span>
+<span class="pl-s1">            <span class="pl-c1">Assertion</span><span class="pl-k">::</span>string(<span class="pl-smi">$name</span>);</span>
+<span class="pl-s1">            <span class="pl-c1">Assertion</span><span class="pl-k">::</span>notEmpty(<span class="pl-smi">$name</span>);</span>
+<span class="pl-s1">        } <span class="pl-k">catch</span> (<span class="pl-c1">\</span><span class="pl-c1">Exception</span> <span class="pl-smi">$e</span>) {</span>
+<span class="pl-s1">            <span class="pl-k">throw</span> <span class="pl-c1">InvalidName</span><span class="pl-k">::</span>reason(<span class="pl-smi">$e</span><span class="pl-k">-&gt;</span>getMessage());</span>
+<span class="pl-s1">        }</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>An event sourced aggregate root looks different from entities you may have used in the past. <code>Prooph\EventSourcing\AggregateRoot</code>
+forces implementers to provide at least one named constructor like the <code>User::registerWithData</code> method shown in the example.
+Such a named constructor should then invoke the class constructor without any arguments and then record the first
+domain event of the aggregate root. Internally the new event is added to the list of pending events (waiting to be stored in the event stream on transaction commit)
+and then forwarded to a special setter method which has the naming convention <code>when&lt;ShortEventName&gt;</code>. In the example it is the method
+<code>User::whenUserWasRegistered</code>. Object properties should be first set in such a domain event setter method because the setter is also used later when reconstituting
+the aggregate root. Methods changing the state of the aggregate root should work in a similar way:</p>
+
+<ol>
+<li>Assert that changes can be made</li>
+<li>Record new domain event which indicates the changes</li>
+<li>Use a domain event setter method to adopt the changes</li>
+</ol>
+
+<h3>
+<a id="aggregatechanged-domain-event" class="anchor" href="#aggregatechanged-domain-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>AggregateChanged Domain Event</h3>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Model\User</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Assert\Assertion</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Prooph\EventSourcing\AggregateChanged</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Prooph\Proophessor\EventStore\IsProcessedAsync</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-en">UserWasRegistered</span> <span class="pl-k">extends</span> <span class="pl-e">AggregateChanged</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$userId</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$username</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$emailAddress</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserId $userId</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> string $name</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> EmailAddress $emailAddress</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> UserWasRegistered</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">withData</span>(<span class="pl-c1">UserId</span> <span class="pl-smi">$userId</span>, <span class="pl-smi">$name</span>, <span class="pl-c1">EmailAddress</span> <span class="pl-smi">$emailAddress</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-c1">Assertion</span><span class="pl-k">::</span>string(<span class="pl-smi">$name</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$event</span> <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">::</span>occur(<span class="pl-smi">$userId</span><span class="pl-k">-&gt;</span>toString(), [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$name</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$emailAddress</span><span class="pl-k">-&gt;</span>toString(),</span>
+<span class="pl-s1">        ]);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span> <span class="pl-k">=</span> <span class="pl-smi">$userId</span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span><span class="pl-smi">username</span> <span class="pl-k">=</span> <span class="pl-smi">$name</span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span><span class="pl-smi">emailAddress</span> <span class="pl-k">=</span> <span class="pl-smi">$emailAddress</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$event</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> UserId</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">userId</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">if</span> (<span class="pl-c1">is_null</span>(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span>)) {</span>
+<span class="pl-s1">            <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span> <span class="pl-k">=</span> <span class="pl-c1">UserId</span><span class="pl-k">::</span>fromString(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">aggregateId</span>);</span>
+<span class="pl-s1">        }</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">userId</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> string</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">name</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">if</span> (<span class="pl-c1">is_null</span>(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">username</span>)) {</span>
+<span class="pl-s1">            <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">username</span> <span class="pl-k">=</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">payload</span>[<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>];</span>
+<span class="pl-s1">        }</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">username</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> EmailAddress</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">emailAddress</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">if</span> (<span class="pl-c1">is_null</span>(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">emailAddress</span>)) {</span>
+<span class="pl-s1">            <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">emailAddress</span> <span class="pl-k">=</span> <span class="pl-c1">EmailAddress</span><span class="pl-k">::</span>fromString(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">payload</span>[<span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span>]);</span>
+<span class="pl-s1">        }</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">emailAddress</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>The AggregateChanged class inherits from <code>Prooph\Common\Messaging\DomainEvent</code> which has the same base class as
+<code>Prooph\Common\Messaging\Command</code> namely <code>Prooph\Common\Messaging\DomainMessage</code>. Other than a command the named
+constructor of an AggregateChanged domain event should take value objects of the domain model as arguments whenever possible.
+As you can see in the example we use some kind of object caching to avoid object creation of the value objects when the getter methods
+are called.</p>
+
+<p><code>But why can't we simply pass the value objects to the payload?</code> The answer is the same as for commands.
+Proophessor doesn't use serializers or other type mapping techniques. The payload of a domain event is just <code>json_encode</code>d when
+storing it in the event store or dispatching it to a remote system. <code>So the payload should only contain scalar values or arrays!</code>
+It is your job to convert your value objects into native PHP types and back. Proophessor can't know the structure of your value objects
+and we don't want to rely on generic mapping. It simplifies things in the first place but sooner or later you would run into trouble with it
+or encounter performance bottlenecks. Some seconds more work when coding the classes will save you a lot of headache later!</p>
+
+<p>The AggregateChanged class provides a named constructor which should be used internally: <code>AggregateChanged::occur</code>.
+First argument of the method should be the identifier of the related aggregate root given as a string. Second argument is the
+already mentioned payload. The message name of a AggregateChanged domain event defaults to the class name of the implementing class.
+However, you can change the name by setting the <code>name</code> property of the event to another value after instantiation.</p>
+
+<h2>
+<a id="working-with-repositories" class="anchor" href="#working-with-repositories" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working With Repositories</h2>
+
+<p>Each aggregate root should have a corresponding repository. Proophessor works with <code>collection like repositories</code> that means
+you don't have to call save, persist or a similar method on the repository. Just add a aggregate root to its collection repository
+and retrieve it later when you need to trigger changes on the aggregate root.
+It is a common practice to define an interface for each repository in your domain model but put the implementation in the infrastructure
+because the implementation is connected to a data storage (in our case the event store) which should not leak into the domain model.
+A typical repository interface looks like the following:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Model\User</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">interface</span> <span class="pl-en">UserCollection</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> User $user</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> void</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">add</span>(<span class="pl-c1">User</span> <span class="pl-smi">$user</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserId $userId</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> User</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">get</span>(<span class="pl-c1">UserId</span> <span class="pl-smi">$userId</span>);</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>And this is the corresponding implementation using <code>Prooph\EventStore\Aggregate\AggregateRepository</code>:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Infrastructure\Repository</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\User\User</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\User\UserCollection</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\User\UserId</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Prooph\EventStore\Aggregate\AggregateRepository</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-en">EventStoreUserCollection</span> <span class="pl-k">extends</span> <span class="pl-e">AggregateRepository</span> <span class="pl-k">implements</span> <span class="pl-e">UserCollection</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> User $user</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> void</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">add</span>(<span class="pl-c1">User</span> <span class="pl-smi">$user</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>addAggregateRoot(<span class="pl-smi">$user</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserId $userId</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@return</span> User</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">get</span>(<span class="pl-c1">UserId</span> <span class="pl-smi">$userId</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>getAggregateRoot(<span class="pl-smi">$userId</span><span class="pl-k">-&gt;</span>toString());</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>Easy, isn't it?</p>
+
+<p>How you can configure proophessor to provide you with such a repository is explained in the <a href="#aggregate-repository">configuration</a> section.</p>
+
+<h2>
+<a id="working-with-the-event-bus" class="anchor" href="#working-with-the-event-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working With The Event Bus</h2>
+
+<p>Normally you don't need to interact with the event bus directly. Just add event handlers to the <code>event_router_map</code> like described in the <a href="#event-routing">configuration</a> section.
+Like command handlers event handlers are only instantiated when an event is dispatched to which they are interested.
+One event can have many event listeners. Therefor the <code>event_routing_map</code> defines a 1:n connection:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/global.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>proophessor<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>event_router_map<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-c1">\Application\Model\User\</span><span class="pl-c1">UserWasRegistered</span><span class="pl-k">::</span><span class="pl-c1">class</span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">                <span class="pl-c1">\Application\Projection\User\</span><span class="pl-c1">UserProjector</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">            ]</span>
+<span class="pl-s1">        ],</span>
+<span class="pl-s1">    ];</span></pre></div>
+
+<p>Also in this case we use the PHP 5.5 class constant feature to define the class name of the UserProjector as a service name
+so that the event bus can retrieve the UserProjector from the service manager.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">//In your own module.config.php or in the application autoload/global.php</span></span>
+<span class="pl-s1"><span class="pl-k">return</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>service_manager<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>factories<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">            <span class="pl-c1">\Application\Model\User\</span><span class="pl-c1">RegisterUserHandler</span><span class="pl-k">::</span><span class="pl-c1">class</span> <span class="pl-k">=&gt;</span> <span class="pl-c1">\Application\Infrastructure\HandlerFactory\</span><span class="pl-c1">RegisterUserHandlerFactory</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">            <span class="pl-c1">\Application\Projection\User\</span><span class="pl-c1">UserProjector</span><span class="pl-k">::</span><span class="pl-c1">class</span> <span class="pl-k">=&gt;</span> <span class="pl-c1">\Application\Projection\User\</span><span class="pl-c1">UserProjectorFactory</span><span class="pl-k">::</span><span class="pl-c1">class</span>,</span>
+<span class="pl-s1">        ],</span>
+<span class="pl-s1">    ];</span></pre></div>
+
+<h3>
+<a id="handle-domain-events" class="anchor" href="#handle-domain-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Handle Domain Events</h3>
+
+<p>Event handlers should implement a method for each event they are interested in. The convention for such a handle method is <code>on&lt;ShortEventName&gt;</code>.
+Checkout the read model projection example below.</p>
+
+<h2>
+<a id="read-model-projection" class="anchor" href="#read-model-projection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Read Model Projection</h2>
+
+<p>Proophessor doesn't provide a specific read model implementation. It is up to you how you implement it. The read model
+should be as simple as possible. It is so called <code>throw away code</code> because all important information is stored in form of
+domain events in the event store. The read model can be regenerated at any time and in any form you need it to let your
+application respond fast!</p>
+
+<p>The example shows a simple read model projection using a <code>Doctrine\DBAL\Connection</code> to persist the user data in a relational
+database table. By default the event store and the read model share the same database. However, if you need more performance or
+scalability you can use different storage mechanisms for the event store and the read model.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">namespace</span> <span class="pl-en">Application\Projection\User</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Model\User\UserWasRegistered</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Application\Projection\Table</span>;</span>
+<span class="pl-s1"><span class="pl-k">use</span> <span class="pl-c1">Doctrine\DBAL\Connection</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-en">UserProjector</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> Connection</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$connection</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> Connection $connection</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-c1">Connection</span> <span class="pl-smi">$connection</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">connection</span> <span class="pl-k">=</span> <span class="pl-smi">$connection</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@param</span> UserWasRegistered $event</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">onUserWasRegistered</span>(<span class="pl-c1">UserWasRegistered</span> <span class="pl-smi">$event</span>)</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">connection</span><span class="pl-k">-&gt;</span>insert(<span class="pl-c1">Table</span><span class="pl-k">::</span><span class="pl-c1">USER</span>, [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span>userId()<span class="pl-k">-&gt;</span>toString(),</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span>name(),</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$event</span><span class="pl-k">-&gt;</span>emailAddress()<span class="pl-k">-&gt;</span>toString()</span>
+<span class="pl-s1">        ]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/prooph/proophessor">Proophessor</a> is maintained by <a href="https://github.com/prooph">prooph</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
