@@ -223,7 +223,7 @@ of commands and command handlers in your application without worrying about perf
 <?php
 //In your own module.config.php or in the application autoload/global.php
 return [
-    'service_manager' => array(
+    'service_manager' =>[
         'factories' => [
             \Application\Model\User\RegisterUserHandler::class => \Application\Infrastructure\HandlerFactory\RegisterUserHandlerFactory::class,
         ],
@@ -292,10 +292,17 @@ final class RegisterUser extends Command
 We use a named constructor to instantiate the command. The method takes only native PHP types as arguments.
 This is due to the fact that the command is instantiated in userland code (for example a controller). In userland code
 our domain model classes should not be used or even not be known.
+
+
 The first argument of the class constructor is the name of the command. We use the class as command name but you could
 also use another name if you don't want your command name look like a PHP namespace.
+
+
 The second argument is a payload array. It is later used in the getter methods to instantiate value objects from it if
-required by the model. `The payload should only contain scalar types and arrays` because only these types allow
+required by the model.
+
+
+`The payload should only contain scalar types and arrays` because only these types allow
 a secure way to convert a command to a remote message which can be send to a remote system or pushed on a job queue.
 Proophessor doesn't work with serializers or annotations to help you with type mapping, because they slow down the system
 and add complexity.
@@ -666,7 +673,7 @@ One event can have many event listeners. Therefor the `event_routing_map` define
 <?php
 //In your own module.config.php or in the application autoload/global.php
 return [
-    'proophessor' => array(
+    'proophessor' => [
         'event_router_map' => [
             \Application\Model\User\UserWasRegistered::class => [
                 \Application\Projection\User\UserProjector::class,
@@ -682,7 +689,7 @@ so that the event bus can retrieve the UserProjector from the service manager.
 <?php
 //In your own module.config.php or in the application autoload/global.php
 return [
-    'service_manager' => array(
+    'service_manager' => [
         'factories' => [
             \Application\Model\User\RegisterUserHandler::class => \Application\Infrastructure\HandlerFactory\RegisterUserHandlerFactory::class,
             \Application\Projection\User\UserProjector::class => \Application\Projection\User\UserProjectorFactory::class,
@@ -743,9 +750,3 @@ final class UserProjector
     }
 }
 ```
-
-
-
-
-
-
