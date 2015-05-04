@@ -27,7 +27,7 @@ Proophessor combines [prooph/service-bus](https://github.com/prooph/service-bus)
 
 ## Example Application
 
-Try out the [proophessor todo example application](https://github.com/prooph/proophessor-todo-sample) and [pick up a task](https://github.com/prooph/proophessor-todo-sample#learning-by-doing)!
+Try out [proophessor-do](https://github.com/prooph/proophessor-do) and [pick up a task](https://github.com/prooph/proophessor-do#learning-by-doing)!
 
 ## Installation
 
