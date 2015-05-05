@@ -2,6 +2,9 @@
 
 CQRS + ES for ZF2
 
+[![Build Status](https://travis-ci.org/prooph/proophessor.svg?branch=master)](https://travis-ci.org/prooph/proophessor)
+[![Coverage Status](https://coveralls.io/repos/prooph/proophessor/badge.svg?branch=master)](https://coveralls.io/r/prooph/proophessor?branch=master)
+
 Proophessor combines [prooph/service-bus](https://github.com/prooph/service-bus), [proop/event-store](https://github.com/prooph/event-store) and [prooph/event-sourcing](https://github.com/prooph/event-sourcing) in a single ZF2 module. Goal is to simplify the set up process for a full featured CQRS + ES system.
 
 ## Key Facts
