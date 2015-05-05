@@ -1,0 +1,16 @@
+<?php
+return array(
+    'modules' => array(        
+        'Prooph\Proophessor'
+    ),
+    'module_listener_options' => array(
+        'config_glob_paths'    => array(
+            '../config/{,*.}{global,local}.php',
+            'config/{,*.}{global,local}.php'
+        ),
+        'module_paths' => array(
+            './',
+            'vendor',
+        ),
+    ),
+);

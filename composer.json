@@ -26,5 +26,10 @@
         "psr-4": {
             "Prooph\\Proophessor\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ProophTest\\Proophessor\\": "tests"
+        }
     }
 }
