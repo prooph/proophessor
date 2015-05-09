@@ -121,7 +121,7 @@ final class TransactionManager implements ActionEventListenerAggregate
     public function onInitialize(CommandDispatch $commandDispatch)
     {
         $command = $commandDispatch->getCommand();
-        if ($command instanceof Command) {
+        if ($command instanceof Command && !$command instanceof AutoCommitCommand) {
             if (! $this->inTransaction) {
                 $this->eventStore->beginTransaction();
                 $this->inTransaction = true;
@@ -133,7 +133,7 @@ final class TransactionManager implements ActionEventListenerAggregate
 
     public function onError(CommandDispatch $commandDispatch)
     {
-        if (! $commandDispatch->getCommand() instanceof Command) return;
+        if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
         if (! $this->inTransaction) return;
 
         $this->eventStore->rollback();
@@ -143,7 +143,7 @@ final class TransactionManager implements ActionEventListenerAggregate
 
     public function onFinalize(CommandDispatch $commandDispatch)
     {
-        if (! $commandDispatch->getCommand() instanceof Command) return;
+        if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
         if (! $this->inTransaction) return;
 
         $this->eventStore->commit();
