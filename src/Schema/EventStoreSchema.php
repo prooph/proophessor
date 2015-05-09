@@ -20,9 +20,9 @@ use Doctrine\DBAL\Schema\Schema;
  */
 final class EventStoreSchema
 {
-    public static function createSchema(Schema $schema)
+    public static function createSchema(Schema $schema, $streamName = 'proophessor_event_stream')
     {
-        $eventStream = $schema->createTable('proophessor_event_stream');
+        $eventStream = $schema->createTable($streamName);
 
         $eventStream->addColumn('event_id', 'string', ['length' => 36]);        //UUID of the event
         $eventStream->addColumn('version', 'integer');                          //Version of the aggregate after event was recorded
@@ -36,11 +36,11 @@ final class EventStoreSchema
         $eventStream->addColumn('causation_name', 'string', ['length' => 100]); //Name of the command which caused the event
         $eventStream->addColumn('dispatch_status', 'integer', ['length' => 1]); //EventDispatcher Status: 0 = not dispatched, 1 = in progress, 2 = success, 3 = failed
         $eventStream->setPrimaryKey(['event_id']);
-        $eventStream->addUniqueIndex(['aggregate_id', 'aggregate_type', 'version'], 'ph_es_metadata_version_uix'); //Concurrency check on database level
+        $eventStream->addUniqueIndex(['aggregate_id', 'aggregate_type', 'version'], $streamName . '_m_v_uix'); //Concurrency check on database level
     }
 
-    public static function dropSchema(Schema $schema)
+    public static function dropSchema(Schema $schema, $streamName = 'proophessor_event_stream')
     {
-        $schema->dropTable('proophessor_event_stream');
+        $schema->dropTable($streamName);
     }
 } 
