@@ -27,6 +27,9 @@ Proophessor combines [prooph/service-bus](https://github.com/prooph/service-bus)
   - monitor commands and recorded events
   - replay event stream to a specific version
 - [ ] Snapshot functionality for aggregates
+ 
+## Apps Using Proophessor
+- [prooph LINK](https://github.com/prooph/link)
 
 ## Example Application
 
