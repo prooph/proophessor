@@ -20,7 +20,7 @@
         "codeliner/array-reader" : "~1.1"
     },
     "require-dev" : {
-        "phpunit/phpunit": "~3.7",
+        "phpspec/phpspec": "~2.0",
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ProophTest\\Proophessor\\": "tests"
+            "Prooph\\Proophessor\\Stub\\": "stubs/"
         }
     }
 }

@@ -8,17 +8,12 @@
  * 
  * Date: 5/5/15 - 7:00 PM
  */
-namespace ProophTest\Proophessor\Mock;
+namespace Prooph\Proophessor\Stub;
+
 use Prooph\EventStore\Aggregate\AggregateRepository;
 
 
-/**
- * Class UserMockRepository
- *
- * @package ProophTest\Proophessor\Mock
- * @author Alexander Miertsch <kontakt@codeliner.ws>
- */
-final class UserMockRepository extends AggregateRepository
+final class UserRepositoryStub extends AggregateRepository
 {
     /**
      * @return \Prooph\EventStore\Aggregate\AggregateTranslator
