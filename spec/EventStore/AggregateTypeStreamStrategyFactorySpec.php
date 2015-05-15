@@ -13,7 +13,6 @@ namespace spec\Prooph\Proophessor\EventStore;
 use PhpSpec\ObjectBehavior;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Stream\AggregateTypeStreamStrategy;
-use Prooph\Proophessor\EventStore\AggregateTypeStreamStrategyFactory;
 use Zend\ServiceManager\ServiceManager;
 
 final class AggregateTypeStreamStrategyFactorySpec extends ObjectBehavior

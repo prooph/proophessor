@@ -17,7 +17,6 @@ use Prooph\EventStore\Aggregate\DefaultAggregateTranslator;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Stream\SingleStreamStrategy;
 use Prooph\EventStore\Stream\StreamStrategy;
-use Prooph\Proophessor\EventStore\AbstractRepositoryFactory;
 use Prooph\Proophessor\Stub\UserRepositoryStub;
 use Prooph\Proophessor\Stub\UserStub;
 use Zend\ServiceManager\ServiceManager;
