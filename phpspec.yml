@@ -1,0 +1,12 @@
+formatter.name: pretty
+suites:
+    proophessor_suite:
+        namespace: Prooph\Proophessor
+        psr4_prefix: Prooph\Proophessor
+extensions:
+    - PhpSpec\Extension\CodeCoverageExtension
+code_coverage:
+  format:
+    - clover
+  output:
+    clover: coverage.xml

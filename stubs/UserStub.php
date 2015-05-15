@@ -8,11 +8,11 @@
  * 
  * Date: 5/5/15 - 7:01 PM
  */
-namespace ProophTest\Proophessor\Mock;
+namespace Prooph\Proophessor\Stub;
 
 use Prooph\EventSourcing\AggregateRoot;
 
-final class UserMock extends AggregateRoot
+final class UserStub extends AggregateRoot
 {
     protected $id;
 
