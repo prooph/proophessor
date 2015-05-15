@@ -12,7 +12,7 @@ namespace Prooph\Proophessor\Stub;
 
 use Prooph\EventSourcing\AggregateRoot;
 
-final class UserStub extends AggregateRoot
+class UserStub extends AggregateRoot
 {
     protected $id;
 
