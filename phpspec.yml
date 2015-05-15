@@ -9,4 +9,4 @@ code_coverage:
   format:
     - clover
   output:
-    clover: coverage.xml
+    clover: build/logs/coverage.xml
