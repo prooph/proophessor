@@ -78,8 +78,8 @@ final class TransactionManager implements ActionEventListenerAggregate
     {
         //Attach with a low priority, so that a potential message translator has done its job
         $this->trackHandler($events->attachListener(CommandDispatch::INITIALIZE, [$this, 'onInitialize'], -1000));
-        $this->trackHandler($events->attachListener(CommandDispatch::HANDLE_ERROR, [$this, 'onError']));
-        $this->trackHandler($events->attachListener(CommandDispatch::FINALIZE, [$this, 'onFinalize']));
+        //Attach with a high priority to rollback transaction early in case of an error
+        $this->trackHandler($events->attachListener(CommandDispatch::FINALIZE, [$this, 'onFinalize'], 1000));
     }
 
     /**
@@ -143,6 +143,11 @@ final class TransactionManager implements ActionEventListenerAggregate
 
     public function onFinalize(CommandDispatch $commandDispatch)
     {
+        if ($commandDispatch->getException() !== null) {
+            $this->onError($commandDispatch);
+            return;
+        }
+
         if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
         if (! $this->inTransaction) return;
 
