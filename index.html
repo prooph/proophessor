@@ -27,7 +27,7 @@
 <p><a href="https://travis-ci.org/prooph/proophessor"><img src="https://travis-ci.org/prooph/proophessor.svg?branch=master" alt="Build Status"></a>
 <a href="https://coveralls.io/r/prooph/proophessor?branch=master"><img src="https://coveralls.io/repos/prooph/proophessor/badge.svg?branch=master" alt="Coverage Status"></a></p>
 
-<p>Proophessor combines <a href="https://github.com/prooph/service-bus">prooph/service-bus</a>, <a href="https://github.com/prooph/event-store">proop/event-store</a> and <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a> in a single ZF2 module. Goal is to simplify the set up process for a full featured CQRS + ES system.</p>
+<p>Proophessor combines <a href="https://github.com/prooph/service-bus">prooph/service-bus</a>, <a href="https://github.com/prooph/event-store">proop/event-store</a> and <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a> in a single ZF2 module to simplify the set up process for a full featured CQRS + ES system.</p>
 
 <h2>
 <a id="key-facts" class="anchor" href="#key-facts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Facts</h2>
@@ -363,21 +363,10 @@ Proophessor doesn't work with serializers or annotations to help you with type m
 and add complexity.</p>
 
 <h3>
-<a id="transaction-handling" class="anchor" href="#transaction-handling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transaction Handling</h3>
-
-<p>Proophessor automatically handles transactions for you. Each time you dispatch a command a new transaction is started.
-A successful dispatch commits the transaction and an error causes a rollback. <code>Proophessor only opens one transaction.</code>
-If you work with a process manager which listens on synchronous dispatched events and the process manager dispatches
-follow up commands, these commands are handled <code>in the same transaction as the first command</code>. If a follow up command fails
-the transaction is completely rolled back including <code>all recorded events</code> and potential <code>changes in the read model</code>.
-Again, this only happens if your events are dispatched <code>synchronous</code> and if the event store and the read model <code>share the same
-database connection</code>.</p>
-
-<h3>
 <a id="command-flow" class="anchor" href="#command-flow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command Flow</h3>
 
 <p>A command is normally dispatched from inside a MVC controller action or a process manager (when an domain event causes a follow up command).
-Because we don't need to care about transaction handling dispatching a command is relative simple:</p>
+Dispatching a command is relatively simple:</p>
 
 <div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
 <span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">UserRegistrationController</span> <span class="pl-k">extends</span> <span class="pl-e">AbstractActionController</span></span>
@@ -799,6 +788,54 @@ scalability you can use different storage mechanisms for the event store and the
 <span class="pl-s1">        ]);</span>
 <span class="pl-s1">    }</span>
 <span class="pl-s1">}</span></pre></div>
+
+<h3>
+<a id="transaction-handling" class="anchor" href="#transaction-handling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transaction Handling</h3>
+
+<p>Proophessor automatically handles transactions for you. Each time you dispatch a command a new transaction is started.
+A successful dispatch commits the transaction and an error causes a rollback. <code>Proophessor only opens one transaction.</code>
+If you work with a process manager which listens on synchronous dispatched events and the process manager dispatches
+follow up commands, these commands are handled <code>in the same transaction as the first command</code>. If a follow up command fails
+the transaction is completely rolled back including <code>all recorded events</code> and potential <code>changes in the read model</code>.
+Again, this only happens if your events are dispatched <code>synchronous</code> and if the event store and the read model <code>share the same
+database connection</code>.</p>
+
+<p>The TransactionManager is responsible for handling these scenarios. It makes use of the action event systems provided by
+prooph/service-bus and prooph/event-store to seamlessly integrate transaction handling.</p>
+
+<h4>
+<a id="begin-commit-rollback" class="anchor" href="#begin-commit-rollback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Begin, Commit, Rollback</h4>
+
+<p>The TransactionManager registers a listener on the <code>Prooph\ServiceBus\Process\CommandDispatch::INITIALIZE</code> action event with a low
+priority of <code>-1000</code> to begin a new transaction if no one is already started and only if the command extends <code>Prooph\Common\Messaging\Command</code> and
+does not implement <code>Prooph\Proophessor\EventStore\AutoCommitCommand</code>. The latter is a marker interface to tell the TransactionManager that it
+should ignore such a command and all domain events caused by it.</p>
+
+<p>Furthermore, the TransactionManager registers a listener on the <code>Prooph\ServiceBus\Process\CommandDispatch::FINALIZE</code> action event with a high
+priority of <code>1000</code>. In the listener the TransactionManager decides either if it commits the current transaction or if it performs a rollback
+depending on the current CommandDispatch.</p>
+
+<p>A rollback is performed if <code>CommandDispatch::getException</code> returns a caught exception. With that in mind you
+can influence the rollback behaviour by registering an own listener on <code>Prooph\ServiceBus\Process\CommandDispatch::ERROR</code>, handle a caught exception of
+your own (f.e. retry current command, translate exception into DomainEvent, etc.) and unset the exception in the CommandDispatch by invoking
+<code>CommandDispatch::setException</code> with <code>NULL</code> as argument.</p>
+
+<p>If the TransactionManager has an active transaction and no exception was caught during dispatch (or was unset) the transaction gets committed.</p>
+
+<h4>
+<a id="event-dispatch-and-status" class="anchor" href="#event-dispatch-and-status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Dispatch and Status</h4>
+
+<p>The TransactionManager has a second job which is related to handling the transaction. It adds meta information to each recorded domain event
+namely the UUID of the current command - referenced as <code>causation_id</code>, the message name of the current command - referenced as <code>causation_name</code> and
+a <code>dispatch_status</code>. The latter can either be <code>0 = event dispatch not started</code> or <code>2 = event dispatch was successful</code>.</p>
+
+<p>To determine the dispatch status of a domain event the TransactionManager checks if the recorded event should be dispatched synchronous or
+asynchronous based on the marker interface: <code>Prooph\Proophessor\EventStore\IsProcessedAsync</code>.</p>
+
+<p>All synchronous domain events are forwarded to the EventBus by the TransactionManager and the dispatch status is set to <code>2</code>
+(a failing event dispatch causes a transaction rollback, so that status will never be set for sync events).</p>
+
+<p>For all asynchronous domain events the dispatch status is set to <code>0</code> and they are not forwarded to the EventBus!</p>
 
 <h2>
 <a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support</h2>
