@@ -38,7 +38,7 @@ abstract class AbstractBusFactory implements FactoryInterface
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @throws \LogicException
+     * @throws \RuntimeException
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -46,15 +46,15 @@ abstract class AbstractBusFactory implements FactoryInterface
         $config = $serviceLocator->get('config');
 
         if (!is_array($config)) {
-            throw new \LogicException("Missing application config");
+            throw new \RuntimeException("Missing application config");
         }
 
         if (!isset($config['proophessor'])) {
-            throw new \LogicException("Missing proophessor config");
+            throw new \RuntimeException("Missing proophessor config");
         }
 
         if (!isset($config['proophessor'][$this->getConfigKey()])) {
-            throw new \LogicException(sprintf(
+            throw new \RuntimeException(sprintf(
                 "Missing %s config key in proophessor config",
                 $this->getConfigKey()
             ));
@@ -63,7 +63,7 @@ abstract class AbstractBusFactory implements FactoryInterface
         $busUtilsList = $config['proophessor'][$this->getConfigKey()];
 
         if (!is_array($busUtilsList)) {
-            throw new \LogicException(sprintf(
+            throw new \RuntimeException(sprintf(
                 "proophessor.%s config needs to be an array",
                 $this->getConfigKey()
             ));

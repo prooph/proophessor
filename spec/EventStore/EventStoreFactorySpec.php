@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use PhpSpec\ObjectBehavior;
 use Prooph\EventStore\Adapter\Doctrine\DoctrineEventStoreAdapter;
 use Prooph\EventStore\Adapter\Zf2\Zf2EventStoreAdapter;
+use Prooph\EventStore\Configuration\Exception\ConfigurationException;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Feature\Feature;
 use Prooph\EventStore\Feature\ZF2FeatureManager;
@@ -118,5 +119,49 @@ class EventStoreFactorySpec extends ObjectBehavior
         $eventStore = $this->createService($serviceManager);
 
         $feature->setUp($eventStore)->shouldHaveBeenCalled();
+    }
+
+    function it_throws_configuration_exception_if_proophessor_config_is_missing(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->get('configuration')->willReturn([
+            'service_manager' => [
+            ]
+        ]);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createService', [$emptyServiceManager]);
+    }
+
+    function it_throws_configuration_exception_if_event_store_config_is_missing(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->get('configuration')->willReturn([
+            'proophessor' => [
+            ]
+        ]);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createService', [$emptyServiceManager]);
+    }
+
+    function it_throws_configuration_exception_if_event_store_adapter_config_is_missing(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->get('configuration')->willReturn([
+            'proophessor' => [
+                'event_store'
+            ]
+        ]);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createService', [$emptyServiceManager]);
+    }
+
+    function it_throws_configuration_exception_if_event_store_adapter_type_config_is_missing(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->get('configuration')->willReturn([
+            'proophessor' => [
+                'event_store' => [
+                    'adapter' => []
+                ]
+            ]
+        ]);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createService', [$emptyServiceManager]);
     }
 }

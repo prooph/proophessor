@@ -12,6 +12,7 @@ namespace Prooph\Proophessor\EventStore;
 
 use Prooph\Common\ServiceLocator\ZF2\Zf2ServiceManagerProxy;
 use Prooph\EventStore\Configuration\Configuration;
+use Prooph\EventStore\Configuration\Exception\ConfigurationException;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Feature\FeatureManager;
 use Prooph\EventStore\Feature\ZF2FeatureManager;
@@ -39,23 +40,23 @@ final class EventStoreFactory implements FactoryInterface
         $config = $serviceLocator->get("configuration");
 
         if (! isset($config['proophessor'])) {
-            throw new \RuntimeException("Missing proophessor config key in application config");
+            throw ConfigurationException::configurationError("Missing proophessor config key in application config");
         }
 
         if (! isset($config['proophessor']['event_store'])) {
-            throw new \RuntimeException("Missing key event_store in proophessor configuration");
+            throw ConfigurationException::configurationError("Missing key event_store in proophessor configuration");
         }
 
         $config = $config['proophessor']['event_store'];
 
         if (! isset($config['adapter'])) {
-            throw new \RuntimeException("Missing adapter configuration in proophessor event_store configuration");
+            throw ConfigurationException::configurationError("Missing adapter configuration in proophessor event_store configuration");
         }
 
         $adapterConfig = $config['adapter'];
 
         if (! isset($adapterConfig['type'])) {
-            throw new \RuntimeException("Missing adapter type configuration in proophessor event_store configuration");
+            throw ConfigurationException::configurationError("Missing adapter type configuration in proophessor event_store configuration");
         }
 
         $adapterType    = $adapterConfig['type'];
