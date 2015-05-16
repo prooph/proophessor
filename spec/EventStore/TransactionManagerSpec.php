@@ -39,8 +39,7 @@ class TransactionManagerSpec extends ObjectBehavior
     function it_acts_as_a_message_bus_plugin_to_monitor_command_dispatch(ActionEventDispatcher $actionEventDispatcher, ListenerHandler $listenerHandler)
     {
         $actionEventDispatcher->attachListener(CommandDispatch::INITIALIZE, [$this, 'onInitialize'], -1000)->willReturn($listenerHandler);
-        $actionEventDispatcher->attachListener(CommandDispatch::HANDLE_ERROR, [$this, 'onError'])->willReturn($listenerHandler);
-        $actionEventDispatcher->attachListener(CommandDispatch::FINALIZE, [$this, 'onFinalize'])->willReturn($listenerHandler);
+        $actionEventDispatcher->attachListener(CommandDispatch::FINALIZE, [$this, 'onFinalize'], 1000)->willReturn($listenerHandler);
 
         $this->attach($actionEventDispatcher);
     }
@@ -69,7 +68,9 @@ class TransactionManagerSpec extends ObjectBehavior
 
         $eventStore->rollback()->shouldBeCalled();
 
-        $this->onError($commandDispatch);
+        $commandDispatch->getException()->willReturn(new \Exception());
+
+        $this->onFinalize($commandDispatch);
     }
 
     function it_does_not_perform_a_rollback_when_command_implements_auto_commit_command(EventStore $eventStore, CommandDispatch $commandDispatch, AutoCommitCommandStub $autoCommitCommand)
@@ -82,14 +83,18 @@ class TransactionManagerSpec extends ObjectBehavior
 
         $commandDispatch->getCommand()->willReturn($autoCommitCommand);
 
-        $this->onError($commandDispatch);
+        $commandDispatch->getException()->willReturn(new \Exception());
+
+        $this->onFinalize($commandDispatch);
     }
 
     function it_does_not_perform_a_rollback_when_it_is_not_in_transaction(EventStore $eventStore, CommandDispatch $commandDispatch)
     {
         $eventStore->rollback()->shouldNotBeCalled();
 
-        $this->onError($commandDispatch);
+        $commandDispatch->getException()->willReturn(new \Exception());
+
+        $this->onFinalize($commandDispatch);
     }
 
     function it_commits_the_transaction_on_finalize(EventStore $eventStore, CommandDispatch $commandDispatch)
@@ -99,6 +104,7 @@ class TransactionManagerSpec extends ObjectBehavior
         $this->onInitialize($commandDispatch);
 
         $eventStore->commit()->shouldBeCalled();
+        $commandDispatch->getException()->shouldBeCalled();
 
         $this->onFinalize($commandDispatch);
     }
@@ -109,6 +115,7 @@ class TransactionManagerSpec extends ObjectBehavior
 
         $this->onInitialize($commandDispatch);
 
+        $commandDispatch->getException()->shouldBeCalled();
         $eventStore->commit()->shouldNotBeCalled();
 
         $commandDispatch->getCommand()->willReturn($autoCommitCommand);
@@ -118,6 +125,7 @@ class TransactionManagerSpec extends ObjectBehavior
 
     function it_does_not_commit_transaction_when_it_is_not_in_transaction(EventStore $eventStore, CommandDispatch $commandDispatch)
     {
+        $commandDispatch->getException()->shouldBeCalled();
         $eventStore->commit()->shouldNotBeCalled();
 
         $this->onFinalize($commandDispatch);
