@@ -14,6 +14,7 @@ use PhpSpec\ObjectBehavior;
 use Prooph\Common\Event\ActionEventDispatcher;
 use Prooph\EventStore\Aggregate\AggregateTranslator;
 use Prooph\EventStore\Aggregate\DefaultAggregateTranslator;
+use Prooph\EventStore\Configuration\Exception\ConfigurationException;
 use Prooph\EventStore\EventStore;
 use Prooph\EventStore\Stream\SingleStreamStrategy;
 use Prooph\EventStore\Stream\StreamStrategy;
@@ -93,5 +94,81 @@ class AbstractRepositoryFactorySpec extends ObjectBehavior
         $repo->getEventStore()->shouldBe($eventStore);
         $repo->getStreamStrategy()->shouldBe($strategy);
         $repo->getTranslator()->shouldBe($translator);
+    }
+
+    function it_cannot_create_repository_if_no_config_is_available(ServiceManager $emptyServiceManager)
+    {
+        $this->canCreateServiceWithName($emptyServiceManager, 'test_repo', 'test_repo')->shouldReturn(false);
+    }
+
+    function it_cannot_create_repository_if_no_proophessor_event_store_config_is_available(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->has('config')->willReturn(true);
+        $emptyServiceManager->get('config')->willReturn([
+            'proophessor' => []
+        ]);
+
+        $this->canCreateServiceWithName($emptyServiceManager, 'test_repo', 'test_repo')->shouldReturn(false);
+    }
+
+    function it_throws_configuration_exception_if_repository_class_is_missing(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->has('config')->willReturn(true);
+        $emptyServiceManager->get('config')->willReturn([
+            'proophessor' => [
+                'event_store' => [
+                    'repository_map' => [
+                        'test_repo' => [
+                            'aggregate_type' => UserStub::class,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->canCreateServiceWithName($emptyServiceManager, 'test_repo', 'test_repo')->shouldReturn(true);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createServiceWithName', [$emptyServiceManager, 'test_repo', 'test_repo']);
+    }
+
+    function it_throws_configuration_exception_if_aggregate_type_is_missing(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->has('config')->willReturn(true);
+        $emptyServiceManager->get('config')->willReturn([
+            'proophessor' => [
+                'event_store' => [
+                    'repository_map' => [
+                        'test_repo' => [
+                            'repository_class' => UserRepositoryStub::class,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->canCreateServiceWithName($emptyServiceManager, 'test_repo', 'test_repo')->shouldReturn(true);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createServiceWithName', [$emptyServiceManager, 'test_repo', 'test_repo']);
+    }
+
+    function it_throws_configuration_exception_if_repository_class_does_not_exist(ServiceManager $emptyServiceManager)
+    {
+        $emptyServiceManager->has('config')->willReturn(true);
+        $emptyServiceManager->get('config')->willReturn([
+            'proophessor' => [
+                'event_store' => [
+                    'repository_map' => [
+                        'test_repo' => [
+                            'repository_class' => '\Acme\UnknownRepository',
+                            'aggregate_type' => UserStub::class,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->canCreateServiceWithName($emptyServiceManager, 'test_repo', 'test_repo')->shouldReturn(true);
+
+        $this->shouldThrow(ConfigurationException::class)->during('createServiceWithName', [$emptyServiceManager, 'test_repo', 'test_repo']);
     }
 } 
