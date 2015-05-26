@@ -18,12 +18,12 @@ use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class AbstractRepositoryFactory
+ * Class RepositoryAbstractFactory
  *
  * @package Prooph\Proophessor\EventStore
  * @author Alexander Miertsch <kontakt@codeliner.ws>
  */
-class AbstractRepositoryFactory implements AbstractFactoryInterface
+class RepositoryAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * @var array

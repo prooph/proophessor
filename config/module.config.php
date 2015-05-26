@@ -87,7 +87,7 @@ return [
             'proophessor.event_store.aggregate_stream_strategy' => \Prooph\Proophessor\EventStore\AggregateStreamStrategyFactory::class,
         ],
         'abstract_factories' => [
-            \Prooph\Proophessor\EventStore\AbstractRepositoryFactory::class,
+            \Prooph\Proophessor\EventStore\RepositoryAbstractFactory::class,
         ],
         'aliases' => [
             'proophessor.event_store.default_stream_strategy' => 'proophessor.event_store.single_stream_strategy',

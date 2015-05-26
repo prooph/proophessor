@@ -23,12 +23,12 @@ use Prooph\Proophessor\Stub\UserStub;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * Class AbstractRepositoryFactorySpec
+ * Class RepositoryAbstractFactorySpec
  *
  * @package ProophTest\Proophessor\EventStore
  * @author Alexander Miertsch <kontakt@codeliner.ws>
  */
-class AbstractRepositoryFactorySpec extends ObjectBehavior
+class RepositoryAbstractFactorySpec extends ObjectBehavior
 {
 
     public function let(ServiceManager $serviceLocator, ActionEventDispatcher $actionEventDispatcher, EventStore $eventStore, AggregateTranslator $aggregateTranslator, StreamStrategy $streamStrategy)
