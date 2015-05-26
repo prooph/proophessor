@@ -138,7 +138,7 @@ return [
 
 ### Aggregate Repository
 
-Proophessor ships with a [AbstractRepositoryFactory](src/EventStore/AbstractRepositoryFactory.php) which simplifies the
+Proophessor ships with a [RepositoryAbstractFactory](src/EventStore/RepositoryAbstractFactory.php) which simplifies the
 instantiation of a repository. As long as you use the defaults provided by proophessor you don't need to worry about stream
 strategies or a translator for your aggregates. Just tell proophessor which repository class is responsible for which aggregate type.
 
