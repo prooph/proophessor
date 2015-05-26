@@ -168,6 +168,7 @@ final class TransactionManager implements ActionEventListenerAggregate
      */
     public function onEventStoreAppendToStream(ActionEvent $appendToStreamEvent)
     {
-        $this->handleRecordedEvents($appendToStreamEvent->getParam('streamEvents'));
+        $streamEvents = $appendToStreamEvent->getParam('streamEvents');
+        $this->handleRecordedEvents($streamEvents);
     }
 }
