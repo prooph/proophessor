@@ -18,7 +18,7 @@ class CommandRouterFactorySpec extends ObjectBehavior
 
     function it_uses_configured_routing_map_to_route_a_command_to_a_handler(ServiceManager $serviceManager, CommandDispatch $commandDispatch)
     {
-        $commandDispatch->getCommandName()->willReturn("test-command");
+        $commandDispatch->getMessageName()->willReturn("test-command");
         $commandDispatch->setCommandHandler('Acme\CommandHandler')->shouldBeCalled();
 
         $serviceManager->get('config')->willReturn([
@@ -33,6 +33,6 @@ class CommandRouterFactorySpec extends ObjectBehavior
 
         $commandRouter->shouldBeAnInstanceOf(CommandRouter::class);
 
-        $commandRouter->onRouteCommand($commandDispatch);
+        $commandRouter->onRouteMessage($commandDispatch);
     }
 }
