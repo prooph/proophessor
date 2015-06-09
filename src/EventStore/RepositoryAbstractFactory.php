@@ -72,22 +72,22 @@ class RepositoryAbstractFactory implements AbstractFactoryInterface
     {
         $repoConfig = $this->repositoryMap[$requestedName];
 
-        if (is_array($repoConfig)) {
-            if (! isset($repoConfig['repository_class'])) {
-                throw ConfigurationException::configurationError("Missing repository_class for alias " . $requestedName);
-            }
-
-            if (! isset($repoConfig['aggregate_type'])) {
-                throw ConfigurationException::configurationError("Missing aggregate_type for alias " . $requestedName);
-            }
-
-            $repoClass = $repoConfig['repository_class'];
-            $repoAggregateTranslator = isset($repoConfig['aggregate_translator'])? $repoConfig['aggregate_translator'] : "proophessor.event_store.default_aggregate_translator";
-            $repoStreamStrategy = isset($repoConfig['stream_strategy'])? $repoConfig['stream_strategy'] : "proophessor.event_store.default_stream_strategy";
-            $repoAggregateType = $repoConfig['aggregate_type'];
-        } else {
+        if (! is_array($repoConfig)) {
             throw ConfigurationException::configurationError("Wrong type provided for repository map of alias " . $requestedName);
         }
+        
+        if (! isset($repoConfig['repository_class'])) {
+            throw ConfigurationException::configurationError("Missing repository_class for alias " . $requestedName);
+        }
+
+        if (! isset($repoConfig['aggregate_type'])) {
+            throw ConfigurationException::configurationError("Missing aggregate_type for alias " . $requestedName);
+        }
+
+        $repoClass = $repoConfig['repository_class'];
+        $repoAggregateTranslator = isset($repoConfig['aggregate_translator'])? $repoConfig['aggregate_translator'] : "proophessor.event_store.default_aggregate_translator";
+        $repoStreamStrategy = isset($repoConfig['stream_strategy'])? $repoConfig['stream_strategy'] : "proophessor.event_store.default_stream_strategy";
+        $repoAggregateType = $repoConfig['aggregate_type'];
 
         if (! class_exists($repoClass)) {
             throw ConfigurationException::configurationError(sprintf(
