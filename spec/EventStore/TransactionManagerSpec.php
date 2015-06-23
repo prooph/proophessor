@@ -109,6 +109,23 @@ class TransactionManagerSpec extends ObjectBehavior
         $this->onFinalize($commandDispatch);
     }
 
+    function it_handles_nested_transactions_by_invoking_event_store_commit_only_when_all_commands_are_dispatched(EventStore $eventStore, CommandDispatch $commandDispatch)
+    {
+        $eventStore->beginTransaction()->shouldBeCalled();
+
+        $this->onInitialize($commandDispatch);
+        $this->onInitialize($commandDispatch);
+
+        $eventStore->commit()->shouldNotBeCalled();
+        $commandDispatch->getException()->shouldBeCalled();
+
+        $this->onFinalize($commandDispatch);
+
+        $eventStore->commit()->shouldBeCalled();
+
+        $this->onFinalize($commandDispatch);
+    }
+
     function it_does_not_commit_transaction_when_command_implements_auto_commit_command(EventStore $eventStore, CommandDispatch $commandDispatch, AutoCommitCommandStub $autoCommitCommand)
     {
         $eventStore->beginTransaction()->shouldBeCalled();
