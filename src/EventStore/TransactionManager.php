@@ -152,6 +152,7 @@ final class TransactionManager implements ActionEventListenerAggregate
         if (! $this->inTransaction) return;
 
         $this->eventStore->commit();
+        $this->inTransaction = false;
         $this->currentCommand = null;
     }
 
