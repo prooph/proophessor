@@ -40,10 +40,7 @@ final class TransactionManager implements ActionEventListenerAggregate
      */
     private $eventStore;
 
-    /**
-     * @var bool
-     */
-    private $inTransaction = false;
+    private $transactionCount = 0;
 
     /**
      * @var Command
@@ -121,12 +118,13 @@ final class TransactionManager implements ActionEventListenerAggregate
     public function onInitialize(CommandDispatch $commandDispatch)
     {
         $command = $commandDispatch->getCommand();
+
         if ($command instanceof Command && !$command instanceof AutoCommitCommand) {
-            if (! $this->inTransaction) {
+            if ($this->transactionCount === 0) {
                 $this->eventStore->beginTransaction();
-                $this->inTransaction = true;
             }
 
+            $this->transactionCount++;
             $this->currentCommand = $command;
         }
     }
@@ -134,10 +132,10 @@ final class TransactionManager implements ActionEventListenerAggregate
     public function onError(CommandDispatch $commandDispatch)
     {
         if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
-        if (! $this->inTransaction) return;
+        if ($this->transactionCount === 0) return;
 
         $this->eventStore->rollback();
-        $this->inTransaction = false;
+        $this->transactionCount = 0;
         $this->currentCommand = null;
     }
 
@@ -149,10 +147,12 @@ final class TransactionManager implements ActionEventListenerAggregate
         }
 
         if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
-        if (! $this->inTransaction) return;
+        if ($this->transactionCount === 0) return;
 
-        $this->eventStore->commit();
-        $this->inTransaction = false;
+        if ($this->transactionCount === 1) {
+            $this->eventStore->commit();
+        }
+        $this->transactionCount--;
         $this->currentCommand = null;
     }
 
