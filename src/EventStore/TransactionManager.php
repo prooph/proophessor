@@ -40,8 +40,6 @@ final class TransactionManager implements ActionEventListenerAggregate
      */
     private $eventStore;
 
-    private $transactionCount = 0;
-
     /**
      * @var Command
      */
@@ -120,11 +118,7 @@ final class TransactionManager implements ActionEventListenerAggregate
         $command = $commandDispatch->getCommand();
 
         if ($command instanceof Command && !$command instanceof AutoCommitCommand) {
-            if ($this->transactionCount === 0) {
-                $this->eventStore->beginTransaction();
-            }
-
-            $this->transactionCount++;
+            $this->eventStore->beginTransaction();
             $this->currentCommand = $command;
         }
     }
@@ -132,10 +126,8 @@ final class TransactionManager implements ActionEventListenerAggregate
     public function onError(CommandDispatch $commandDispatch)
     {
         if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
-        if ($this->transactionCount === 0) return;
 
         $this->eventStore->rollback();
-        $this->transactionCount = 0;
         $this->currentCommand = null;
     }
 
@@ -147,12 +139,8 @@ final class TransactionManager implements ActionEventListenerAggregate
         }
 
         if (! $commandDispatch->getCommand() instanceof Command || $commandDispatch->getCommand() instanceof AutoCommitCommand) return;
-        if ($this->transactionCount === 0) return;
 
-        if ($this->transactionCount === 1) {
-            $this->eventStore->commit();
-        }
-        $this->transactionCount--;
+        $this->eventStore->commit();
         $this->currentCommand = null;
     }
 
