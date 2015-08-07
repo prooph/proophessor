@@ -14,7 +14,6 @@ use Prooph\Common\ServiceLocator\ZF2\Zf2ServiceManagerProxy;
 use Prooph\EventStore\Configuration\Configuration;
 use Prooph\EventStore\Configuration\Exception\ConfigurationException;
 use Prooph\EventStore\EventStore;
-use Prooph\EventStore\Feature\FeatureManager;
 use Prooph\EventStore\Feature\ZF2FeatureManager;
 use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
