@@ -11,13 +11,6 @@
 return [
     'proophessor' => [
         'event_store' => [
-            'adapter' => [
-                'type' => 'Prooph\\EventStore\\Adapter\\Doctrine\\DoctrineEventStoreAdapter',
-                'options' => [
-                    'doctrine_connection_alias' => 'orm_default',
-                    'serializer_adapter' => 'json',
-                ],
-            ],
             'single_stream_name' => 'proophessor_event_stream',
             'repository_map' => [
                 //you can define custom dependencies for your repository by
