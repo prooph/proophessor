@@ -5,14 +5,14 @@
     <title>proophessor by prooph</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
     <section class="page-header">
       <h1 class="project-name">proophessor</h1>
-      <h2 class="project-tagline">CQRS + ES for ZF2</h2>
+      <h2 class="project-tagline">prooph components in action</h2>
       <a href="https://github.com/prooph/proophessor" class="btn">View on GitHub</a>
       <a href="https://github.com/prooph/proophessor/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/prooph/proophessor/tarball/master" class="btn">Download .tar.gz</a>
@@ -22,10 +22,45 @@
       <h1>
 <a id="proophessor" class="anchor" href="#proophessor" aria-hidden="true"><span class="octicon octicon-link"></span></a>proophessor</h1>
 
-<p>CQRS + ES for ZF2</p>
+<p>prooph components in action</p>
+
+<p>ZF2 module is deprecated. Please read below!</p>
 
 <p><a href="https://travis-ci.org/prooph/proophessor"><img src="https://travis-ci.org/prooph/proophessor.svg?branch=master" alt="Build Status"></a>
 <a href="https://coveralls.io/r/prooph/proophessor?branch=master"><img src="https://coveralls.io/repos/prooph/proophessor/badge.svg?branch=master" alt="Coverage Status"></a></p>
+
+<h2>
+<a id="deprecated-warning-meta-package" class="anchor" href="#deprecated-warning-meta-package" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deprecated Warning: Meta Package</h2>
+
+<p>Proophessor started as a ZF2 module to ease integration of prooph components with a ZF2 application. Things have changed in the meanwhile.
+Zend is working on ZF3 and a Psr-7 middleware application skeleton which will be an alternative to the MVC stack.
+This made us thinking. Currently, proophessor depends on the MVC stack (or at least on the module system). It can not be used in any other context. Which is a bad situation.
+Sure, one can take the single prooph components and integrate them in his/her framework of choice. But all the factory logic included in proophessor
+can not be used outside of this package.</p>
+
+<p>Since zend-servicemanager v2.6 the <code>Interop\ContainerInterface</code> is supported and more importantly we will release new major versions
+for all prooph components soon which will no longer have hard dependencies to heavy zend components like zend-eventmanager and
+zend-servicemanager.</p>
+
+<p>Both facts bring us to our next tasks. We will extract proophessor's factories and convert them to <code>invokable container factories</code>.
+If you are interested in what that means refer to one of the components issues like <a href="https://github.com/prooph/event-store/issues/57">this one</a>.</p>
+
+<p>The <code>TransactionManager</code> shipped with proophessor will be moved into a new prooph component. If all these tasks are done proophessor
+will be empty.</p>
+
+<h3>
+<a id="so-what-purpose-will-it-have-then" class="anchor" href="#so-what-purpose-will-it-have-then" aria-hidden="true"><span class="octicon octicon-link"></span></a>So what purpose will it have then?</h3>
+
+<p>Well, proophessor will act as a meta package containing no source code but a cookbook full
+of usage examples and an overview of the prooph ecosystem.</p>
+
+<p>In the meanwhile please sit back or help us with the tasks mentioned above. You can join our <a href="https://gitter.im/prooph/improoph"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a>
+and ask for a task. We appreciate any help.</p>
+
+<hr>
+
+<p>What follows is the old README of proophessor. Still useful if you want to read through a full description of how prooph components work together and
+how a CQRS + ES set up can look like in a ZF2 application.</p>
 
 <p>Proophessor combines <a href="https://github.com/prooph/service-bus">prooph/service-bus</a>, <a href="https://github.com/prooph/event-store">proop/event-store</a> and <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a> in a single ZF2 module to simplify the set up process for a full featured CQRS + ES system.</p>
 
@@ -191,7 +226,7 @@ mentioned above. However, you can override the default with a dedicated connecti
 <h3>
 <a id="aggregate-repository" class="anchor" href="#aggregate-repository" aria-hidden="true"><span class="octicon octicon-link"></span></a>Aggregate Repository</h3>
 
-<p>Proophessor ships with a <a href="src/EventStore/AbstractRepositoryFactory.php">AbstractRepositoryFactory</a> which simplifies the
+<p>Proophessor ships with a <a href="src/EventStore/RepositoryAbstractFactory.php">RepositoryAbstractFactory</a> which simplifies the
 instantiation of a repository. As long as you use the defaults provided by proophessor you don't need to worry about stream
 strategies or a translator for your aggregates. Just tell proophessor which repository class is responsible for which aggregate type.</p>
 
@@ -862,4 +897,3 @@ To establish a consistent code quality, please provide unit tests for all your c
   
   </body>
 </html>
-
