@@ -14,7 +14,6 @@ use Prooph\Common\ServiceLocator\ZF2\Zf2ServiceManagerProxy;
 use Prooph\EventStore\Configuration\Configuration;
 use Prooph\EventStore\Configuration\Exception\ConfigurationException;
 use Prooph\EventStore\EventStore;
-use Prooph\EventStore\Feature\FeatureManager;
 use Prooph\EventStore\Feature\ZF2FeatureManager;
 use Zend\ServiceManager\Config;
 use Zend\ServiceManager\FactoryInterface;
@@ -65,12 +64,20 @@ final class EventStoreFactory implements FactoryInterface
         //Check if we have to use the application wide database connection
         if ($adapterType == 'Prooph\EventStore\Adapter\Doctrine\DoctrineEventStoreAdapter'
             && !isset($adapterOptions['connection'])
-            && isset($adapterOptions['doctrine_connection_alias'])) {
+            && isset($adapterOptions['doctrine_connection_alias'])
+        ) {
             $config['adapter']['options']['connection'] = $serviceLocator->get('doctrine.connection.' . $adapterOptions['doctrine_connection_alias']);
         } else if ( $adapterType == 'Prooph\EventStore\Adapter\Zf2\Zf2EventStoreAdapter'
             && isset($adapterOptions['zend_db_adapter'])
-            && is_string($adapterOptions['zend_db_adapter'])) {
+            && is_string($adapterOptions['zend_db_adapter'])
+        ) {
             $config['adapter']['options']['zend_db_adapter'] = $serviceLocator->get($adapterOptions['zend_db_adapter']);
+        } else if ($adapterType == 'Prooph\EventStore\Adapter\MongoDb\MongoDbEventStoreAdapter'
+            && !isset($adapterOptions['mongo_client'])
+        ) {
+            isset($adapterOptions['mongo_connection_alias'])
+                ? $config['adapter']['options']['mongo_client'] = $serviceLocator->get($adapterOptions['mongo_connection_alias'])
+                : $config['adapter']['options']['mongo_client'] = new \MongoClient();
         }
 
         $featureManagerConfig = null;
