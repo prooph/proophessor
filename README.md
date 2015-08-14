@@ -1,9 +1,39 @@
 # proophessor
 
-CQRS + ES for ZF2
+[deprecated - please read below] CQRS + ES for ZF2
 
 [![Build Status](https://travis-ci.org/prooph/proophessor.svg?branch=master)](https://travis-ci.org/prooph/proophessor)
 [![Coverage Status](https://coveralls.io/repos/prooph/proophessor/badge.svg?branch=master)](https://coveralls.io/r/prooph/proophessor?branch=master)
+
+## Deprecated Warning: Meta Package
+
+Proophessor started as a ZF2 module to ease integration of prooph components with a ZF2 application. Things have changed in the meanwhile.
+Zend is working on ZF3 and a Psr-7 middleware application skeleton which will be an alternative to the MVC stack.
+This made us thinking. Currently, proophessor depends on the MVC stack (or at least on the module system). It can not be used in any other context. Which is a bad situation.
+Sure, one can take the single prooph components and integrate them in his/her framework of choice. But all the factory logic included in proophessor
+can not be used outside of this package.
+
+Since zend-servicemanager v2.6 the `Interop\ContainerInterface` is supported and more importantly we will release new major versions
+for all prooph components soon which will no longer have hard dependencies to heavy zend components like zend-eventmanager and
+zend-servicemanager.
+
+Both facts bring us to our next tasks. We will extract proophessor's factories and convert them to `invokable container factories`.
+If you are interested in what that means refer to one of the components issues like [this one](https://github.com/prooph/event-store/issues/57).
+
+The `TransactionManager` shipped with proophessor will be moved into a new prooph component. If all these tasks are done proophessor
+will be empty.
+
+### So what purpose will it have then?
+Well, proophessor will act as a meta package containing no source code but a cookbook full
+of usage examples and an overview of the prooph ecosystem.
+
+In the meanwhile please sit back or help us with the tasks mentioned above. You can join our [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/prooph/improoph)
+and ask for a task. We appreciate any help.
+
+------
+
+What follows is the old README of proophessor. Still useful if you want to read through a full description of how prooph components work together and
+how a CQRS + ES set up can look like in a ZF2 application.
 
 Proophessor combines [prooph/service-bus](https://github.com/prooph/service-bus), [proop/event-store](https://github.com/prooph/event-store) and [prooph/event-sourcing](https://github.com/prooph/event-sourcing) in a single ZF2 module to simplify the set up process for a full featured CQRS + ES system.
 
