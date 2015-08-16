@@ -17,7 +17,7 @@ Since zend-servicemanager v2.6 the `Interop\ContainerInterface` is supported and
 for all prooph components soon which will no longer have hard dependencies to heavy zend components like zend-eventmanager and
 zend-servicemanager.
 
-Both facts bring us to our next tasks. We will extract proophessor's factories and convert them to `invokable container factories`.
+Both facts bring us to our next tasks. We will extract proophessor's factories and convert them to `invokable container aware factories`.
 If you are interested in what that means refer to one of the components issues like [this one](https://github.com/prooph/event-store/issues/57).
 
 The `TransactionManager` shipped with proophessor will be moved into a new prooph component. If all these tasks are done proophessor
