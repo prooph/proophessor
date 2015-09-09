@@ -1,4 +1,5 @@
-# Proophessor - Exploring prooph components
+# Proophessor 
+Exploring prooph components
 
 Welcome at prooph! We are developing and supporting CQRS and EventSourcing infrastructure for PHP 5.5+ environments.
 Proophessor is NOT a framework. Instead we provide components which address individual topics.
