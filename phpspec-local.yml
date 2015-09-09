@@ -1,5 +1,0 @@
-formatter.name: pretty
-suites:
-    proophessor_suite:
-        namespace: Prooph\Proophessor
-        psr4_prefix: Prooph\Proophessor
