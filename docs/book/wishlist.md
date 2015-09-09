@@ -20,7 +20,7 @@ start working on it please drop us a note.
 
 | New Feature | Status | Maintainer |
 |-------------|--------|-----------|
-| [http message producer](https://github.com/prooph/psb-http-producer) for prooph/service-bus) | in progress | @codeliner |
+| [http message producer](https://github.com/prooph/psb-http-producer) for prooph/service-bus | in progress | @codeliner |
 | amqp message producer | planned | @prolic |
 | aggregate snapshots | planned | @prooph/components-core |
 | event stream replay | planned | @prooph/components-core |
