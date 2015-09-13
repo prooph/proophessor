@@ -16,6 +16,9 @@ PHP 5.5+ lightweight message bus supporting CQRS and Micro Services
 
 [Bernard Message Producer](https://github.com/prooph/psb-bernard-producer) for prooph/service-bus.
 
+### Service Bus ZfcRbac Bridge
+[ZfcRbac Authorization Service](https://github.com/prooph/service-bus-zfc-rbac-bridge) for prooph/service-bus
+
 ## prooph/event-store
 
 ProophEventStore is capable of persisting event objects that are organized in streams.
