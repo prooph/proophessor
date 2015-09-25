@@ -21,11 +21,11 @@ start working on it please drop us a note.
 | New Feature | Status | Maintainer |
 |-------------|--------|-----------|
 | [http message producer](https://github.com/prooph/psb-http-producer) for prooph/service-bus | in progress | @codeliner |
+| [zeromq message producer](https://github.com/prooph/psb-zeromq-producer) | in progress | @bweston92  |
+| event stream replay | in progress | @prooph/components-core |
+| aggregate snapshots | in progress | @prooph/components-core |
 | amqp message producer | planned | @prolic |
-| aggregate snapshots | planned | @prooph/components-core |
-| event stream replay | planned | @prooph/components-core |
 | saga / process manager abstraction | requested | - |
-| [zeromq](http://zeromq.org/) message producer | requested | - |
 | [php-event-store-client](https://github.com/dbellettini/php-eventstore-client) adapter | requested | - |
 
 ## Request a component
