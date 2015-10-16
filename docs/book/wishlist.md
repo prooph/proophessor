@@ -27,6 +27,7 @@ start working on it please drop us a note.
 | amqp message producer | planned | @prolic |
 | saga / process manager abstraction | requested | - |
 | [php-event-store-client](https://github.com/dbellettini/php-eventstore-client) adapter | requested | - |
+| memcached snapshot adapter | requested | - |
 
 ## Request a component
 
