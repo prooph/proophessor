@@ -11,11 +11,16 @@ for those who are new to the world of messaging and event sourced domain models.
 All prooph components now ship with `container-interop` compatible factories and therefor provide interoperable framework integration.
 A module, bundle, bridge or whatever is no longer needed to integrate prooph in your web framework of choice.*
 
-## Docs
+## Documentation
 
-- [prooph components](docs/book/components.md)
-- [prooph in a nutshell](docs/book/prooph_in_a_nutshell.md)
-- [component wishlist](docs/book/wishlist.md)
+Documentation is [in the doc tree](docs/), and can be compiled using [bookdown](http://bookdown.io).
+
+```console
+$ php ./vendor/bin/bookdown docs/bookdown.json
+$ php -S 0.0.0.0:8080 -t docs/html/
+```
+
+Then browse to [http://localhost:8080/](http://localhost:8080/)
 
 ## Example Application
 

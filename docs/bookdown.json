@@ -1,0 +1,12 @@
+{
+  "title": "proophessor - Exploring prooph components",
+  "content": [
+    {"proophessor": "book/bookdown.json"},
+    {"service-bus": "https://raw.githubusercontent.com/prooph/service-bus/develop/docs/bookdown.json"},
+    {"event-store": "https://raw.githubusercontent.com/prooph/event-store/develop/docs/bookdown.json"},
+    {"event-store-bus-bridge": "https://raw.githubusercontent.com/prooph/event-store-bus-bridge/develop/docs/bookdown.json"},
+    {"snapshotter": "https://raw.githubusercontent.com/prooph/snapshotter/master/docs/bookdown.json"}
+  ],
+  "target": "./html",
+  "template": "../vendor/tobiju/bookdown-bootswatch-templates/templates/main.php"
+}
