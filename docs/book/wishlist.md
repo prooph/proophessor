@@ -22,12 +22,10 @@ start working on it please drop us a note.
 |-------------|--------|-----------|
 | [http message producer](https://github.com/prooph/psb-http-producer) for prooph/service-bus | in progress | @codeliner |
 | [zeromq message producer](https://github.com/prooph/psb-zeromq-producer) | in progress | @bweston92  |
-| event stream replay | in progress | @prooph/components-core |
-| aggregate snapshots | in progress | @prooph/components-core |
 | amqp message producer | planned | @prolic |
 | saga / process manager abstraction | requested | - |
 | [php-event-store-client](https://github.com/dbellettini/php-eventstore-client) adapter | requested | - |
-| memcached snapshot adapter | requested | - |
+
 
 ## Request a component
 
