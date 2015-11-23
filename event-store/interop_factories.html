@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>Interop Factories</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 204px;
+            position: relative;
+        }
+
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
+
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+
+        .links .prev {
+            text-align: left;
+        }
+
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        /* Overide bootsstrap default style */
+        table, .table {
+            font-size: inherit;
+        }
+    </style>
+
+</head>
+    <body>
+    <div class="page-wrapper">
+        
+<header>
+    <div class="container">
+        <h3 class="title text-center">
+            3.7. Interop Factories        </h3>
+    </div>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/upcasting.html">3.6. Upcasting</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/">4. Marry CQRS with Event Sourcing</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/upcasting.html">3.6. Upcasting</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store/">3. PHP EventStore Implementation</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/">4. Marry CQRS with Event Sourcing</a>            </div>
+</div>
+
+        </div>
+    </div>
+</header>
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+<h1 id="3.7">3.7. Interop Factories</h1>
+<p>Instead of providing a module, a bundle, a bridge or similar framework integration prooph/event-store ships with <code>interop factories</code>.</p>
+<h2 id="3.7.1">3.7.1. Factory-Driven Creation</h2>
+<p>The concept behind these factories (see <code>src/Container</code> folder) is simple but powerful. It allows us to provide you with bootstrapping logic for the event store and related components
+without the need to rely on a specific framework. However, the factories have three requirements.</p>
+<h3 id="3.7.1.1">3.7.1.1. Requirements</h3>
+<ol>
+<li>Your Inversion of Control container must implement the <a href="https://github.com/container-interop/container-interop">interop-container interface</a>.</li>
+<li>
+<a href="https://github.com/sandrokeil/interop-config">interop-config</a> must be installed</li>
+<li>The application configuration should be registered with the service id <code>config</code> in the container.</li>
+</ol>
+<p><em>Note: Don't worry, if your environment doesn't provide the requirements. You can
+always bootstrap the components by hand. Just look at the factories for inspiration in this case.</em></p>
+<h3 id="3.7.1.2">3.7.1.2. Event Store Factory</h3>
+<p>If the requirements are met you just need to add a new section in your application config ...</p>
+<pre><code class="language-php">[
+    'prooph' =&gt; [
+        'event_store' =&gt; [
+            'adapter' =&gt; [
+                'type' =&gt; 'adapter_service_id', //The factory will use this id to get the adapter from the container
+                //The options key is reserved for adapter factories
+                'options' =&gt; []
+            ],
+            'event_emitter' =&gt; 'emitter_service_id' //The factory will use this id to get the event emitter from the container
+            'plugins' =&gt; [
+                //And again the factory will use each service id to get the plugin from the container
+                //Plugin::setUp($eventStore) is then invoked by the factory so your plugins get attached automatically
+                //Awesome, isn't it?
+                'plugin_1_service_id',
+                'plugin_2_service_id',
+                //...
+            ]
+        ]
+    ],
+    //... other application config here
+]
+</code></pre>
+<p>... and register <code>Prooph\EventStore\Container\EventStoreFactory</code> in your IoC container. We recommend using the service id <code>Prooph\EventStore\EventStore (EventStore::class)</code> for the event store
+because other factories like the stream strategy factories try to locate the event store
+by using this service id.</p>
+<p><em>Note: The available event store adapters also ship with factories. Please refer to the adapter packages for details.</em></p>
+<h3 id="3.7.1.3">3.7.1.3. Snapshot Store Factory</h3>
+<p>Same for the snapshot store ...</p>
+<pre><code class="language-php">[
+    'prooph' =&gt; [
+        'snapshot_store' =&gt; [
+            'adapter' =&gt; [
+                'type' =&gt; 'adapter_service_id', //The factory will use this id to get the adapter from the container
+                //The options key is reserved for adapter factories
+                'options' =&gt; []
+            ],
+        ]
+    ],
+    //... other application config here
+]
+</code></pre>
+<p>... and register the <code>Prooph\EventStore\Container\Snapshot\SnapshotStoreFactory</code> in your IoC container. We recommend using the service id <code>Prooph\EventStore\Snapshot\SnapshotStore (SnapshotStore::class)</code> for the snapshot store.</p>
+<p><em>Note: The available snapshot store adapters also ship with factories. Please refer to the adapter packages for details.</em></p>
+<h3 id="3.7.1.4">3.7.1.4. AbstractAggregateRepositoryFactory</h3>
+<p>To ease set up of repositories for your aggregate roots prooph/event-store also ships with a <code>Prooph\EventStore\Container\Aggregate\AbstractAggregateRepositoryFactory</code>.
+It is an abstract class implementing the <code>container-interop RequiresContainerId</code> interface. The <code>containerId</code> method
+itself is not implemented in the abstract class. You have to extend it and provide the container id because each
+aggregate repository needs a slightly different configuration and therefor needs its own config key.</p>
+<p><em>Note: You can have a look at the <code>ProophTest\EventStore\Mock\RepositoryMockFactory</code>. It sounds more complex than it is.</em></p>
+<p>Let's say we have a repository factory for a User aggregate root. We use <code>user_repository</code> as container id and add this
+configuration to our application configuration:</p>
+<pre><code class="language-php">[
+    'prooph' =&gt; [
+        'event_store' =&gt; [
+            'user_repository' =&gt; [ //&lt;-- here the container id is referenced
+                'repository_class' =&gt; MyUserRepository::class, //&lt;-- FQCN of the repository responsible for the aggregate root
+                'aggregate_type' =&gt; MyUser::class, //&lt;-- The aggregate root FQCN the repository is responsible for
+                'aggregate_translator' =&gt; 'user_translator', //&lt;-- The aggregate translator must be available as service in the container
+            ]
+        ]
+    ]
+]
+</code></pre>
+<p>If you want to speed up loading of aggregates with a snapshot store then you need to make
+it available as service in the container and use the configuration to let the factory inject the snapshot store in the repository.</p>
+<pre><code class="language-php">[
+    'prooph' =&gt; [
+        'event_store' =&gt; [
+            'user_repository' =&gt; [
+                'repository_class' =&gt; MyUserRepository::class,
+                'aggregate_type' =&gt; MyUser::class,
+                'aggregate_translator' =&gt; 'user_translator',
+                'snapshot_store' =&gt; 'awesome_snapshot_store' // &lt;-- SnapshotStore service id
+            ]
+        ]
+    ]
+]
+</code></pre>
+<p>You can also configure a custom stream name (default is <code>event_stream</code>):</p>
+<pre><code class="language-php">[
+    'prooph' =&gt; [
+        'event_store' =&gt; [
+            'user_repository' =&gt; [
+                'repository_class' =&gt; MyUserRepository::class,
+                'aggregate_type' =&gt; MyUser::class,
+                'aggregate_translator' =&gt; 'user_translator',
+                'snapshot_store' =&gt; 'awesome_snapshot_store', // &lt;-- SnapshotStore service id
+                'stream_name' =&gt; 'user_stream' // &lt;-- Custom stream name
+            ]
+        ]
+    ]
+]
+</code></pre>
+<p>Last but not least you can enable the so called "One-Stream-Per-Aggregate-Mode":</p>
+<pre><code class="language-php">[
+    'prooph' =&gt; [
+        'event_store' =&gt; [
+            'user_repository' =&gt; [
+                'repository_class' =&gt; MyUserRepository::class,
+                'aggregate_type' =&gt; MyUser::class,
+                'aggregate_translator' =&gt; 'user_translator',
+                'snapshot_store' =&gt; 'awesome_snapshot_store', // &lt;-- SnapshotStore service id
+                'one_stream_per_aggregate' =&gt; true // &lt;-- Enable One-Stream-Per-Aggregate-Mode
+            ]
+        ]
+    ]
+]
+</code></pre>
+
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/upcasting.html">3.6. Upcasting</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/">4. Marry CQRS with Event Sourcing</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/upcasting.html">3.6. Upcasting</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store/">3. PHP EventStore Implementation</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/">4. Marry CQRS with Event Sourcing</a>            </div>
+</div>
+
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    </div>
+
+    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
+    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+</body>
+</html>

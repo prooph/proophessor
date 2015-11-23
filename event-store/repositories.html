@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>Working with Repositories</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 204px;
+            position: relative;
+        }
+
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
+
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+
+        .links .prev {
+            text-align: left;
+        }
+
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        /* Overide bootsstrap default style */
+        table, .table {
+            font-size: inherit;
+        }
+    </style>
+
+</head>
+    <body>
+    <div class="page-wrapper">
+        
+<header>
+    <div class="container">
+        <h3 class="title text-center">
+            3.2. Working with Repositories        </h3>
+    </div>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/intro.html">3.1. ProophEventStore</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/event_store.html">3.3. Prooph Event Store</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/intro.html">3.1. ProophEventStore</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store/">3. PHP EventStore Implementation</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/event_store.html">3.3. Prooph Event Store</a>            </div>
+</div>
+
+        </div>
+    </div>
+</header>
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+<h1 id="3.2">3.2. Working with Repositories</h1>
+<p>Repositories typically connect your domain model with the persistence layer (part of the infrastructure).
+Following DDD suggestions your domain model should be database agnostic.
+An event store is of course some kind of database so you are likely looking for a third-party event store that gets out of your way.</p>
+<p><em>The good news is:</em> <strong>You've found one!</strong></p>
+<p>But you need to get familiar with the concept. So you're pleased to read this document and follow the example.
+Afterwards you should be able to integrate <code>prooph/event-store</code> into your infrastructure without coupling it with your model.</p>
+<h2 id="3.2.1">3.2.1. Event Sourced Aggregates</h2>
+<p>We assume that you want to work with event sourced aggregates. If you are not sure what we are talking about
+please refer to the great educational project <a href="http://buttercup-php.github.io/protects/">Buttercup.Protects</a> by Mathias Verraes.
+prooph/event-store does not include base classes or traits to add event sourced capabilities to your aggregates.</p>
+<p>Sounds bad? It isn't!</p>
+<p>It is your job to write something like <code>Buttercup.Protects</code> for your model. Don't be lazy in this case.
+If you just want to play with the idea you can have a look at <a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a>.
+It is our internal event sourcing package and ships with support for prooph/event-store.</p>
+<p>The event store doesn't know anything about aggregates. It is just interested in <code>Prooph\Common\Messaging\Message events</code>.
+These events are organized in <code>Prooph\EventStore\Stream\Stream</code>s.
+A repository is responsible for extracting pending events from aggregates and putting them in the correct stream.
+And the repository must also be able to load persisted events from a stream and reconstitute an aggregate.
+To provide this functionality the repository makes use of various helper classes explained below.</p>
+<h2 id="3.2.2">3.2.2. AggregateType</h2>
+<p>Each repository is responsible for one <code>Prooph\EventStore\Aggregate\AggregateType</code>. Super types are not supported.
+Imagine we have a domain with <code>Admin extends User</code> and <code>Employee extends User</code>. You'd need to have a <code>AdminRepository</code> and
+a <code>EmployeeRepository</code> in this case. If this is not what you want you can create a custom aggregate translator (see below)
+which is capable of reconstituting the correct types based on information derived from persisted domain events.
+Then you can have a <code>UserRepository</code> set up with your custom aggregate translator and it should work.</p>
+<h2 id="3.2.3">3.2.3. AggregateTranslator</h2>
+<p>To achieve 100% decoupling between layers and/or contexts you can make use of translation adapters.
+For prooph/event-store such a translation adapter is called an <code>Prooph\EventStore\Aggregate\AggregateTranslator</code>.</p>
+<p>The interface requires you to implement 5 methods:</p>
+<ul>
+<li>extractAggregateId</li>
+<li>extractAggregateVersion</li>
+<li>extractPendingStreamEvents</li>
+<li>reconstituteAggregateFromHistory</li>
+<li>applyStreamEvents</li>
+</ul>
+<p>To make your life easier prooph/event-store ships with a <code>Prooph\EventStore\Aggregate\ConfigurableAggregateTranslator</code> which implements the interface.</p>
+<p>Let's have a look at the constructor</p>
+<pre><code class="language-php">/**
+ * @param null|string   $identifierMethodName
+ * @param null|string   $versionMethodName
+ * @param null|string   $popRecordedEventsMethodName
+ * @param null|string   $replayEventsMethodsName
+ * @param null|string   $staticReconstituteFromHistoryMethodName
+ * @param null|callable $eventToMessageCallback
+ * @param null|callable $messageToEventCallback
+ */
+public function __construct(
+    $identifierMethodName = null,
+    $versionMethodName = null,
+    $popRecordedEventsMethodName = null,
+    $replayEventsMethodsName = null,
+    $staticReconstituteFromHistoryMethodName = null,
+    $eventToMessageCallback = null,
+    $messageToEventCallback = null)
+{
+    //...
+}
+</code></pre>
+<p>We can identify 7 dependencies but all are optional.</p>
+<ul>
+<li>
+<code>$identifierMethodName</code>
+<ul>
+<li>defaults to <code>getId</code>
+</li>
+<li>used to <code>extractAggregateId</code> and must return a string</li>
+<li>you can have a translator per aggregate type, so if you prefer to have methods reflecting domain language you likely want to use methods like <code>getTrackingId</code>, <code>getProductNumber</code>, etc.. As you can see, this is no problem for the event store. Feel free to model your aggregates exactly the way you need it!</li>
+</ul>
+</li>
+<li>
+<code>$versionMethodName</code>
+<ul>
+<li>defaults to <code>getVersion</code>
+</li>
+<li>used to <code>extractVersion</code> of the aggregate root</li>
+</ul>
+</li>
+<li>
+<code>$popRecordedEventsMethodName</code>
+<ul>
+<li>defaults to <code>popRecordedEvents</code>
+</li>
+<li>with this method the <code>ConfigurableAggregateTranslator</code> requests the latest recorded events from your aggregate</li>
+<li>the aggregate should also clear its internal event cache before returning the events as no additional method is invoked</li>
+</ul>
+</li>
+<li>
+<code>replayStreamEvents</code>
+<ul>
+<li>defaults to <code>replay</code>
+</li>
+<li>used in case the repository loaded a snapshot and needs to replay newer events</li>
+</ul>
+</li>
+<li>
+<code>$staticReconstituteFromHistoryMethodName</code>
+<ul>
+<li>defaults to <code>reconstituteFromHistory</code>
+</li>
+<li>like indicated in the parameter name the referenced method must be static (a named constructor) which must return an instance of the aggregate with all events replayed</li>
+</ul>
+</li>
+<li>
+<code>$eventToMessageCallback</code>
+<ul>
+<li>completely optional</li>
+<li>you can pass any callable</li>
+<li>the callable is invoked for each domain event returned by <code>$popRecordedEventsMethodName</code> and can be used to translate a domain event into a <code>Prooph\Common\Messaging\Message</code>
+</li>
+<li>the message interface is required by the event store adapters to function correctly</li>
+<li>you can also decide to let your domain events implement the interface. This would make your life easier when you want to make use of advanced features provided by prooph. But, again. Your domain events don't have to implement the interface. It is your choice!</li>
+</ul>
+</li>
+<li>
+<code>$messageToEventCallback</code>
+<ul>
+<li>completely optional</li>
+<li>it is the opposite of <code>$eventToMessageCallback</code>
+</li>
+<li>when you pass a callable it is invoked for each message (loaded from the event store) before <code>$staticReconstituteFromHistoryMethodName</code> or <code>$applyEventsMethodsName</code>is called</li>
+</ul>
+</li>
+</ul>
+<p><em>Note: When using the translation callbacks shown above you should consider translating domain events into <code>Prooph\Common\Messaging\DomainEvent</code> objects. It is a default implementation of the <code>Message</code> interface and all event store adapters can handle it out-of-the-box.
+If you decide to provide your own implementation of <code>Prooph\Common\Messaging\Message</code> you should have a look at <code>Prooph\Common\Messaging\MessageFactory</code> and <code>Prooph\Common\Messaging\MessageConverter</code> because the event store adapters work with these to translate events into PHP arrays and back.</em></p>
+<h2 id="3.2.4">3.2.4. Snapshot Store</h2>
+<p>A repository can be set up with a snapshot store to speed up loading of aggregates.
+Checkout the snapshot docs for more information.</p>
+<h2 id="3.2.5">3.2.5. Event Streams</h2>
+<p>An event stream can be compared with a table in a relational database (and in case of the doctrine adapter it is a table).
+By default the repository puts all events of all aggregates (no matter the type) in a single stream called <strong>event_stream</strong>.
+If you wish to use another name, you can pass a custom <code>Prooph\EventStore\Stream\StreamName</code> to the repository.
+This is especially useful when you want to have an event stream per aggregate type, for example store all user related events
+in a <code>user_stream</code>.</p>
+<p>The repository can also be configured to create a new stream for each new aggregate instance. You need to turn the last
+constructor parameter <code>oneStreamPerAggregate</code> to true to enable the mode.
+This can be useful when working for example with MongoDB and you want to persist all events of an aggregate in single document (take care of the document size limit).
+If the mode is enabled the repository builds a unique stream name for each aggregate by using the <code>AggregateType</code> and append
+the <code>aggregateId</code> of the aggregate. The stream name for a new <code>Acme\User</code> with id <code>123</code> would look like this: <code>Acme\User-123</code>.</p>
+<p>Depending on the event store adapter used the stream name is maybe modified by the adapter to replace or removed non supported characters.
+Check your adapter of choice for details. You can also override <code>AggregateRepository::determineStreamName</code> to apply a custom logic
+for building the stream name.</p>
+<h2 id="3.2.6">3.2.6. Wiring It Together</h2>
+<p>Best way to see a repository in action is by looking at the <code>ProophTest\EventStore\Aggregate\AggregateRepositoryTest</code>.</p>
+<h3 id="3.2.6.1">3.2.6.1. Set Up</h3>
+<pre><code class="language-php">$this-&gt;repository = new AggregateRepository(
+    $this-&gt;eventStore,
+    AggregateType::fromAggregateRootClass('ProophTest\EventStore\Mock\User'),
+    new ConfigurableAggregateTranslator()
+);
+
+$this-&gt;eventStore-&gt;beginTransaction();
+
+$this-&gt;eventStore-&gt;create(new Stream(new StreamName('event_stream'), []));
+
+$this-&gt;eventStore-&gt;commit();
+</code></pre>
+<p>Notice the injected dependencies! Snapshot store, stream name and stream mode are optional and not injected for all tests.
+Therefor stream name defaults to <strong>event_stream</strong> and the repository appends all events to this stream.
+For the test cases we also create the stream on every run. In a real application you need to do this only once.</p>
+<pre><code class="language-php">/**
+ * @test
+ */
+public function it_adds_a_new_aggregate()
+{
+    $this-&gt;eventStore-&gt;beginTransaction();
+
+    $user = User::create('John Doe', 'contact@prooph.de');
+
+    $this-&gt;repository-&gt;addAggregateRoot($user);
+
+    $this-&gt;eventStore-&gt;commit();
+
+    $fetchedUser = $this-&gt;repository-&gt;getAggregateRoot(
+        $user-&gt;getId()-&gt;toString()
+    );
+
+    $this-&gt;assertInstanceOf('ProophTest\EventStore\Mock\User', $fetchedUser);
+
+    $this-&gt;assertNotSame($user, $fetchedUser);
+
+    $this-&gt;assertEquals('John Doe', $fetchedUser-&gt;name());
+
+    $this-&gt;assertEquals('contact@prooph.de', $fetchedUser-&gt;email());
+}
+</code></pre>
+<p>In the first test case you can see how an aggregate (the user entity in this case) can be added to the repository.</p>
+<pre><code class="language-php">/**
+ * @test
+ */
+public function it_tracks_changes_of_aggregate()
+{
+    $this-&gt;eventStore-&gt;beginTransaction();
+
+    $user = User::create('John Doe', 'contact@prooph.de');
+
+    $this-&gt;repository-&gt;addAggregateRoot($user);
+
+    $this-&gt;eventStore-&gt;commit();
+
+    $this-&gt;eventStore-&gt;beginTransaction();
+
+    $fetchedUser = $this-&gt;repository-&gt;getAggregateRoot(
+        $user-&gt;getId()-&gt;toString()
+    );
+
+    $this-&gt;assertNotSame($user, $fetchedUser);
+
+    $fetchedUser-&gt;changeName('Max Mustermann');
+
+    $this-&gt;eventStore-&gt;commit();
+
+    $fetchedUser2 = $this-&gt;repository-&gt;getAggregateRoot(
+        $user-&gt;getId()-&gt;toString()
+    );
+
+    $this-&gt;assertNotSame($fetchedUser, $fetchedUser2);
+
+    $this-&gt;assertEquals('Max Mustermann', $fetchedUser2-&gt;name());
+}
+</code></pre>
+<p>Here we first add the user, then load it with the help of the repository and finally we change the user entity.
+The change causes a <code>UserNameChanged</code> event. You may noticed that after changing the user name, the user is not passed to
+a repository method. Only <code>$this-&gt;eventStore-&gt;commit();</code> is called. But as you can see in the last test assertion the username
+is changed and the appropriate domain event was added to the <code>event_stream</code>. This happens becasue the repository manages an identity map
+internally. Each aggregate root loaded via <code>AggregateRepository::getAggregateRoot</code> is added to the identity map and
+new events recorded by such an agggregate root are added automatically to the event stream on <code>EventStore::commit</code>.</p>
+<p><strong>But</strong> the identity map is cleared after each transaction commit. You may noticed the <code>assertNotSame</code> checks in the test.
+The repository keeps an aggregate only in memory as long as the transaction is active. Otherwise multiple long-running
+processes dealing with the same aggregate would run into concurrency issues very fast.</p>
+<p>The test case has some more tests including snapshot usage and working with different stream names / strategies.
+Just browse through the test methods for details.</p>
+
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/intro.html">3.1. ProophEventStore</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/event_store.html">3.3. Prooph Event Store</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/intro.html">3.1. ProophEventStore</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store/">3. PHP EventStore Implementation</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/event_store.html">3.3. Prooph Event Store</a>            </div>
+</div>
+
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    </div>
+
+    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
+    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+</body>
+</html>

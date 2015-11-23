@@ -1,215 +1,178 @@
 <!DOCTYPE html>
 <html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>proophessor - Exploring prooph components</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="proophessor : Exploring prooph components">
+    <style>
+        body, html {
+            height: 100%;
+        }
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 204px;
+            position: relative;
+        }
 
-    <title>proophessor</title>
-  </head>
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-weight: 300;
+        }
 
-  <body>
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/prooph/proophessor">View on GitHub</a>
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
 
-          <h1 id="project_title">proophessor</h1>
-          <h2 id="project_tagline">Exploring prooph components</h2>
+        .links .prev {
+            text-align: left;
+        }
 
-        </header>
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        /* Overide bootsstrap default style */
+        table, .table {
+            font-size: inherit;
+        }
+    </style>
+
+</head>
+    <body>
+    <div class="page-wrapper">
+        
+<header>
+    <div class="container">
+        <h3 class="title text-center">
+            proophessor - Exploring prooph components        </h3>
+    </div>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+            </div>
+    <div class="parent col-sm-4">
+            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
+</div>
+
+        </div>
+    </div>
+</header>
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+
+<h1>proophessor - Exploring prooph components</h1>
+<table class="table table-striped">
+    <tr><td>1</td><td><a href="http://getprooph.org/proophessor/">Exploring prooph components</a></td></tr><tr><td>1.1</td><td><a href="http://getprooph.org/proophessor/prooph-in-a-nutshell.html#1.1">prooph in a nutshell</a></td></tr><tr><td>1.2</td><td><a href="http://getprooph.org/proophessor/components.html#1.2">prooph components</a></td></tr><tr><td>1.2.1</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.1">prooph/common</a></td></tr><tr><td>1.2.2</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.2">Prooph Service Bus (PSB)</a></td></tr><tr><td>1.2.2.1</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.2.1">Bernard Message Producer</a></td></tr><tr><td>1.2.2.2</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.2.2">Service Bus ZfcRbac Bridge</a></td></tr><tr><td>1.2.3</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.3">Prooph Event Store</a></td></tr><tr><td>1.2.3.1</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.3.1">MongoDB Event Store Adapter</a></td></tr><tr><td>1.2.3.2</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.3.2">Doctrine DBAL Event Store Adapter</a></td></tr><tr><td>1.2.4</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.4">Snapshotter</a></td></tr><tr><td>1.2.4.1</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.4.1">MongoDB Snapshot Adapter</a></td></tr><tr><td>1.2.4.2</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.4.2">Doctrine DBAL Snapshot Adapter</a></td></tr><tr><td>1.2.4.3</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.4.3">Memcached Snapshot Adapter</a></td></tr><tr><td>1.2.5</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.5">Prooph Event Sourcing</a></td></tr><tr><td>1.2.6</td><td><a href="http://getprooph.org/proophessor/components.html#1.2.6">prooph/event-store-bus-bridge</a></td></tr><tr><td>1.3</td><td><a href="http://getprooph.org/proophessor/wishlist.html#1.3">Component Wishlist</a></td></tr><tr><td>1.3.1</td><td><a href="http://getprooph.org/proophessor/wishlist.html#1.3.1">Status Caption</a></td></tr><tr><td>1.3.2</td><td><a href="http://getprooph.org/proophessor/wishlist.html#1.3.2">The List</a></td></tr><tr><td>1.3.3</td><td><a href="http://getprooph.org/proophessor/wishlist.html#1.3.3">Request a component</a></td></tr><tr><td>2</td><td><a href="http://getprooph.org/service-bus/">PHP Enterprise Service Bus Implementation supporting CQRS and DDD</a></td></tr><tr><td>2.1</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1">PSB - ProophServiceBus</a></td></tr><tr><td>2.1.1</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.1">Messaging API</a></td></tr><tr><td>2.1.2</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.2">Installation</a></td></tr><tr><td>2.1.3</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.3">Quick Start</a></td></tr><tr><td>2.1.4</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.4">Documentation</a></td></tr><tr><td>2.1.5</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.5">Support</a></td></tr><tr><td>2.1.6</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.6">Contribute</a></td></tr><tr><td>2.1.7</td><td><a href="http://getprooph.org/service-bus/intro.html#2.1.7">License</a></td></tr><tr><td>2.2</td><td><a href="http://getprooph.org/service-bus/overview.html#2.2">PSB Overview</a></td></tr><tr><td>2.2.1</td><td><a href="http://getprooph.org/service-bus/overview.html#2.2.1">CommandBus</a></td></tr><tr><td>2.2.2</td><td><a href="http://getprooph.org/service-bus/overview.html#2.2.2">EventBus</a></td></tr><tr><td>2.2.3</td><td><a href="http://getprooph.org/service-bus/overview.html#2.2.3">QueryBus</a></td></tr><tr><td>2.2.4</td><td><a href="http://getprooph.org/service-bus/overview.html#2.2.4">Message Objects</a></td></tr><tr><td>2.2</td><td><a href="http://getprooph.org/service-bus/overview.html#2.2">Synchronous Versus Asynchronous Processing</a></td></tr><tr><td>2.3</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3">Message Buses</a></td></tr><tr><td>2.3.1</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.1">Commanding</a></td></tr><tr><td>2.3.2</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.2">Eventing</a></td></tr><tr><td>2.3.3</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.3">Querying</a></td></tr><tr><td>2.3.4</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.4">API</a></td></tr><tr><td>2.3.5</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5">Event-Driven Dispatch</a></td></tr><tr><td>2.3.5.1</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.1">initialize</a></td></tr><tr><td>2.3.5.2</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.2">detect-message-name (optional)</a></td></tr><tr><td>2.3.5.3</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.3">route</a></td></tr><tr><td>2.3.5.4</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.4">locate-handler (optional)</a></td></tr><tr><td>2.3.5.5</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.5">invoke-handler / invoke-finder (optional)</a></td></tr><tr><td>2.3.5.6</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.6">handle-error</a></td></tr><tr><td>2.3.5.7</td><td><a href="http://getprooph.org/service-bus/message_bus.html#2.3.5.7">finalize</a></td></tr><tr><td>2.4</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4">PSB Plugins</a></td></tr><tr><td>2.4.1</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.1">Routers</a></td></tr><tr><td>2.4.1.1</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.1.1">Prooph\ServiceBus\Plugin\Router\CommandRouter</a></td></tr><tr><td>2.4.1.2</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.1.2">Prooph\ServiceBus\Plugin\Router\QueryRouter</a></td></tr><tr><td>2.4.1.3</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.1.3">Prooph\ServiceBus\Plugin\Router\EventRouter</a></td></tr><tr><td>2.4.1.4</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.1.4">Prooph\ServiceBus\Plugin\Router\RegexRouter</a></td></tr><tr><td>2.4.2</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.2">Invoke Strategies</a></td></tr><tr><td>2.4.2.1</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.2.1">Available Strategies</a></td></tr><tr><td>2.4.3</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.3">Guards</a></td></tr><tr><td>2.4.4</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.4">ServiceLocatorPlugin</a></td></tr><tr><td>2.4.5</td><td><a href="http://getprooph.org/service-bus/plugins.html#2.4.5">MessageProducerPlugin</a></td></tr><tr><td>2.5</td><td><a href="http://getprooph.org/service-bus/async_message_producer.html#2.5">Async Message Producer</a></td></tr><tr><td>2.5.1</td><td><a href="http://getprooph.org/service-bus/async_message_producer.html#2.5.1">Available MessageProducer</a></td></tr><tr><td>2.5.2</td><td><a href="http://getprooph.org/service-bus/async_message_producer.html#2.5.2">Usage</a></td></tr><tr><td>2.5.3</td><td><a href="http://getprooph.org/service-bus/async_message_producer.html#2.5.3">Async Querying</a></td></tr><tr><td>2.6</td><td><a href="http://getprooph.org/service-bus/factories.html#2.6">Interop + Factories</a></td></tr><tr><td>2.6.1</td><td><a href="http://getprooph.org/service-bus/factories.html#2.6.1">Factory-Driven Message Bus Creation</a></td></tr><tr><td>2.6.1.1</td><td><a href="http://getprooph.org/service-bus/factories.html#2.6.1.1">Requirements</a></td></tr><tr><td>2.6.2</td><td><a href="http://getprooph.org/service-bus/factories.html#2.6.2">Customizing via Configuration</a></td></tr><tr><td>3</td><td><a href="http://getprooph.org/event-store/">PHP EventStore Implementation</a></td></tr><tr><td>3.1</td><td><a href="http://getprooph.org/event-store/intro.html#3.1">ProophEventStore</a></td></tr><tr><td>3.1.1</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.1">Overview</a></td></tr><tr><td>3.1.2</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.2">Installation</a></td></tr><tr><td>3.1.3</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.3">Available Persistence Adapters</a></td></tr><tr><td>3.1.4</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.4">Available Snapshot Adapters</a></td></tr><tr><td>3.1.5</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.5">Quick Start</a></td></tr><tr><td>3.1.6</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.6">Documentation</a></td></tr><tr><td>3.1.7</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.7">Support</a></td></tr><tr><td>3.1.8</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.8">Contribute</a></td></tr><tr><td>3.1.9</td><td><a href="http://getprooph.org/event-store/intro.html#3.1.9">License</a></td></tr><tr><td>3.2</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2">Working with Repositories</a></td></tr><tr><td>3.2.1</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.1">Event Sourced Aggregates</a></td></tr><tr><td>3.2.2</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.2">AggregateType</a></td></tr><tr><td>3.2.3</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.3">AggregateTranslator</a></td></tr><tr><td>3.2.4</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.4">Snapshot Store</a></td></tr><tr><td>3.2.5</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.5">Event Streams</a></td></tr><tr><td>3.2.6</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.6">Wiring It Together</a></td></tr><tr><td>3.2.6.1</td><td><a href="http://getprooph.org/event-store/repositories.html#3.2.6.1">Set Up</a></td></tr><tr><td>3.3</td><td><a href="http://getprooph.org/event-store/event_store.html#3.3">Prooph Event Store</a></td></tr><tr><td>3.3.1</td><td><a href="http://getprooph.org/event-store/event_store.html#3.3.1">Event Hooks</a></td></tr><tr><td>3.3.2</td><td><a href="http://getprooph.org/event-store/event_store.html#3.3.2">Attaching Plugins</a></td></tr><tr><td>3.3.3</td><td><a href="http://getprooph.org/event-store/event_store.html#3.3.3">Plugin Use Cases</a></td></tr><tr><td>3.4</td><td><a href="http://getprooph.org/event-store/snapshots.html#3.4">Snapshots</a></td></tr><tr><td>3.4.1</td><td><a href="http://getprooph.org/event-store/snapshots.html#3.4.1">But my aggregates record tons of events!</a></td></tr><tr><td>3.5</td><td><a href="http://getprooph.org/event-store/replay_history.html#3.5">Replay Event History</a></td></tr><tr><td>3.5</td><td><a href="http://getprooph.org/event-store/replay_history.html#3.5">Replay vs Load Stream</a></td></tr><tr><td>3.5.1</td><td><a href="http://getprooph.org/event-store/replay_history.html#3.5.1">Order By Created-At And Aggregate Version</a></td></tr><tr><td>3.6</td><td><a href="http://getprooph.org/event-store/upcasting.html#3.6">Upcasting</a></td></tr><tr><td>3.6.1</td><td><a href="http://getprooph.org/event-store/upcasting.html#3.6.1">How does it work?</a></td></tr><tr><td>3.6.2</td><td><a href="http://getprooph.org/event-store/upcasting.html#3.6.2">But how to avoid conflicts during the upcasting process?</a></td></tr><tr><td>3.7</td><td><a href="http://getprooph.org/event-store/interop_factories.html#3.7">Interop Factories</a></td></tr><tr><td>3.7.1</td><td><a href="http://getprooph.org/event-store/interop_factories.html#3.7.1">Factory-Driven Creation</a></td></tr><tr><td>3.7.1.1</td><td><a href="http://getprooph.org/event-store/interop_factories.html#3.7.1.1">Requirements</a></td></tr><tr><td>3.7.1.2</td><td><a href="http://getprooph.org/event-store/interop_factories.html#3.7.1.2">Event Store Factory</a></td></tr><tr><td>3.7.1.3</td><td><a href="http://getprooph.org/event-store/interop_factories.html#3.7.1.3">Snapshot Store Factory</a></td></tr><tr><td>3.7.1.4</td><td><a href="http://getprooph.org/event-store/interop_factories.html#3.7.1.4">AbstractAggregateRepositoryFactory</a></td></tr><tr><td>4</td><td><a href="http://getprooph.org/event-store-bus-bridge/">Marry CQRS with Event Sourcing</a></td></tr><tr><td>4.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1">Prooph Event Store :link: Service Bus</a></td></tr><tr><td>4.1.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.1">Features</a></td></tr><tr><td>4.1.2</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.2">Documentation</a></td></tr><tr><td>4.1.3</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.3">Support</a></td></tr><tr><td>4.1.4</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.4">Contribute</a></td></tr><tr><td>4.1.5</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.5">Dependencies</a></td></tr><tr><td>4.1.6</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.6">License</a></td></tr><tr><td>4.2</td><td><a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html#4.2">Event Publishing</a></td></tr><tr><td>4.2.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html#4.2.1">Set Up</a></td></tr><tr><td>4.2.1.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html#4.2.1.1">Container-Driven Set Up</a></td></tr><tr><td>4.3</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3">Transaction Handling</a></td></tr><tr><td>4.3.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3.1">Set Up</a></td></tr><tr><td>4.3.1.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3.1.1">Container-Driven Set Up</a></td></tr><tr><td>4.3.2</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3.2">Features</a></td></tr><tr><td>5</td><td><a href="http://getprooph.org/snapshotter/">Snapshot tool for the prooph event-store</a></td></tr><tr><td>5.1</td><td><a href="http://getprooph.org/snapshotter/intro.html#5.1">snapshotter</a></td></tr><tr><td>5.1.1</td><td><a href="http://getprooph.org/snapshotter/intro.html#5.1.1">Documentation</a></td></tr><tr><td>5.1.2</td><td><a href="http://getprooph.org/snapshotter/intro.html#5.1.2">Support</a></td></tr><tr><td>5.1.3</td><td><a href="http://getprooph.org/snapshotter/intro.html#5.1.3">Contribute</a></td></tr><tr><td>5.1.4</td><td><a href="http://getprooph.org/snapshotter/intro.html#5.1.4">Dependencies</a></td></tr><tr><td>5.1.5</td><td><a href="http://getprooph.org/snapshotter/intro.html#5.1.5">License</a></td></tr><tr><td>5.2</td><td><a href="http://getprooph.org/snapshotter/configuration.html#5.2">Configuration</a></td></tr></table>
+
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+            </div>
+    <div class="parent col-sm-4">
+            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
+</div>
+
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-<p>Welcome at prooph! We are developing and supporting CQRS and EventSourcing infrastructure for PHP 5.5+ environments.
-Proophessor is NOT a framework. Instead we provide components which address individual topics.</p>
-
-<h2>
-<a id="prooph-in-a-nutshell" class="anchor" href="#prooph-in-a-nutshell" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph in a nutshell</h2>
-
-<p><img src="https://raw.githubusercontent.com/prooph/proophessor/master/docs/book/img/prooph_overview.png" alt="prooph_overview"></p>
-
-<h2>
-<a id="example-application" class="anchor" href="#example-application" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Application</h2>
-
-<p>Try out <a href="https://github.com/prooph/proophessor-do">proophessor-do</a> and <a href="https://github.com/prooph/proophessor-do#learning-by-doing">pick up a task</a>!</p>
-
-<h2>
-<a id="prooph-components" class="anchor" href="#prooph-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph components</h2>
-
-<h3>
-<a id="proophcommon" class="anchor" href="#proophcommon" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph/common</h3>
-
-<p>Common classes shared between prooph components</p>
-
-<p><a href="https://github.com/prooph/common">prooph/common</a></p>
-
-<h3>
-<a id="proophservice-bus" class="anchor" href="#proophservice-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph/service-bus</h3>
-
-<p>PHP 5.5+ lightweight message bus supporting CQRS and Micro Services</p>
-
-<p><a href="https://github.com/prooph/service-bus">prooph/service-bus</a></p>
-
-<h4>
-<a id="bernard-message-producer" class="anchor" href="#bernard-message-producer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bernard Message Producer</h4>
-
-<p><a href="https://github.com/prooph/psb-bernard-producer">Bernard Message Producer</a> for prooph/service-bus.</p>
-
-<h4>
-<a id="service-bus-zfc-rbac-bridge" class="anchor" href="#service-bus-zfc-rbac-bridge" aria-hidden="true"><span class="octicon octicon-link"></span></a>Service Bus ZfcRbac Bridge</h4>
-
-<p><a href="https://github.com/prooph/service-bus-zfc-rbac-bridge">ZfcRbac Authorization Service</a> for prooph/service-bus.</p>
-
-<h3>
-<a id="proophevent-store" class="anchor" href="#proophevent-store" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph/event-store</h3>
-
-<p>ProophEventStore is capable of persisting event objects that are organized in streams.</p>
-
-<p><a href="https://github.com/prooph/event-store">prooph/event-store</a></p>
-
-<h4>
-<a id="mongodb-adapter" class="anchor" href="#mongodb-adapter" aria-hidden="true"><span class="octicon octicon-link"></span></a>MongoDB Adapter</h4>
-
-<p><a href="https://github.com/prooph/event-store-mongodb-adapter">MongoDB Adapter</a> for prooph/event-store</p>
-
-<h4>
-<a id="doctrine-dbal-adapter" class="anchor" href="#doctrine-dbal-adapter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Doctrine DBAL Adapter</h4>
-
-<p><a href="https://github.com/prooph/event-store-doctrine-adapter">Doctrine DBAL Adapter</a> for prooph/event-store</p>
-
-<h3>
-<a id="proophevent-sourcing" class="anchor" href="#proophevent-sourcing" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph/event-sourcing</h3>
-
-<p>Simple and lightweight event sourcing library with out of the box support for prooph/event-store.</p>
-
-<p><a href="https://github.com/prooph/event-sourcing">prooph/event-sourcing</a></p>
-
-<h3>
-<a id="proophevent-store-bus-bridge" class="anchor" href="#proophevent-store-bus-bridge" aria-hidden="true"><span class="octicon octicon-link"></span></a>prooph/event-store-bus-bridge</h3>
-
-<p>Glue component between prooph/service-bus and prooph/event-store</p>
-
-<p><a href="https://github.com/prooph/event-store-bus-bridge">prooph/event-store-bus-bridge</a></p>
-
-<h2>
-<a id="component-wishlist" class="anchor" href="#component-wishlist" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component Wishlist</h2>
-
-<p>The prooph component wishlist is our "todo" list. We want to share it with you.
-So you always know what is going on at prooph, who will take care of new features and most importantly:</p>
-
-<p><strong>Is there something on the list you can help with?</strong></p>
-
-<p>If you want to become a core contributor to one or more features on the list, drop us
-a request in our chat: <a href="https://gitter.im/prooph/improoph"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p>
-
-<h3>
-<a id="status-caption" class="anchor" href="#status-caption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Status Caption</h3>
-
-<ul>
-<li>
-<strong>in progress</strong>: development is in progress but it is not production ready.
-As soon as the first stable release is available the component will be moved from wishlist to the <a href="#prooph-components">official components list</a>
-</li>
-<li>
-<strong>planned</strong>: Will be developed in the near future. Ask the maintainer if you want to help.</li>
-<li>
-<strong>requested</strong>: Would be a good addition but we are looking for maintainers or will implement it later. If you would like
-start working on it please drop us a note.</li>
-</ul>
-
-<h3>
-<a id="the-list" class="anchor" href="#the-list" aria-hidden="true"><span class="octicon octicon-link"></span></a>The List</h3>
-
-<table>
-<thead>
-<tr>
-<th>New Feature</th>
-<th>Status</th>
-<th>Maintainer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/prooph/psb-http-producer">http message producer</a> for prooph/service-bus</td>
-<td>in progress</td>
-<td><a href="https://github.com/codeliner" class="user-mention">@codeliner</a></td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/prooph/psb-zeromq-producer">zeromq message producer</a></td>
-<td>in progress</td>
-<td><a href="https://github.com/bweston92" class="user-mention">@bweston92</a></td>
-</tr>
-<tr>
-<td>aggregate snapshots</td>
-<td>in progress</td>
-<td>@prooph/components-core</td>
-</tr>
-<tr>
-<td>event stream replay</td>
-<td>in progress</td>
-<td>@prooph/components-core</td>
-</tr>
-<tr>
-<td>amqp message producer</td>
-<td>planned</td>
-<td><a href="https://github.com/prolic" class="user-mention">@prolic</a></td>
-</tr>
-<tr>
-<td>saga / process manager abstraction</td>
-<td>requested</td>
-<td>-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/dbellettini/php-eventstore-client">php-event-store-client</a> adapter</td>
-<td>requested</td>
-<td>-</td>
-</tr>
-<tr>
-<td>
-memcached snapshot adapter</td>
-<td>requested</td>
-<td>-</td>
-</tr>
-</tbody>
-</table>
-
-<h3>
-<a id="request-a-component" class="anchor" href="#request-a-component" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request a component</h3>
-
-<p>You have an idea for a feature? Great! Simply fork <a href="https://github.com/prooph/proophessor">proophessor</a>, add the feature to the list and submit a pull request
-with a short description.</p>
-
-<h2>
-<a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support</h2>
-
-<ul>
-<li>Ask questions on <a href="https://groups.google.com/forum/?hl=de#!forum/prooph">prooph-users</a> mailing list.</li>
-<li>Say hello in the <a href="https://gitter.im/prooph/improoph">prooph gitter</a> chat.</li>
-</ul>
-
-<p>Happy messaging!</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">proophessor maintained by <a href="https://github.com/prooph">prooph</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
+    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
+    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+</body>
 </html>

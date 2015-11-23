@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>Upcasting</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 204px;
+            position: relative;
+        }
+
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
+
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+
+        .links .prev {
+            text-align: left;
+        }
+
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        /* Overide bootsstrap default style */
+        table, .table {
+            font-size: inherit;
+        }
+    </style>
+
+</head>
+    <body>
+    <div class="page-wrapper">
+        
+<header>
+    <div class="container">
+        <h3 class="title text-center">
+            3.6. Upcasting        </h3>
+    </div>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/replay_history.html">3.5. Replay Event History</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/replay_history.html">3.5. Replay Event History</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store/">3. PHP EventStore Implementation</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+</div>
+
+        </div>
+    </div>
+</header>
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+<h1 id="3.6">3.6. Upcasting</h1>
+<p>Imagine <code>v1</code> of your application already runs in production. You've worked on great new features the last weeks and
+want to deploy <code>v1.1</code> but structure of some domain events did change. The new versions of your aggregates would not be
+able to replay <code>v1</code> domain events correctly. To solve the issue you can <strong>upcast</strong> your history events.</p>
+<h2 id="3.6.1">3.6.1. How does it work?</h2>
+<p>Basically you need to write a migration script (much like a normal DB migration script). The script should load all
+effected events from the event store and manipulate them to be compliant with version <code>1.1</code> of your aggregates.
+Then simply replace the original events in the stream with the changed ones.</p>
+<p><em>Note: The event store only offers methods to load events from a stream and add new ones, but it has no method to replace them.
+The reason for that is simple: "Upcasting" is nothing your normal program should <strong>not</strong> have access to.
+It is really only a way to upgrade your application to the next version. So your upcasting script needs to make use
+of low-level functionality provided by the underlying driver for the event store adapter.</em></p>
+<h2 id="3.6.2">3.6.2. But how to avoid conflicts during the upcasting process?</h2>
+<p>Well, that depends on your infrastructure and deployment strategy. The easiest way is to take your application offline,
+perform the upcasting script, deploy new version of the application and bring the system online again.</p>
+<p>A more complex option with no or very little downtime is to use a special <a href="https://github.com/prooph/common/blob/master/src/Messaging/MessageFactory.php">MessageFactory</a>.
+Make the MessageFactory aware of the differences between <code>v1</code> and <code>v1.1</code> of your events. Deploy the modified factory together
+with version <code>1.1</code> of your application. The factory takes care of translating old events into new ones.
+Perform the "upcasting" script in the background and once it has replaced all old events you can remove the translation logic
+from the factory again and exchange it with the simple factory you used before.</p>
+<p><em>Note: Each event store adapter allows you to set it up with a custom message factory. Please refer to the adapter documentation of your choice to get more information.</em></p>
+
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/replay_history.html">3.5. Replay Event History</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/replay_history.html">3.5. Replay Event History</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store/">3. PHP EventStore Implementation</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+</div>
+
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    </div>
+
+    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
+    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+</body>
+</html>
