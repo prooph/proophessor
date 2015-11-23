@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>Marry CQRS with Event Sourcing</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 204px;
+            position: relative;
+        }
+
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
+
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+
+        .links .prev {
+            text-align: left;
+        }
+
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        /* Overide bootsstrap default style */
+        table, .table {
+            font-size: inherit;
+        }
+    </style>
+
+</head>
+    <body>
+    <div class="page-wrapper">
+        
+<header>
+    <div class="container">
+        <h3 class="title text-center">
+            4. Marry CQRS with Event Sourcing        </h3>
+    </div>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/intro.html">4.1. Prooph Event Store :link: Service Bus</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/">proophessor - Exploring prooph components</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/intro.html">4.1. Prooph Event Store :link: Service Bus</a>            </div>
+</div>
+
+        </div>
+    </div>
+</header>
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+
+<h1>4. Marry CQRS with Event Sourcing</h1>
+<table class="table table-striped">
+    <tr><td>4.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1">Prooph Event Store :link: Service Bus</a></td></tr><tr><td>4.1.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.1">Features</a></td></tr><tr><td>4.1.2</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.2">Documentation</a></td></tr><tr><td>4.1.3</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.3">Support</a></td></tr><tr><td>4.1.4</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.4">Contribute</a></td></tr><tr><td>4.1.5</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.5">Dependencies</a></td></tr><tr><td>4.1.6</td><td><a href="http://getprooph.org/event-store-bus-bridge/intro.html#4.1.6">License</a></td></tr><tr><td>4.2</td><td><a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html#4.2">Event Publishing</a></td></tr><tr><td>4.2.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html#4.2.1">Set Up</a></td></tr><tr><td>4.2.1.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html#4.2.1.1">Container-Driven Set Up</a></td></tr><tr><td>4.3</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3">Transaction Handling</a></td></tr><tr><td>4.3.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3.1">Set Up</a></td></tr><tr><td>4.3.1.1</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3.1.1">Container-Driven Set Up</a></td></tr><tr><td>4.3.2</td><td><a href="http://getprooph.org/event-store-bus-bridge/transaction_manager.html#4.3.2">Features</a></td></tr></table>
+
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/intro.html">4.1. Prooph Event Store :link: Service Bus</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store/interop_factories.html">3.7. Interop Factories</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/">proophessor - Exploring prooph components</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/intro.html">4.1. Prooph Event Store :link: Service Bus</a>            </div>
+</div>
+
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    </div>
+
+    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
+    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+</body>
+</html>

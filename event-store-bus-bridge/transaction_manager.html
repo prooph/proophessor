@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>Transaction Handling</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 204px;
+            position: relative;
+        }
+
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
+
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+
+        .links .prev {
+            text-align: left;
+        }
+
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        /* Overide bootsstrap default style */
+        table, .table {
+            font-size: inherit;
+        }
+    </style>
+
+</head>
+    <body>
+    <div class="page-wrapper">
+        
+<header>
+    <div class="container">
+        <h3 class="title text-center">
+            4.3. Transaction Handling        </h3>
+    </div>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html">4.2. Event Publishing</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/snapshotter/">5. Snapshot tool for the prooph event-store</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html">4.2. Event Publishing</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/">4. Marry CQRS with Event Sourcing</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/snapshotter/">5. Snapshot tool for the prooph event-store</a>            </div>
+</div>
+
+        </div>
+    </div>
+</header>
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+<h1 id="4.3">4.3. Transaction Handling</h1>
+<h2 id="4.3.1">4.3.1. Set Up</h2>
+<p>To enable transaction handling based on command dispatch you need to set up the <code>Prooph\EventStoreBusBridge\TransactionManager</code>.
+The transaction manager acts as command bus AND event store plugin so you need to attach it to both:</p>
+<pre><code class="language-php">/** @var $eventStore Prooph\EventStore\EventStore */
+$transactionManager-&gt;setUp($eventStore);
+
+/** @var $commandBus Prooph\ServiceBus\CommandBus */
+$commandBus-&gt;utilize($transactionManager);
+</code></pre>
+<p>That's it!</p>
+<h3 id="4.3.1.1">4.3.1.1. Container-Driven Set Up</h3>
+<p>If you are using the <code>container-aware factories</code> shipped with prooph/service-bus you may also
+want to auto register the <code>TransactionManager</code>. As long as the command bus is available as service <code>Prooph\ServiceBus\CommandBus</code> in the container you can use
+the <code>Prooph\EventStoreBusBridge\Container\TransactionManagerFactory</code> for that. Just map the factory to a service name like <code>prooph.transaction_manager</code> and
+add the service name to the plugin list of the event store configuration. Also have a look at the event store docs for more details about the plugin system.</p>
+<h2 id="4.3.2">4.3.2. Features</h2>
+<ol>
+<li>The transaction manager starts a new event store transaction on every command dispatch.
+<em>Note: Nested transactions were removed with prooph/event-store v6.0. So you can dispatch follow up commands only after event store commit!</em>
+</li>
+<li>If the <code>dispatched command</code> is an instance of <code>Prooph\Common\Messaging\Message</code> the transaction manager will also add <code>causation metadata</code> to each recorded event during the transaction.
+Two entries are added to the metadata:
+<ul>
+<li>
+<code>causation_id</code> = <code>$command-&gt;uuid()-&gt;toString()</code>
+</li>
+<li>
+<code>causation_name</code> = <code>$command-&gt;messageName()</code>.
+<em>Note: Depending on the event store adapter used you may need to alter your event stream schema</em>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row hidden-sm hidden-md hidden-lg">
+    <div class="prev col-xs-6">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html">4.2. Event Publishing</a>            </div>
+    <div class="next col-xs-6">
+                    <p>Next</p>
+            <a href="http://getprooph.org/snapshotter/">5. Snapshot tool for the prooph event-store</a>            </div>
+</div>
+
+<div class="row hidden-xs">
+    <div class="prev col-sm-4">
+                    <p>Prev</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/event_publisher.html">4.2. Event Publishing</a>            </div>
+    <div class="parent col-sm-4">
+                    <p>Up</p>
+            <a href="http://getprooph.org/event-store-bus-bridge/">4. Marry CQRS with Event Sourcing</a>            </div>
+    <div class="next col-sm-4">
+                    <p>Next</p>
+            <a href="http://getprooph.org/snapshotter/">5. Snapshot tool for the prooph event-store</a>            </div>
+</div>
+
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    </div>
+
+    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
+    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+</body>
+</html>
