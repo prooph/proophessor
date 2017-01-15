@@ -1,0 +1,6 @@
+{
+  "title": "Tutorial",
+  "content": [
+    {"getting-started": "getting-started/bookdown.json"}
+  ]
+}

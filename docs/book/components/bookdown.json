@@ -1,0 +1,8 @@
+{
+  "title": "components",
+  "content": [
+    {"event-store": "https://raw.githubusercontent.com/prooph/event-store/develop/docs/bookdown.json"}
+  ],
+  "target": "./html",
+  "template": "../vendor/prooph/bookdown-template/templates/main.php"
+}
