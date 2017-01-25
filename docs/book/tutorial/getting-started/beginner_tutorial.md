@@ -119,7 +119,7 @@ interface Message extends HasMessageName
 ```
 That is the basic contract, an immutable message with a unique identifier, a type, an created at timestamp, 
 a message name (by extending the `HasMessageName` interface), payload and metadata.
-Both payload and metadata should only contain scalar types and arrays (no objects) to be truly immutable.
+Payload should only contain scalar types and arrays (no objects) and metadata only scalars to be truly immutable.
 
 ## Command Query Responsibility Segregation
 
