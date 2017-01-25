@@ -43,7 +43,7 @@ Create a file called `hello_world.php` with the following content and run it wit
 //All prooph components use strict types enabled
 declare(strict_types=1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\PayloadConstructable;
@@ -134,7 +134,7 @@ The basic concept is very simple. Let's look at a common service class:
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class UserService
 {
@@ -180,7 +180,7 @@ In a CQRS system this looks slightly different:
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class CreateUserHandler
 {
@@ -210,7 +210,7 @@ class CreateUserHandler
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class UserFinder
 {
@@ -253,7 +253,7 @@ independent of each other. Let's look at a read-optimized `UserFinder`
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class UserFinder
 {
@@ -310,7 +310,7 @@ Yeah, looks better now. Let's put it in the handler.
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class CreateUserHandler
 {
@@ -341,7 +341,7 @@ The following code looks better, right?
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class RegisterUserHandler
 {
@@ -369,7 +369,7 @@ Finally, we add some prooph flavour and change the method of the handler to hand
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class RegisterUserHandler
 {
@@ -422,7 +422,7 @@ in the write model owned by the responsible object `User::changeEmail`
 
 declare(strict_types = 1);
 
-namespace ProophTutorial;
+namespace Prooph\Tutorial;
 
 class ChangeEmailHandler
 {
