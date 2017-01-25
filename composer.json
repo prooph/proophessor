@@ -26,7 +26,7 @@
         "bookdown/bookdown": "1.0.0-beta1 as 1.0.0"
     },
     "scripts": {
-        "build": "export CSS_BOOTSWATCH=yeti && export CSS_PRISM=coy && vendor/bin/bookdown docs/bookdown.json",
+        "docs": "export CSS_BOOTSWATCH=yeti && export CSS_PRISM=coy && vendor/bin/bookdown docs/bookdown.json",
         "serve": "php -S 0.0.0.0:8080 -t docs/html/"
     }
 }
