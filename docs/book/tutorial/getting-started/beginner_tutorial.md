@@ -9,7 +9,7 @@ make them ready for the future.
 
 In the prooph ecosystem everything is bound together by messages.
 So when you want to get started with prooph components you should know the
-basic building block - **prooph messages**. Ones you know how they work we give a short overview
+basic building block - **prooph messages**. Once you know how they work we give a short overview
 of CQRS and Event Sourcing and why messages play an important role in this architecture.
 
 ## The initial setup
@@ -404,7 +404,7 @@ Event Sourcing is covered in detail in the next chapter. What follows is a very 
 you can get an idea of what you'll learn when continue reading.
 
 In an event sourced system all state changes are described by events. The fact that a new user was registered in
-our system would be one of those events another one would be that the user has logged in or changed the email address.
+our system would be one of those events. Another one would be that the user has logged in or changed the email address.
 
 Let's analyze the last example. We start by looking at our database table after the user was registered.
 
