@@ -5,5 +5,11 @@
     {"tutorial": "book/tutorial/bookdown.json"}
   ],
   "target": "./html",
-  "template": "../vendor/prooph/bookdown-template/templates/main.php"
+  "template": "../vendor/prooph/bookdown-template/templates/main.php",
+  "extensions": {
+    "commonmark": [
+      "Webuni\\CommonMark\\TableExtension\\TableExtension",
+      "Webuni\\CommonMark\\AttributesExtension\\AttributesExtension"
+    ]
+  }
 }

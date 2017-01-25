@@ -408,11 +408,10 @@ our system would be one of those events another one would be that the user has l
 
 Let's analyze the last example. We start by looking at our database table after the user was registered.
 
-```
+
 id  | name     | email
 --- | -------- | ------------
 1   | John Doe | doe@test.com
-```
 
 
 Applying CQRS again we end up with a new command `ChangeEmail`, an appropriate command handler and a matching action
@@ -462,18 +461,16 @@ $handler->handle($changeEmail);
 
 will result in an updated database row
 
-```
 id  | name     | email
 --- | -------- | ------------
 1   | John Doe | john.doe@test.com
-```
 
 What is wrong here? We've changed state but we don't know why and when it happened.
 Wouldn't it be nice if we could look at the database and see what caused the state change?
 
 What would you say if your database would give you this information instead?
 
-```
+```json
 [{
     event: UserWasRegistered,
     createdAt: 2017-01-13
