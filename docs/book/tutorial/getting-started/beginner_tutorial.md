@@ -171,7 +171,7 @@ class UserService
 
 ```
 
-The `ÙserService` is responsible for all actions related to a user. 
+The `UserService` is responsible for all actions related to a user. 
 In a CQRS system this looks slightly different:
 
 `CreateUserHandler.php`
@@ -286,7 +286,7 @@ If it is quaranteed that no state changes happen within the read model, we don't
 objects as we don't need to enforce any rules. Select the data and return it to the client as fast as possible
 that is the target of the read model.
 
-The write model however has to protect invariants. At the moment our `Ùser` object does a bad job on this.
+The write model however has to protect invariants. At the moment our `user` object does a bad job on this.
 
 ```php
 $user = new User($id);
@@ -390,7 +390,7 @@ class RegisterUserHandler
 
 ```
 
-With a few changes we turned our original `ÙserService` into two distinct classes supporting the basic idea of CQRS.
+With a few changes we turned our original `UserService` into two distinct classes supporting the basic idea of CQRS.
 In the last step we enabled the write side to handle a prooph command that expresses its intent of how the system state should change
 (a new user should be registered) using the message name `RegisterUser` and payload of the command.
 The `RegisterUserHandler` is a so called *glue component*. Its task is to take the command and
@@ -408,14 +408,14 @@ our system would be one of those events another one would be that the user has l
 
 Let's analyze the last example. We start by looking at our database table after the user was registered.
 
-
+{.table}
 id  | name     | email
 --- | -------- | ------------
 1   | John Doe | doe@test.com
 
 
 Applying CQRS again we end up with a new command `ChangeEmail`, an appropriate command handler and a matching action
-in the write model owned by the responsible object `Ùser::changeEmail`
+in the write model owned by the responsible object `User::changeEmail`
 
 ```php
 <?php
@@ -461,6 +461,7 @@ $handler->handle($changeEmail);
 
 will result in an updated database row
 
+{.table}
 id  | name     | email
 --- | -------- | ------------
 1   | John Doe | john.doe@test.com
