@@ -15,7 +15,7 @@ of CQRS and Event Sourcing and why messages play an important role in this archi
 ## The initial setup
 
 To follow the tutorial you need PHP 7.1 and composer installed. Later you'll also need some more
-infrastructure like a Postgres database server. Nowadays Docker makes it easy to run infrastructure on demand.
+infrastructure like a Postgres database server. Nowadays [Docker](https://www.docker.com/) makes it easy to run infrastructure on demand.
 While Docker is not required for prooph components we recommend using it. All examples in the tutorial
 assume that you have Docker installed, too. If not, you need to set up the infrastructure by hand.
 
