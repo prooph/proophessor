@@ -6,6 +6,8 @@
   ],
   "target": "./html",
   "template": "../vendor/prooph/bookdown-template/templates/main.php",
+  "numbering": false,
+  "tocDepth": 2,
   "extensions": {
     "commonmark": [
       "Webuni\\CommonMark\\TableExtension\\TableExtension",

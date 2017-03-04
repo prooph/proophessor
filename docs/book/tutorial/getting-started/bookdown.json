@@ -1,6 +1,8 @@
 {
   "title": "Getting Started",
+  "tocDepth": 1,
   "content": [
-    {"beginner-tutorial": "beginner_tutorial.md"}
+    {"beginner-tutorial": "beginner_tutorial.md"},
+    {"event-sourcing": "event_sourcing.md"}
   ]
 }

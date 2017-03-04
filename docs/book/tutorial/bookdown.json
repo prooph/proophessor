@@ -1,5 +1,6 @@
 {
   "title": "Tutorial",
+  "tocDepth": 1,
   "content": [
     {"getting-started": "getting-started/bookdown.json"}
   ]

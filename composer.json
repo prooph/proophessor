@@ -23,7 +23,7 @@
     ],
     "require-dev": {
         "prooph/bookdown-template": "^0.2.3",
-        "bookdown/bookdown": "1.0.0-beta1 as 1.0.0",
+        "bookdown/bookdown": "1.x-dev as 1.0.0",
         "webuni/commonmark-table-extension": "^0.4.2",
         "webuni/commonmark-attributes-extension": "^0.3.1"
     },
