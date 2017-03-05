@@ -1,8 +1,7 @@
 # A Deep Dive Into Event Sourcing
 
 On the [first page](./beginner-tutorial.html) of our prooph walk-through guide we learned about **prooph messages** and the two main architectural patterns
-supported by prooph components, namely **CQRS and Event Sourcing**. It has a very good reason that we focus on both:
-Event Sourcing requires CQRS in most cases. 
+supported by prooph components: **CQRS and Event Sourcing**. Event Sourcing requires CQRS in most cases so you'll likely see the two together.
 
 This part of the walk-through guide covers the basics of Event Sourcing and
 will show you one way of applying the pattern. We'll start with a functional style because it will help us understand the pure idea without 
@@ -12,12 +11,11 @@ mixing concepts of the object oriented world. Later we will walk the way back an
 
 Event Sourcing is a very simple concept and fits naturally with a **process** that consists of multiple steps. Every successful 
 step or even a failed one is represented by an event. A checkout process of an eCommerce platform is a good example. It can be described by
-events that need to happen for a successful checkout: 
+a series of events which need to happen for a successful checkout: 
 
 `ProductsWereBought -> ShippingInformationWasFilled -> ShippingMehodWasSelected -> PaymentMethodWasSelected -> OrderWasConfirmed`
 
-If we try to match the pattern with other processes we recognize that it is mostly the same. Nearly every process can be described by events no matter
-the steps involved. A good part of our work as software developers is to write routines which automate processes. 
+Every process can be described by events no matter the steps involved. A good part of our work as software developers is to write routines which automate processes. 
 
 *But we often tend to focus on things and state rather than process logic*. At least we design our entities and database schema first and
 build the logic around them. 
@@ -36,19 +34,24 @@ object oriented world, but this fact will help us to learn the basic ideas of Ev
 And maybe you'll like the approach and don't want to look back. Who knows...
 
 We're going to implement the `Checkout` described above.
- 
-@TODO: Explain concept of functional aggregate
 
+*Note: we're using linux commands in the examples and assume that php 7.1 and composer are installed globally. You have to adopt the examples for your environment!*
+ 
 First we need to install `prooph/micro` in an empty project folder:
 
 ```
+$ mkdir checkout && cd checkout
 $ composer require prooph/micro
 ```
 
-This will also install required prooph components to get a functional event sourced Microservice up and running.
-We don't want to lose time and directly start with implementing the model. First we need a good place for our functional model.
-Create a `src` dir in the project root. Then create a `Model` dir in `src` and a `Checkout` dir in `Model`.
-Finally, put a `Checkout.php` file in the `Checkout` dir.
+This will also install the required prooph components.
+We don't want to lose time and directly start with implementing the model. First we need a good place for our functions.
+
+```
+$ mkdir -p src/Model/Checkout
+$ touch src/Model/Checkout/Checkout.php
+```
+
 Open the `composer.json` file (created by composer in the project root) and configure autoloading:
 
 ```json
@@ -68,7 +71,17 @@ Open the `composer.json` file (created by composer in the project root) and conf
 }
 ```
 
-Let's define the first method of the `Checkout` process. Put the following code in the `Checkout.php` file:
+Then dump the autoloader:
+
+```
+$ composer dump-autoload
+```
+
+*Note: We use the [files autoload](https://getcomposer.org/doc/04-schema.md#files) feature of composer. But be aware that those files are required on every request. 
+prooph/micro is meant to be used for Microservices. A lot of "autoloaded" files would slow down bootstrapping of a larger application. 
+You're better off with an object oriented model for monolithic applications, because composer can only load PSR-0 or PSR-4 compliant classes on demand.*
+
+Let's define the first function of the `Checkout` process. Put the following code in `src/Model/Checkout/Checkout.php` file:
 
 ```php
 <?php
@@ -88,7 +101,8 @@ function buyProducts(callable $stateResolver, $command): array {
 We've defined a namespace, but instead of writing a class we just put a function in the file called `buyProducts`.
 A constant with the same name holding the full qualified function name of our `buyProducts` function is also defined.
 You know the `::class` language construct in PHP? The constant can be used in the same manner. Whenever you want to reference
-the function in a string use the constant. When you need to refactor later you can "find usage" of the constant and move functions around.
+the function use the constant. It makes your function globally available and you're able to pass the function as an argument to
+another function.
 
 Before we continue with the function itself, we should think about its input and output. The first argument of the 
 function is explained later. Let's skip it for now. The function takes a command as second argument.
@@ -211,7 +225,7 @@ is passed to the `buyProducts` function. Therefor we write a test case in `tests
 ```php
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ProophTest\Tutorial\Model\Checkout;
 
@@ -262,12 +276,16 @@ Test autoloading should also be configured in the `composer.json`:
  }
 ```
 
-*Note*: PHPUnit will find the test case without composer configuration but it becomes handy when we want to make use of mocks.
+```
+$ composer dump-autoload
+```
 
-Ok, result of test execution should be a failing test. Run phpunit using docker and a prooph docker image:
+*Note: PHPUnit will find the test case without composer configuration but it becomes handy when we want to make use of mocks.*
+
+Ok, result of test execution should be a failing test.
 
 ```
-$ docker run -v $(pwd):/app prooph/php:7.1-cli php vendor/bin/phpunit
+$ php vendor/bin/phpunit
 
 E                                                                   1 / 1 (100%)
 
@@ -304,17 +322,17 @@ function buyProducts(callable $stateResolver, BuyProducts $command): array {
 
 ```
 ```
-$ docker run -v $(pwd):/app prooph/php:7.1-cli php vendor/bin/phpunit
+$ php vendor/bin/phpunit
 
 .                                                                   1 / 1 (100%)
 
 OK (1 test, 3 assertions)
 ```
 
-Ok cool, the test is green. But the `buyProducts` function doesn't do much. It just takes the input payload and passes it
+Ok cool, the test is green. But the `buyProducts` function has very few logic at the moment. It just takes the input payload and passes it
 to the output payload. In some cases this is really all you need but in most cases an aggregate has a very important task.
-It should protect invariants. For our system one of these invariants could be that a product can only be bought if it is available
-in stock. Following interface describes a possible contract between our "Checkout domain" and a "Warehouse domain".
+**It should protect invariants.** For our system one of these invariants could be that a product can only be bought if it is available
+in stock. Following interface describes a possible contract between our "Checkout domain" and a "Warehouse domain" (simplified).
 
 ```php
 <?php
@@ -396,7 +414,7 @@ class CheckoutTest extends TestCase
 And of course the test fails again:
 
 ```
-$ docker run -v $(pwd):/app prooph/php:7.1-cli php vendor/bin/phpunit
+$ php vendor/bin/phpunit
 
 F                                                                   1 / 1 (100%)
 
@@ -421,10 +439,10 @@ Before we continue, we should get back to the whiteboard together with our domai
 
 - What happens if a product is not available in stock?
 - What happens if all products are not available in stock?
-- What happens if a product is only partially available in stock?
+- What happens if a product is partially available in stock?
 
-Three questions dealing with error cases. Stop! Are they really error cases? Sounds more like normal business to me.
-So should we handle these cases with exceptions or should we simply raise other events? The latter approach seems more appropriate.
+Three questions deal with error cases. Or wait! Are they really error cases? Sounds more like normal business to me.
+Should we handle these cases with exceptions or should we raise other events? The latter approach seems more appropriate.
 Let's try it and see how it goes.
 
 ```php
@@ -473,7 +491,7 @@ function buyProducts(callable $stateResolver, BuyProducts $command, Warehouse $w
     }
 
     if (count($notAvailableProducts) === count($products)) {
-        return [new AllProductsWereNotAvailable(['products' => $products])];
+        return [new AllProductsWereNotAvailable(['products' => $notAvailableProducts])];
     }
 
     if(count($notAvailableProducts) > 0 || count($partiallyAvailableProducts) > 0) {
@@ -494,7 +512,7 @@ And the test case with tests to cover all possible outcomes of `Checkout\buyProd
 ```php
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ProophTest\Tutorial\Model\Checkout;
 
@@ -590,6 +608,16 @@ class CheckoutTest extends TestCase
 }
 
 ```
+
+## To sum up
+
+
+
+
+## The Event Store
+
+
+
 ## State is just a projection of a series of events
 
 Our aggregate function raises different events now depending on availability of the products in stock. The domain expert
