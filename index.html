@@ -1,208 +1,1135 @@
 <!DOCTYPE html>
-<html>
-    <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-    <meta name="HandheldFriendly" content="True"/>
-    <title>proophessor - Exploring prooph components</title>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="http://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
-    <link rel="stylesheet"
-          href="http://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enterprise-ready CQRS and Event Sourcing packages for PHP with support for the most famous PHP web frameworks">
+    <meta name="author" content="">
+    <title>prooph CQRS and Event Sourcing components for PHP</title>
+	<!-- core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <!-- Owl Carousel Assets -->
+    <link href="css/owl.carousel.css" rel="stylesheet">
+    <link href="css/owl.theme.css" rel="stylesheet">
+    <link href="css/owl.transitions.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/responsive.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->       
+    <link rel="shortcut icon" href="images/ico/prooph-logo@0.5x.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@prooph_software">
+    <meta name="twitter:title" content="prooph components">
+    <meta name="twitter:description" content="Enterprise-ready CQRS and Event Sourcing packages for PHP with support for the most famous PHP web frameworks">
+    <meta name="twitter:image" content="http://getprooph.org/images/prooph-components-intro.png">
+</head><!--/head-->
 
-    <style>
-        body, html {
-            height: 100%;
-        }
+<body id="home">
+    <section class="header" id="main-slider">
+        <div class="section_overlay">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-color" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-angle-down fa-2x"></i>
+                        </button>
+                        <a class="navbar-brand" href="index.html"><img src="images/prooph-logo-2-1@0.5x.png" alt="logo"></a>
+                    </div>
 
-        .page-wrapper {
-            min-height: 100%;
-            padding-bottom: 204px;
-            position: relative;
-        }
+                    <div class="collapse navbar-collapse navbar-right">
+                        <ul class="nav navbar-nav">                            
+                            <li class="scroll active"><a href="#home">Home</a></li>
+                            <li class="scroll"><a href="#features">About</a></li>
+                            <li class="scroll"><a href="#about">Documentation</a></li>
+                            <li class="scroll"><a href="#community">Community</a></li>
+                            <li class="scroll"><a href="#get-in-touch">Contact</a></li>
+                            <li class="scroll"><a href="#blog">News</a></li>
+                        </ul>
+                    </div>
+                </div><!--/.container-->
+            </nav>
 
-        /* Header Section */
-        header {
-            background: white;
-            color: black;
-            font-weight: 300;
-        }
+            <div class="container home-container">
+                <div class="row hidden">
+                    <div class="col-md-12">
+                        <div class="logo text-center">
+                            <!-- LOGO -->
+                            <img height="100" src="images/prooph-logo-2-1@0.5x.png" alt="prooph logo">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <div class="home_text">
+                            <!-- TITLE AND DESC -->
+                            <h1>The <span>CQRS and Event Sourcing</span> components for PHP</h1>
+                            <h2>Crafted for Your Enterprise App</h2>
 
-        /* Content Section */
-        #content {
-            margin-bottom: 17px;
-            font-size: 17px;
-            min-height: 200px;
-        }
-
-        .links {
-            background: #f8f8f8;
-            border-top: 1px solid #e5e5e5;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 16px 0;
-        }
-
-        .links .prev {
-            text-align: left;
-        }
-
-        .links .parent {
-            text-align: center;
-        }
-
-        .links .next {
-            text-align: right;
-        }
-
-
-        /* Footer Section */
-        footer {
-            color: black;
-            background: white;
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-        }
-
-        footer #copyright {
-            padding: 30px;
-            text-align: center;
-            color: #444;
-        }
-
-        footer #copyright p {
-            margin: 0;
-        }
-
-        footer #copyright span a {
-            color: white;
-        }
-
-        /* Overide bootsstrap default style */
-        table, .table {
-            font-size: inherit;
-        }
-    </style>
-
-</head>
-    <body>
-    <div class="page-wrapper">
-        
-<header>
-    <div class="container">
-        <h3 class="title text-center">
-            proophessor - Exploring prooph components        </h3>
-    </div>
-    <div class="links">
-        <div class="container">
-            <div class="row hidden-sm hidden-md hidden-lg">
-    <div class="prev col-xs-6">
-            </div>
-    <div class="next col-xs-6">
-                    <p>Next</p>
-            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
-</div>
-
-<div class="row hidden-xs">
-    <div class="prev col-sm-4">
-            </div>
-    <div class="parent col-sm-4">
-            </div>
-    <div class="next col-sm-4">
-                    <p>Next</p>
-            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
-</div>
-
-        </div>
-    </div>
-</header>
-
-<section id="content">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                    <h1 class="text-center">proophessor - Exploring prooph components</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <img src="https://raw.githubusercontent.com/prooph/proophessor/master/docs/book/img/prooph_overview.png" alt="prooph components in a nutshell" style="width: 100%" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12"><p>&nbsp;</p></div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-<table class="table table-striped">
-    <tr>
-        <td>1</td>
-        <td><a href="http://getprooph.org/proophessor/">Overview</a></td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td><a href="http://getprooph.org/service-bus/">Prooph Service Bus (PSB)</a></td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td><a href="http://getprooph.org/event-store/">Prooph Event Store (PES)</a></td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td><a href="http://getprooph.org/event-store-bus-bridge/">Marry CQRS with Event Sourcing</a></td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td><a href="http://getprooph.org/snapshotter/">Snapshotter</a></td>
-    </tr>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-
-<footer>
-    <div class="links">
-        <div class="container">
-            <div class="row hidden-sm hidden-md hidden-lg">
-    <div class="prev col-xs-6">
-            </div>
-    <div class="next col-xs-6">
-                    <p>Next</p>
-            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
-</div>
-
-<div class="row hidden-xs">
-    <div class="prev col-sm-4">
-            </div>
-    <div class="parent col-sm-4">
-            </div>
-    <div class="next col-sm-4">
-                    <p>Next</p>
-            <a href="http://getprooph.org/proophessor/">1. Exploring prooph components</a>            </div>
-</div>
-
-        </div>
-    </div>
-    <div id="copyright">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <p>
-                        Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.
-                    </p>
+                            <div class="download-btn">
+                                <!-- BUTTON -->
+                                <a class="btn btn-creative btn-2 btn-2c home-btn wow fadeInLeft" href="https://github.com/prooph" target="_blank">Install</a>
+                                <a class="tuor btn wow fadeInRight scroll" href="#cta">Take a tour <i class="fa fa-angle-down"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</footer>
-    </div>
+    </section>
 
-    <script src="http://tobiju.github.io/share/prismjs/main.js"></script>
-    <script src="http://tobiju.github.io/share/prismjs/prism.js"></script>
+    <section id="cta" class="wow fadeIn">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7 col-md-8">
+                    <h2>prooph components include everything to get you started with CQRS and Event Sourcing</h2>
+                    <p>Enterprise-ready CQRS and Event Sourcing packages for PHP with support for the most famous PHP web frameworks. 
+                        <strong>Plays well with Microservices, too!</strong></p>
+                </div>
+                <div class="col-sm-5 col-md-4 text-right">
+                    <a class="btn btn-creative btn-2 btn-2c" href="https://github.com/prooph/event-sourcing/blob/master/examples/quickstart.php" target="_blank">Get Started Now!</a>
+                </div>
+            </div>
+        </div>
+    </section><!--/#cta-->
+
+    <section id="features">
+        <div class="container">
+
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Awesome Features</h2>
+                <p class="text-center wow fadeInDown">prooph components is a set of loosely coupled PHP packages that can be composed to a powerful toolbox</p>
+            </div>
+
+            <div class="row">
+                <div class="features">
+                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="300ms" data-wow-delay="100ms">
+                        <div class="media service-box">
+                            <div class="pull-left">
+                                <i class="prooph-eventsourcing"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color:#CF3241">Event Sourcing</h4>
+                                <p>It is different than what you've learned. Explore a fresh new way of designing and developing software with a clear focus on intent, behaviour and domain events.</p>
+                            </div>
+                        </div>
+                    </div><!--/.col-md-4-->
+                    
+                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="300ms" data-wow-delay="0ms">
+                        <div class="media service-box">
+                            <div class="pull-left">
+                                <i class="prooph-eventstore"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color: #ED6842">Event-Store</h4>
+                                <p>Turn your traditional database into a full-featured event store. No new technology stack required. No magic involved. Just another way to organize and manage data.
+                                </p>
+                            </div>
+                        </div>
+                    </div><!--/.col-md-4-->
+
+                    <div class="clearfix visible-sm-block"></div>
+
+                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="300ms" data-wow-delay="300ms">
+                        <div class="media service-box">
+                            <div class="pull-left">
+                                <i class="prooph-snapshot"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color: #EECA51">Snapshot-Store</h4>
+                                <p>High-performance write operations without losing the simplicity and scalability of PHP's Shared Nothing Architecture in an event centric system.
+                                </p>
+                            </div>
+                        </div>
+                    </div><!--/.col-md-4-->
+
+                    <div class="clearfix visible-md-block visible-lg-block"></div>
+
+                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="300ms" data-wow-delay="200ms">
+                        <div class="media service-box">
+                            <div class="pull-left">
+                                <i class="prooph-projections"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color:#1F8A6D">Persistent Projections</h4>
+                                <p>With persistent projections you can feed event streams directly into read-optimized databases that serve your data at the speed of light.
+                                    </p>
+                            </div>
+                        </div>
+                    </div><!--/.col-md-4-->
+
+                    <div class="clearfix visible-sm-block"></div>
+
+                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="300ms" data-wow-delay="400ms">
+                        <div class="media service-box">
+                            <div class="pull-left">
+                                <i class="prooph-servicebus"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color:#15A2B0">CQRS Service-Bus</h4>
+                                <p>Message-based communication between different parts of a system is the basic building block for scalable and maintainable enterprise software.</p>
+                            </div>
+                        </div>
+                    </div><!--/.col-md-4-->
+
+                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="300ms" data-wow-delay="500ms">
+                        <div class="media service-box">
+                            <div class="pull-left">
+                                <i class="prooph-messaging"></i>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color:#715671">Message Queue</h4>
+                                <p>Shift work to background jobs, manage long-running business processes and handle high traffic with seamless message queue integrations.</p>
+                            </div>
+                        </div>
+                    </div><!--/.col-md-4-->
+                </div><!--/.features--> 
+            </div><!--/.row-->    
+        </div><!--/.container-->
+        
+    </section>
+
+    <section id="cta2">
+        <div class="section_overlay">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="0ms">prooph components are 100% Open Source</h2>
+                    <p class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="100ms">Corporate-Friendly Open Source BSD License</p>
+                    <p class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="200ms"><a class="btn btn-creative btn-2 btn-2c" href="https://github.com/prooph" target="_blank">Hosted on GitHub</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" >
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Good To Know</h2>
+                <p class="text-center wow fadeInDown">prooph is designed for Event Sourcing in PHP</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 wow fadeInLeft">
+                    <script src="https://gist.github.com/codeliner/f2db029bbc66dc0e20431bd51195880f.js"></script>
+                </div>
+                <div class="col-md-6">
+                    <div class="media service-box wow fadeInRight">
+                        <div class="pull-left">
+                            <i class="fa fa-clone"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">Abstraction Layer</h4>
+                            <p>prooph is mainly designed as an abstraction layer that supports CQRS / ES using existing infrastructure</p>
+                        </div>
+                    </div>
+
+                    <div class="media service-box wow fadeInRight">
+                        <div class="pull-left">
+                            <i class="fa fa-exchange"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">Tackle Complexity</h4>
+                            <p>prooph is meant to be used in larger applications dealing with complex business logic and distributed processes.</p>
+                        </div>
+                    </div>
+
+                    <div class="media service-box wow fadeInRight">
+                        <div class="pull-left">
+                            <i class="fa fa-line-chart"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">Domain-Driven Design</h4>
+                            <p>If you think your project will benefit from Domain-Driven Design it will likely benefit from prooph as well.</p>
+                        </div>
+                    </div>
+
+                    <div class="media service-box wow fadeInRight">
+                        <div class="pull-left">
+                            <i class="fa fa-cubes"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">Monolith or Microservice</h4>
+                            <p>prooph plays well with both due to its loosely coupled components that can be used alone or all together.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section><!--/#services-->
+
+    <section id="work-process">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Event Sourcing</h2>
+                <p class="text-center wow fadeInDown">Event Sourcing is a mind shift in the way how software is designed and developed</p>
+            </div>
+
+            <div class="row text-center row-eq-height">
+                <div class="col-md-2 col-xs-12">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="0ms">
+                        <div class="icon-circle hidden-sm hidden-xs">
+                            <i class="fa fa-chevron-right fa-3x"></i>
+                        </div>
+                        <h3>Event Storming Sessions</h3>
+                        <div class="icon-circle visible-sm-block visible-xs-block">
+                            <i class="fa fa-chevron-down fa-4x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="100ms">
+                        <div class="icon-circle hidden-sm hidden-xs">
+                            <i class="fa fa-chevron-right fa-3x"></i>
+                        </div>
+                        <h3>Distributed Domain-Driven Design</h3>
+                        <div class="icon-circle visible-sm-block visible-xs-block">
+                            <i class="fa fa-chevron-down fa-4x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="300ms">
+                        <div class="icon-circle hidden-sm hidden-xs">
+                            <i class="fa fa-chevron-right fa-3x"></i>
+                        </div>
+                        <h3>Behaviour-Driven Development</h3>
+                        <div class="icon-circle visible-sm-block visible-xs-block">
+                            <i class="fa fa-chevron-down fa-4x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="200ms">
+                        <div class="icon-circle hidden-sm hidden-xs">
+                            <i class="fa fa-chevron-right fa-3x"></i>
+                        </div>
+                        <h3>Task-based UI Design</h3>
+                        <div class="icon-circle visible-sm-block visible-xs-block">
+                            <i class="fa fa-chevron-down fa-4x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="400ms">
+                        <div class="icon-circle hidden-sm hidden-xs">
+                            <i class="fa fa-chevron-right fa-3x"></i>
+                        </div>
+                        <h3>Event-oriented Testing</h3>
+                        <div class="icon-circle visible-sm-block visible-xs-block">
+                            <i class="fa fa-chevron-down fa-4x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="500ms">
+                        <div class="icon-circle hidden-sm hidden-xs">
+                            <i class="fa fa-rocket fa-4x"></i>
+                        </div>
+                        <h3>Production Audit Log</h3>
+                        <div class="icon-circle visible-sm-block visible-xs-block">
+                            <i class="fa fa-rocket fa-5x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+
+        </div>
+    </section><!--/#work-process-->
+
+    <section id="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Supported Technologies</h2>
+                <p class="text-center wow fadeInDown">Growing list of platforms supported</p>
+            </div>
+
+            <div class="text-center">
+                <ul class="portfolio-filter">
+                    <li><a class="active" href="#" data-filter="*">All</a></li>
+                    <li><a href="#" data-filter=".sup-frameworks">Frameworks</a></li>
+                    <li><a href="#" data-filter=".sup-databases">Databases</a></li>
+                    <li><a href="#" data-filter=".sup-messaging">Messaging Systems</a></li>
+                </ul><!--/#portfolio-filter-->
+            </div>
+            <div class="portfolio-items">
+                <div class="portfolio-item sup-frameworks">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/zf-logo-mark.png" alt="">
+                        <div class="portfolio-info">
+                            <h3>Zend Framework</h3>
+                            <a class="preview" href="https://github.com/prooph/proophessor-do#proophessor-do" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-databases">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/MongoDB.jpg" alt="">
+                        <div class="portfolio-info">
+                            <h3 class="align-middle">MongoDB</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=mongodb&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-frameworks">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/symfony_black_03.png" alt="">
+                        <div class="portfolio-info">
+                            <h3>Symfony</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=symfony&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-databases">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/postgresql.png" alt="">
+                        <div class="portfolio-info">
+                            <h3>PostgreSQL</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=pdo&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-frameworks">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/laravel-l-slant.png" alt="">
+                        <div class="portfolio-info">
+                            <h3>Laravel</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=laravel&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-databases">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/ArangoDB_logo_avocado.png" alt="">
+                        <div class="portfolio-info">
+                            <h3>ArangoDB</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=arangodb&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-messaging">
+                    <div class="portfolio-item-inner">
+                        <img class="img-responsive" src="images/logos-ext/ZeroMQ.gif" alt="">
+                        <div class="portfolio-info">
+                            <h3>ZeroMQ</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=zeromq&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-databases">
+                    <div class="portfolio-item-inner">
+                        <div class="portfolio-info" style="opacity:1">
+                            <h3>MySQL</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=pdo&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-messaging">
+                    <div class="portfolio-item-inner">
+                        <div class="portfolio-info" style="opacity:1">
+                            <h3>RabbitMQ</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=humus-amqp&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-databases">
+                    <div class="portfolio-item-inner">
+                        <div class="portfolio-info" style="opacity:1">
+                            <h3>Redis</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=redis&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+                <div class="portfolio-item sup-messaging">
+                    <div class="portfolio-item-inner">
+                        <div class="portfolio-info" style="opacity:1">
+                            <h3>Bernard</h3>
+                            <a class="preview" href="https://github.com/prooph?utf8=%E2%9C%93&q=bernard&type=&language=" target="_blank"><i class="fa fa-github-square"></i> Go to GitHub repo</a>
+                        </div>
+                    </div>
+                </div><!--/.portfolio-item-->
+
+            </div>
+        </div><!--/.container-->
+    </section><!--/#portfolio-->
+
+    <section id="about">
+        <div class="container">
+
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Intro</h2>
+                <p class="text-center wow fadeInDown">CQRS / ES sounds great but it looks too complex and difficult to learn?<br />We've got you covered!</p>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 wow fadeInLeft">
+                    <h3 class="column-title">Nomad Lightning Talk</h3>
+                    <!-- 16:9 aspect ratio -->
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/KfaNTbf1rIc?rel=0&amp;controls=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <div class="divider visible-xs-block"></div>
+
+                <div class="col-sm-6 wow fadeInRight">
+                    <h3 class="column-title">Documentation & Examples</h3>
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <strong>Components Docs</strong>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <p>Each component ships with its own <a href="http://bookdown.io/" target="_blank">bookdown.io</a> docs. However, we use the remote content feature of bookdown to collect the components docs and join them to a single book. This will help you find information quickly.</p>
+                                    <p><a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="docs/html/index.html" target="_blank">Read The Book</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingTwo">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <strong>Prooph in Action</strong>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="panel-body">
+                                    Our so called "proophessor-do" example app demonstrates prooph components in action. It is available in three versions using different web layers, so that you feel at home even if looking at a CQRS / ES for the first time.
+                                    <div class="btn-toolbar hidden-xs">
+                                        <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://github.com/prooph/proophessor-do" target="_blank">Zend Expressive Do</a>
+                                        <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://github.com/prooph/proophessor-do-symfony" target="_blank">Symfony Do</a>
+                                        <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://github.com/prooph/micro-do" target="_blank">Micro Do</a>
+                                    </div>
+                                    <div class="btn-toolbar visible-xs">
+                                        <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://github.com/prooph/proophessor-do" target="_blank">Zend Expressive Do</a>
+                                        <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://github.com/prooph/proophessor-do-symfony" target="_blank">Symfony Do</a>
+                                        <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://github.com/prooph/micro-do" target="_blank">Micro Do</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+
+                <div class="col-sm-6 col-md-4">
+                    <h3 class="column-title">Prooph in Production</h3>
+                    <p>prooph is used in a couple of enterprise projects. It runs in dockerized Microservices on Amazon AWS as well as side-by-side with Doctrine ORM in monolithic PHP applications. it powers eCommerce, booking and content management solutions to name a few.</p>
+
+                    <p><strong>Commercial support and workshop offers are available.</strong> All that makes prooph one of the best options for critical, high traffic applications.</p>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="nostyle">
+                                <li><i class="fa fa-check-square"></i> Community</li>
+                                <li><i class="fa fa-check-square"></i> Stability</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <ul class="nostyle">
+                                <li><i class="fa fa-check-square"></i> Free Chat</li>
+                                <li><i class="fa fa-check-square"></i> Commercial Support</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://gitter.im/prooph/improoph" target="_blank">Get In Touch</a>
+                </div>
+
+                <div class="col-md-4 hidden-sm hidden-xs">
+                    <h3 class="column-title">Our History</h3>
+                    <div role="tabpanel">
+                        <ul class="nav main-tab nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#tab1" role="tab" data-toggle="tab" aria-controls="tab1" aria-expanded="true">2014</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab2" role="tab" data-toggle="tab" aria-controls="tab2" aria-expanded="false">2015</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab3" role="tab" data-toggle="tab" aria-controls="tab3" aria-expanded="false">2016</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab4" role="tab" data-toggle="tab" aria-controls="tab4" aria-expanded="false">2017</a>
+                            </li>
+                        </ul>
+                        <div id="tab-content" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="tab1" aria-labelledby="tab1">
+                                <p>The <a href="https://github.com/prooph/service-bus/commit/fcdc84026c3a61b1c7c1ad9b3229153f0a50a424" target="_blank">Initial commit</a> of prooph/service-bus was committed on 7 Mar 2014 by <a href="https://github.com/codeliner" target="_blank">@codeliner</a>.</p>
+                                <p>Followed by <a href="https://github.com/prooph/event-store/commit/b5986d2493843b7d31ad7482bb4725cc3007a072" target="_blank">prooph/event-store</a> on 19 Apr 2014.</p>
+                                <p>These two commits mark the beginning of an exciting journey of collective learning and joint open source development.</p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab2" aria-labelledby="tab2">
+                                <p><blockquote>Hi, first of all, many thanks for this great library. Expect some PR's in near future from me.</blockquote></p>
+                                <p>With this <a href="https://github.com/prooph/proophessor/issues/20" target="_blank">promise</a> <a href="https://github.com/prolic" target="_blank">@prolic</a> joined the prooph project on 23 May 2015. Since this day his ongoing high-quality contributions are pushing prooph in one direction: forward!</p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab3" aria-labelledby="tab3">
+                                <p>2016 was another great year for prooph. <a href="https://github.com/prooph/event-store/releases/tag/v6.0" target="_blank">prooph/event-store v6</a> and <a href="https://github.com/prooph/service-bus/releases/tag/v5.0" target="_blank">prooph/service-bus v5</a> were continuously improved and the community started to grow.</p>
+                                <p><a href="https://twitter.com/hashtag/prooph?src=hash" target="_blank">Tweets</a>, <a href="http://slides.com/prooph/deck-0#/" target="_blank">talks</a>, <a href="https://joind.in/event/dutch-php-conference-2016/basic-cqrs-and-event-sourcing-with-prooph" target="_blank">workshops</a>, <a href="http://t3n.de/magazin/wichtigsten-frameworks-vorgestellt-php-werkzeugkaesten-240069/" target="_blank">magazin articles</a>, <a href="https://twitter.com/prooph_software/status/789548575667683328" target="_blank">the prooph logo</a>, <a href="https://www.eventbrite.de/e/prooph-meetup-tickets-28949182785#" target="_blank">first prooph meetup</a>, hundreds of contributions and many great discussions in our <a href="https://gitter.im/prooph/improoph" target="_blank">prooph/improoph</a> chat by more than 100 people around the world turned prooph into a first-class open source project.</p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab4" aria-labelledby="tab3">
+                                <p>With <a href="https://github.com/prooph/event-store/releases/tag/v7.0.0" target="_blank">version 7 of prooph/event-store</a> prooph enters the next level of evolution. Persistent projections and an event store HTTP API provide new capabilities to manage and consume event streams in PHP applications.</p>
+                                <p><a href="https://github.com/orgs/prooph/people" target="_blank">More than 10 core contributors</a> and many more community members work together on various prooph packages like web framework and infrastructure integrations, annotations support, dedicated prooph Docker images and so on. Prooph is a great project with a bright future. A big thx to everybody who is involved!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider visible-xs-block"></div>
+
+                <div class="col-sm-6 col-md-4">
+                    <h3 class="column-title">Test Coverage</h3>
+                    <strong>prooph/event-store</strong>
+                    <div class="progress">
+                        <div id="coverage-event-store" class="progress-bar progress-bar-primary" role="progressbar" data-width="0">0%</div>
+                    </div>
+                    <strong>prooph/pdo-event-store</strong>
+                    <div class="progress">
+                        <div id="coverage-pdo-event-store" class="progress-bar progress-bar-primary" role="progressbar" data-width="0">0%</div>
+                    </div>
+                    <strong>prooph/event-sourcing</strong>
+                    <div class="progress">
+                        <div id="coverage-event-sourcing" class="progress-bar progress-bar-primary" role="progressbar" data-width="0">0%</div>
+                    </div>
+                    <strong>prooph/service-bus</strong>
+                    <div class="progress">
+                        <div id="coverage-service-bus" class="progress-bar progress-bar-primary" role="progressbar" data-width="0">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider visible-sm-block visible-xs-block"></div>            
+
+            <div class="row visible-sm-block visible-xs-block"> 
+
+                <div class="col-xs-12">
+                    <h3 class="column-title">Our History</h3>
+                    <div role="tabpanel">
+                        <ul class="nav main-tab nav-justified" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#tab5" role="tab" data-toggle="tab" aria-controls="tab5" aria-expanded="true">2014</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab6" role="tab" data-toggle="tab" aria-controls="tab6" aria-expanded="false">2015</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab7" role="tab" data-toggle="tab" aria-controls="tab7" aria-expanded="false">2016</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab8" role="tab" data-toggle="tab" aria-controls="tab8" aria-expanded="false">2017</a>
+                            </li>
+                        </ul>
+                        <div id="tab-content" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="tab5" aria-labelledby="tab5">
+                                <p>The <a href="https://github.com/prooph/service-bus/commit/fcdc84026c3a61b1c7c1ad9b3229153f0a50a424" target="_blank">Initial commit</a> of prooph/service-bus was committed on 7 Mar 2014 by <a href="https://github.com/codeliner" target="_blank">@codeliner</a>.</p>
+                                <p>Followed by <a href="https://github.com/prooph/event-store/commit/b5986d2493843b7d31ad7482bb4725cc3007a072" target="_blank">prooph/event-store</a> on 19 Apr 2014.</p>
+                                <p>These two commits mark the beginning of an exciting journey of collective learning and joint open source development.</p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab6" aria-labelledby="tab6">
+                                <p><blockquote>Hi, first of all, many thanks for this great library. Expect some PR's in near future from me.</blockquote></p>
+                                <p>With this <a href="https://github.com/prooph/proophessor/issues/20" target="_blank">promise</a> <a href="https://github.com/prolic" target="_blank">@prolic</a> joined the prooph project on 23 May 2015. Since this day his ongoing high-quality contributions are pushing prooph in one direction: forward!</p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab7" aria-labelledby="tab7">
+                                <p>2016 was another great year for prooph. <a href="https://github.com/prooph/event-store/releases/tag/v6.0" target="_blank">prooph/event-store v6</a> and <a href="https://github.com/prooph/service-bus/releases/tag/v5.0" target="_blank">prooph/service-bus v5</a> were continuously improved and the community started to grow.</p>
+                                <p><a href="https://twitter.com/hashtag/prooph?src=hash" target="_blank">Tweets</a>, <a href="http://slides.com/prooph/deck-0#/" target="_blank">talks</a>, <a href="https://joind.in/event/dutch-php-conference-2016/basic-cqrs-and-event-sourcing-with-prooph" target="_blank">workshops</a>, <a href="http://t3n.de/magazin/wichtigsten-frameworks-vorgestellt-php-werkzeugkaesten-240069/" target="_blank">magazin articles</a>, <a href="https://twitter.com/prooph_software/status/789548575667683328" target="_blank">the prooph logo</a>, <a href="https://www.eventbrite.de/e/prooph-meetup-tickets-28949182785#" target="_blank">first prooph meetup</a>, hundreds of contributions and many great discussions in our <a href="https://gitter.im/prooph/improoph" target="_blank">prooph/improoph</a> chat by more than 100 people around the world turned prooph into a first-class open source project.</p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab8" aria-labelledby="tab8">
+                                <p>With <a href="https://github.com/prooph/event-store/releases/tag/v7.0.0" target="_blank">version 7 of prooph/event-store</a> prooph enters the next level of evolution. Persistent projections and an event store HTTP API provide new capabilities to manage and consume event streams in PHP applications.</p>
+                                <p><a href="https://github.com/orgs/prooph/people" target="_blank">More than 10 core contributors</a> and many more community members work together on various prooph packages like web framework and infrastructure integrations, annotations support, dedicated prooph Docker images and so on. Prooph is a great project with a bright future. A big thx to everybody who is involved!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section><!--/#about-->
+
+
+    <section id="community" class="hidden">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Prooph Community</h2>
+                <p class="text-center wow fadeInDown">The prooph/improoph chat on Gitter is a vibrant place with people from around the world
+                    talking about CQRS and Event Sourcing
+                </p>
+            </div>
+            <div id="gitter-wall" class="row owl-carousel">
+                <div id="gitter-wall-tpl" class="col-md-1 hidden owl-item"><img src="#" alt="" title="" width="60" height="60"></div>
+            </div>
+        </div>
+    </section>    
+
+    <section id="meet-team">
+        <div class="container">
+
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown"><i class="fa fa-trophy"></i><br />Hall of Fame</h2>
+                <p class="text-center wow fadeInDown">Everybody in the Hall of Fame is a prooph hero. All of them have successfully passed an exercise in our learning application <a href="https://github.com/prooph/proophessor-do" target="_blank">proophessor-do</a> which helps exploring the unknown world of CQRS / ES</p>
+            </div>
+
+            <div class="row row-eq-height">
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="0ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars1.githubusercontent.com/u/618940?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Danny van der Sluijs</h3>
+                            <span>Netherlands, Vianen</span>
+                        </div>
+                        <p>Exercise #1: <a href="https://github.com/prooph/proophessor-do/issues/1" target="_blank">Mark a todo as done</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/DannyvdSluijs" target="_blank"><i class="fa fa-github"></i> @DannyvdSluijs</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="100ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars0.githubusercontent.com/u/143068?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Bas Kamer</h3>
+                            <span>amsterdam, nl</span>
+                        </div>
+                        <p>Exercise #2: <a href="https://github.com/prooph/proophessor-do/issues/2" target="_blank">Reopen a todo</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/basz" target="_blank"><i class="fa fa-github"></i> @basz</a></li>
+                        </ul>
+                    </div>
+                </div>    
+
+                <div class="clearfix visible-xs-block"></div>
+
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="200ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars1.githubusercontent.com/u/199368?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Wojtek Gancarczyk</h3>
+                            <span>Berlin</span>
+                        </div>
+                        <p>Exercise #3: <a href="https://github.com/prooph/proophessor-do/issues/35" target="_blank">Add deadline to todo</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/theDisco" target="_blank"><i class="fa fa-github"></i> @theDisco</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm-block"></div>
+                
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="300ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars1.githubusercontent.com/u/743946?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Roman Sachse</h3>
+                            <span>Osnabrück</span>
+                        </div>
+                        <p>Exercise #4: <a href="https://github.com/prooph/proophessor-do/issues/60" target="_blank">Add reminder to todo</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/rommsen" target="_blank"><i class="fa fa-github"></i> @rommsen</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs-block visible-md-block"></div>
+
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="0ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars2.githubusercontent.com/u/167126?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Dranzd Viper</h3>
+                            <span>-</span>
+                        </div>
+                        <p>Exercise #5: <a href="https://github.com/prooph/proophessor-do/issues/75" target="_blank">Mark todo as expired</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/dranzd" target="_blank"><i class="fa fa-github"></i> @dranzd</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="0ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars0.githubusercontent.com/u/2399452?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Mike Zukowsky</h3>
+                            <span>Poland</span>
+                        </div>
+                        <p>Exercise #5: <a href="https://github.com/prooph/proophessor-do/issues/82" target="_blank">Notify assignee when todo deadline is expired</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/mikemix" target="_blank"><i class="fa fa-github"></i> @mikemix</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm-block visible-xs-block"></div>
+
+                <div class="col-xs-6 col-sm-4 col-md-3 team-member">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="0ms">
+                        <div class="team-img">
+                            <img class="img-responsive" src="https://avatars2.githubusercontent.com/u/938375?v=3&s=460" alt="">
+                        </div>
+                        <div class="team-info">
+                            <h3>Lucas Courot</h3>
+                            <span>Lyon, France</span>
+                        </div>
+                        <p>Exercise #7: <a href="https://github.com/prooph/proophessor-do/issues/92" target="_blank">Check that email address is unique</a></p>
+                        <ul class="social-icons">
+                            <li><a href="https://github.com/lucascourot" target="_blank"><i class="fa fa-github"></i> @lucascourot</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/#meet-team-->
+
+    <section id="animated-number" class="hidden">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">prooph in numbers</h2>
+                <p class="text-center wow fadeInDown">Every new star on Github, every download on packagist and every new face in our chat room shows that prooph is a great project with a growing community</p>
+            </div>
+
+            <div class="row text-center">
+                <div class="col-sm-4">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="100ms">
+                        <div id="animated-number-stars" class="animated-number" data-digit="0" data-duration="1000"></div>
+                        <strong>Stars on GitHub</strong>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="0ms">
+                        <div id="animated-number-downloads" class="animated-number" data-digit="0" data-duration="1000"></div>
+                        <strong>Downloads</strong>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="wow fadeInUp" data-wow-duration="400ms" data-wow-delay="200ms">
+                        <div id="animated-number-people" class="animated-number" data-digit="0" data-duration="1000"></div>
+                        <strong>Community Members</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/#animated-number-->
+
+    <section id="testimonial">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">What users say</h2>
+                <p class="text-center wow fadeInDown">See what our users love about prooph components
+                    </p>
+            </div>            
+            <div class="row">
+                <div class="btns col-xs-2 text-right">
+                    <a href="#carousel-testimonial" role="button" data-slide="prev">
+                        <span class="fa fa-angle-left fa-5x" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </div>
+
+                <div class="col-xs-8">
+
+                    <div id="carousel-testimonial" class="carousel slide text-center" data-ride="carousel">
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox">
+                            <div class="item active">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="img-circle img-thumbnail" src="https://avatars2.githubusercontent.com/u/154256?v=3&s=60" alt="">
+                                        <h4>@Ocramius</h4>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>I personally went for Prooph because its design allows for more customization and decoupling of domain from framework</p>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="img-circle img-thumbnail" src="https://avatars1.githubusercontent.com/u/3479626?v=3&s=60" alt="">
+                                        <h4>@webdevilopers</h4>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>recently started using #prooph - amazing!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="img-circle img-thumbnail" src="https://avatars1.githubusercontent.com/u/3275172?v=3&s=60" alt="">
+                                        <h4>@malukenho</h4>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>I like the way that prooph solve problems and leave us free from itself. It does not get in my way, so I like it a lot.</p>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="img-circle img-thumbnail" src="https://avatars1.githubusercontent.com/u/16303605?v=3&s=60" alt="">
+                                        <h4>@phpugdd</h4>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>We love to see our members @SandroKeil & @rabbl involved in #prooph's #OSS projects!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="img-circle img-thumbnail" src="https://avatars1.githubusercontent.com/u/143068?v=3&s=60" alt="">
+                                        <h4>@baskamer</h4>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>Doing PHP? Interested in event sourcing? Ever tried #prooph? It’s a delight!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="img-circle img-thumbnail" src="https://avatars0.githubusercontent.com/u/2643972?v=3&s=60" alt="">
+                                        <h4>@marcoshuttle</h4>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p>my life changed in a few days.. from legacy projects to #docker #php7 #zendexpressive #prooph #cqrs #eventsourcing!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="btns col-xs-2">
+                    <a href="#carousel-testimonial" role="button" data-slide="next">
+                        <span class="fa fa-angle-right fa-5x" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section><!--/#testimonial-->
+
+    <section id="get-in-touch">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">Get in Touch</h2>
+                <p class="text-center wow fadeInDown">Want to know more? Be part of the prooph community?</p>
+
+                 <div class="row row-eq-height">
+                        <div class="col-xs-6 col-sm-3 col-md-3">
+                            <a href="https://github.com/prooph" target="_blank">
+                                <div class="get-in-touch">
+                                    <i class="fa fa-github"></i>
+                                    <div class="get-in-touch_inner">
+                                        <h2>Contribute on Github</h2>
+                                        <p>Star us on Github, fork and contribute.
+                                        </p>                    
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-3">
+                            <a href="https://gitter.im/prooph/improoph" target="_blank">
+                                <div class="get-in-touch">
+                                    <i class="fa fa-comment"></i>
+                                    <div class="get-in-touch_inner">
+                                        <h2>Join our chat on Gitter</h2>
+                                        <p>Get involved, ask questions, discuss - the community is always on to help you.
+                                        </p>                    
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                                            <div class="clearfix visible-xs-block"></div>
+
+                        <div class="col-xs-6 col-sm-3 col-md-3">
+                            <a href="https://twitter.com/hashtag/prooph?src=hash" target="_blank">
+                                <div class="get-in-touch">
+                                    <i class="fa fa-twitter"></i>
+                                    <div class="get-in-touch_inner">
+                                        <h2>Follow and share on twitter</h2>
+                                        <p>Stay informed and spread the word #prooph
+                                        </p>                    
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-xs-6 col-sm-3 col-md-3">
+                            <a href="mailto:support@getprooph.org">
+                                <div class="get-in-touch last">
+                                    <i class="fa fa-envelope"></i>
+                                    <div class="get-in-touch_inner">
+                                        <h2>Get commercial support</h2>
+                                        <p>Workshops, Support, Projects - send your requests to support[at]getprooph.org
+                                        </p>                    
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/#get-in-touch-->
+
+    <section id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title text-center wow fadeInDown">What's New</h2>
+                <p class="text-center wow fadeInDown">New Releases, Events and Announcements</p>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="blog-post blog-large wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="0ms">
+                        <article>
+                            <header class="entry-header">
+                                <div class="entry-date">30 March 2017</div>
+                                <h2 class="entry-title"><a href="https://github.com/prooph/event-store/releases/tag/v7.0.0">Out now: prooph Event-Store Version 7!</a></h2>
+                            </header>
+
+                            <div class="entry-content">
+                                <p>After one year of development the 7th edition of prooph/event-store is finally available.
+                                    The new version is a complete rewrite and ships with long planed improophments like usage of PHP 7.1 language features
+                                    and performance optimizations. But wait, there's more!
+                                </p>
+                                <p>
+                                    Instead of one event store implementation using different database adapters
+                                    we now have event store interfaces and database specific implementations. This allows us to optimize for vendor needs
+                                    and support more kinds of event stores in the future.
+                                </p>
+                                <p>
+                                    Some additional query methods enable communicating with the event store over
+                                    <a href="https://github.com/prooph/event-store-http-api" target="_blank">HTTP</a> which is a precondition for an event store management UI.
+                                    So be prepared for some awesome tools available for prooph/event-store soon.
+                                </p>
+                                <p>
+                                    Another great new feature is the possibility to run persistent projections against the event store. Those projections are executed in the background and update the
+                                    read model as soon as new events arrive in the store. Check out the new feature in our <a href="https://github.com/prooph/proophessor-do/blob/master/bin/todo_reminder_projection.php" target="_blank">proophessor-do</a> example app
+                                    and of course in the <a href="/docs/html/event-store/projections.html" target="_blank">docs</a>.
+                                </p>
+                                <p>
+                                    Upgrading from an older version requires some work. We've prepared some update notes for you. Don't worry if you cannot update immediately. prooph/event-store v6 will receive bugfixes until the end of 2017.
+                                </p>
+                                <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="/docs/html/event-store/migration.html#3-6" target="_blank">Migration from v6</a>
+                            </div>
+                        </article>
+                    </div>
+                </div><!--/.col-sm-6-->
+                <div class="col-sm-6">
+                    <div class="blog-post blog-media wow fadeInRight" data-wow-duration="300ms" data-wow-delay="100ms">
+                        <article class="media clearfix">
+                            <div class="media-body">
+                                <header class="entry-header">
+                                    <div class="entry-date">16 February 2017</div>
+                                    <h2 class="entry-title"><a href="https://github.com/prooph/service-bus/releases/tag/v6.0.0" target="_blank">Version 6 prooph Service-Bus released!</a></h2>
+                                </header>
+
+                                <div class="entry-content">
+                                    <p>Increased performance while still being extremely flexible, optimized for PHP 7.1 - these are the key facts of the newest version of prooph/service-bus. If you're coming from an older version you should take a look at the <a href="/docs/html/service-bus/message_bus.html#2-3-6" target="_blank">migration docs</a>.</p>
+                                    <p>Support for prooph/service-bus v5 will end on 31 Dec 2017.</p>
+                                    <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="/docs/html/service-bus/" target="_blank">Read More</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="blog-post blog-media wow fadeInRight" data-wow-duration="300ms" data-wow-delay="200ms">
+                        <article class="media clearfix">
+                            <div class="media-body">
+                                <header class="entry-header">
+                                    <div class="entry-date">2 Dec 2016</div>
+                                    <h2 class="entry-title"><a href="https://www.eventbrite.de/e/prooph-meetup-tickets-28949182785#" target="_blank">prooph meetup 2016</a></h2>
+                                </header>
+
+                                <div class="entry-content">
+                                    <p>The very first official prooph meetup! On 30 Nov 2016 the hosts <a href="http://www.insecia.com/" target="_blank">Insecia Cloud Services</a> and <a href="http://prooph.de" target="_blank">prooph software GmbH</a> have invited the prooph community
+                                        to meet in Potsdam and talk about prooph, DDD, CQRS and Event Sourcing while enjoying free food and drinks. Two talks by <a href="http://slides.com/prooph/deck-0#/" target="_blank">@codeliner</a> and <a href="https://prolic.github.io/prooph-v7-talk/" target="_blank">@prolic</a>
+                                        informed about upcoming releases of prooph/event-store and prooph/service-bus as well as some insights about prooph in production.</p>
+                                    <p>We'll definitely host a meetup in 2017, too. Stay tuned!</p>
+                                    <a class="btn btn-creative btn-creative-small btn-2 btn-2c" href="https://twitter.com/search?q=%23prooph%20meetup&src=typd" target="_blank">Impressions</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    &copy; 2017 prooph components. Designed by <a target="_blank" href="http://prooph-software.com" title="prooph">prooph software GmbH</a>
+                </div>
+                <div class="col-sm-6">
+                    <p>All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only.</p>
+                </div>
+            </div>
+        </div>
+    </footer><!--/#footer-->
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.parallax-1.1.3.js"></script>
+    <script src="js/mousescroll.js"></script>
+    <script src="js/smoothscroll.js"></script>
+    <script src="js/jquery.isotope.min.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/main.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            loadFunFacts('/fun_facts/fun_facts.json?v=1')
+        })
+    </script>
 </body>
 </html>

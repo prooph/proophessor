@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <title>Message Buses</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+    <link rel="stylesheet"
+          href="https://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+    <style>
+        body, html {
+            height: 100%;
+            padding-top: 36px;
+            position: relative;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100%;
+            padding-bottom: 170px;
+            position: relative;
+        }
+
+        /* Header Section */
+        header {
+            background: white;
+            color: black;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        h1:first-child {
+            margin-top: 0;
+        }
+
+        /* anchor link will be displayed after the static top nav */
+        h1:before,
+        h2:before,
+        h3:before,
+        h4:before,
+        h5:before,
+        h6:before {
+            display: block;
+            content: " ";
+            margin-top: -64px;
+            height: 64px;
+            visibility: hidden;
+        }
+
+        .navbar-brand {
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            max-height: 100%;
+        }
+
+        /* Content Section */
+        #content {
+            margin-bottom: 17px;
+            font-size: 17px;
+            min-height: 200px;
+        }
+
+        .breadcrumb {
+            position: relative;
+            z-index: 999;
+        }
+
+        .links {
+            background: #f8f8f8;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+
+        .links .prev {
+            text-align: left;
+        }
+
+        .links .parent {
+            text-align: center;
+        }
+
+        .links .next {
+            text-align: right;
+        }
+
+        /* TOC */
+        .list-toc .list-group-item {
+            background: 0 none;
+            position: relative;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .list-toc .list-group-item.level-2 {
+            padding-left: 20px;
+        }
+
+        .list-toc .list-group-item.level-3 {
+            padding-left: 40px;
+        }
+
+        .list-toc .list-group-item.level-4 {
+            padding-left: 20px;
+        }
+
+        .list-toc .list-group-item .row {
+            padding: 7px 0;
+        }
+
+        .list-toc .list-group-item .text-number {
+            padding-left: 10px;
+        }
+
+        .list-toc .list-toc-nested .list-group-item {
+            font-weight: normal;
+            border: 0 none !important;
+        }
+
+        .list-toc .list-toc-nested {
+            margin-bottom: 0;
+            padding-bottom: 10px;
+        }
+
+        .list-toc .list-group-item .bbt-toc-toggle {
+            display: block;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-weight: normal;
+        }
+        .list-toc .list-group-item .bbt-toc-toggle:before {
+            content: "";
+            display: block;
+        }
+        .list-toc .list-group-item .bbt-toc-toggle.collapsed:before {
+            content: "";
+            display: block;
+        }
+
+        .list-toc > li:nth-child(2n+1) {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .bbt-theme-cyborg .list-toc > li:nth-child(2n+1),
+        .bbt-theme-darkly .list-toc > li:nth-child(2n+1),
+        .bbt-theme-slate .list-toc > li:nth-child(2n+1),
+        .bbt-theme-superhero .list-toc > li:nth-child(2n+1) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .list-toc .list-group-item {
+            border-bottom: 0 none;
+            border-left: 0 none;
+            border-right: 0 none;
+            font-size: inherit;
+        }
+
+        .list-toc .list-group-item:first-child {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .list-toc .list-group-item:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Left navigation */
+        .nav-left ul li a {
+            padding-top: 3px;
+            padding-bottom: 3px;
+            border-left: 1px solid transparent;
+        }
+        .nav-left ul li.active a,
+        .nav-left ul li a:hover {
+            background: none !important;
+            color: inherit;
+            border-color: inherit;
+        }
+
+        .affix {
+            top: 60px;
+        }
+
+        .badge {
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        /* Footer Section */
+        footer {
+            color: black;
+            background: white;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer #copyright {
+            padding: 30px;
+            text-align: center;
+            color: #444;
+        }
+
+        footer #copyright p {
+            margin: 0;
+        }
+
+        footer #copyright span a {
+            color: white;
+        }
+
+        .prooph-logo {
+            float: left;
+            margin-left: 8px;
+            margin-right: 8px;
+            transition-timing-function: ease-in-out;
+            transition: all 5s;
+            height: 50px;
+            padding: 5px;
+        }
+
+        .prooph-logo:hover {
+            transition: all .7s;
+            transition-timing-function: ease-out;
+            transform: rotate(360deg);
+        }
+
+        /* Top Navigation */
+        @media (max-width: 767px) {
+            ul.navbar-nav {
+                margin: 0 -15px
+            }
+
+            ul.navbar-nav li {
+                border-radius: 0;
+            }
+
+            ul.navbar-nav li ul {
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                display: block;
+                float: none;
+                left: auto;
+                padding: 0;
+                position: static;
+            }
+
+            ul.navbar-nav li ul li a {
+                padding: 8px 30px;
+            }
+
+            ul.navbar-nav li ul li ul li a {
+                padding: 6px 40px;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            ul.navbar-nav li {
+                display: block;
+                position: relative;
+                float: left;
+            }
+
+            ul.navbar-nav li ul {
+                display: none;
+            }
+
+            ul.navbar-nav li a {
+                display: block;
+            }
+
+            ul.navbar-nav li:hover > ul {
+                display: block;
+                position: absolute;
+            }
+
+            ul.navbar-nav li:hover li {
+                float: none;
+            }
+
+            ul.navbar-nav ul ul {
+                left: 100%;
+                top: 0;
+            }
+        }
+    </style>
+    </head>
+    <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
+    <div class="page-wrapper">
+        <header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#js-navbar-collapse" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                    </div>
+
+        <div class="collapse navbar-collapse" id="js-navbar-collapse">
+            
+    
+    <ul class="nav navbar-nav">
+        <a href="/docs/html/">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
+                <defs>
+                    <style>
+                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
+                    </style>
+                </defs>
+                <title>prooph-logo</title>
+                <g id="artwork">
+                    <g id="Layer_5" data-name="Layer 5">
+                        <path class="cls-1"
+                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
+                        <path class="cls-2"
+                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
+                        <path class="cls-3"
+                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
+                        <path class="cls-4"
+                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
+                        <path class="cls-5"
+                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
+                        <path class="cls-6"
+                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
+                    </g>
+                </g>
+            </svg>
+        </a>
+                        <li>
+    <a href="/docs/html/overview/">Overview</a>
+    
+    <ul class="dropdown-menu">
+        <a href="/docs/html/overview/">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
+                <defs>
+                    <style>
+                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
+                    </style>
+                </defs>
+                <title>prooph-logo</title>
+                <g id="artwork">
+                    <g id="Layer_5" data-name="Layer 5">
+                        <path class="cls-1"
+                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
+                        <path class="cls-2"
+                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
+                        <path class="cls-3"
+                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
+                        <path class="cls-4"
+                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
+                        <path class="cls-5"
+                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
+                        <path class="cls-6"
+                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
+                    </g>
+                </g>
+            </svg>
+        </a>
+                        <li>
+    <a href="/docs/html/overview/prooph-in-a-nutshell.html">prooph in a nutshell</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/overview/components.html">prooph components</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="/docs/html/service-bus/">Service Bus</a>
+    
+    <ul class="dropdown-menu">
+        <a href="/docs/html/service-bus/">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
+                <defs>
+                    <style>
+                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
+                    </style>
+                </defs>
+                <title>prooph-logo</title>
+                <g id="artwork">
+                    <g id="Layer_5" data-name="Layer 5">
+                        <path class="cls-1"
+                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
+                        <path class="cls-2"
+                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
+                        <path class="cls-3"
+                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
+                        <path class="cls-4"
+                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
+                        <path class="cls-5"
+                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
+                        <path class="cls-6"
+                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
+                    </g>
+                </g>
+            </svg>
+        </a>
+                        <li>
+    <a href="/docs/html/service-bus/intro.html">PSB - ProophServiceBus</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/service-bus/overview.html">PSB Overview</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/service-bus/message_bus.html">Message Buses</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/service-bus/plugins.html">PSB Plugins</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/service-bus/async_message_producer.html">Async Message Producer</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/service-bus/factories.html">Interop + Factories</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-store/">Event Store</a>
+    
+    <ul class="dropdown-menu">
+        <a href="/docs/html/event-store/">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
+                <defs>
+                    <style>
+                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
+                    </style>
+                </defs>
+                <title>prooph-logo</title>
+                <g id="artwork">
+                    <g id="Layer_5" data-name="Layer 5">
+                        <path class="cls-1"
+                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
+                        <path class="cls-2"
+                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
+                        <path class="cls-3"
+                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
+                        <path class="cls-4"
+                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
+                        <path class="cls-5"
+                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
+                        <path class="cls-6"
+                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
+                    </g>
+                </g>
+            </svg>
+        </a>
+                        <li>
+    <a href="/docs/html/event-store/intro.html">ProophEventStore</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-store/event_store.html">Prooph Event Store</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-store/projections.html">Projections</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-store/upcasting.html">Upcasting</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-store/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-store/migration.html">Migration from v6 to v7</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-sourcing/">Event Sourcing</a>
+    
+    <ul class="dropdown-menu">
+        <a href="/docs/html/event-sourcing/">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
+                <defs>
+                    <style>
+                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
+                    </style>
+                </defs>
+                <title>prooph-logo</title>
+                <g id="artwork">
+                    <g id="Layer_5" data-name="Layer 5">
+                        <path class="cls-1"
+                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
+                        <path class="cls-2"
+                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
+                        <path class="cls-3"
+                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
+                        <path class="cls-4"
+                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
+                        <path class="cls-5"
+                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
+                        <path class="cls-6"
+                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
+                    </g>
+                </g>
+            </svg>
+        </a>
+                        <li>
+    <a href="/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-sourcing/repositories.html">Working with Repositories</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-sourcing/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/docs/html/event-sourcing/migration.html">Migration from v4 to v5</a>
+
+    </li>
+            </ul>
+
+    </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+</header>
+<div class="container">
+    <ol class="breadcrumb">
+                        <li><a href="/docs/html/">prooph components documentation</a></li>
+                                <li><a href="/docs/html/service-bus/">Service Bus</a></li>
+                                <li class="active">Message Buses</li>
+            </ol>
+    <div class="row">
+
+                <div class="col-md-3">
+            <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
+    <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
+                                <li>
+                <a href="#2-3" title="Message&#x20;Buses">Message Buses</a>
+            </li>
+                                <li>
+                <a href="#2-3-1" title="Commanding">Commanding</a>
+            </li>
+                                <li>
+                <a href="#2-3-2" title="Eventing">Eventing</a>
+            </li>
+                                <li>
+                <a href="#2-3-3" title="Querying">Querying</a>
+            </li>
+                                <li>
+                <a href="#2-3-4" title="API">API</a>
+            </li>
+                                <li>
+                <a href="#2-3-5" title="Event-Driven&#x20;Dispatch">Event-Driven Dispatch</a>
+            </li>
+                                                                                                                    <li>
+                <a href="#2-3-6" title="Migration&#x20;from&#x20;v5">Migration from v5</a>
+            </li>
+                                                                        </ul>
+</nav>
+        </div>
+                <div class="col-md-9">
+<div id="section-main"><h1 id="2-3">Message Buses</h1>
+<h2 id="2-3-1">Commanding</h2>
+<p>When you want to apply <a href="http://cqrs.files.wordpress.com/2010/11/cqrs_documents.pdf">CQRS</a> the command bus is
+your best friend.
+It takes an incoming command message and routes it to the responsible command handler.
+The advantage of using a CommandBus instead of calling command handlers directly is, that you can change your model
+without effecting the application logic. You can work with command versions to dispatch a newer version to a new
+command handler and older versions to old command handlers. Your model can support different versions at the same
+time which makes migrations a lot easier.
+Second feature of a command bus could be automatic transaction handling.
+And for distributed systems it is also interesting to push the command on a queue and handle it asynchronous.</p>
+<h2 id="2-3-2">Eventing</h2>
+<p>When dividing your domain logic into modules or bounded contexts you need a way to inform the outside world
+about events that happened in your model.
+An EventBus is responsible for dispatching event messages to all interested listeners. If a listener is part of
+another system the event may need to be send to a remote interface.</p>
+<h2 id="2-3-3">Querying</h2>
+<p>A system based on <a href="http://martinfowler.com/articles/microservices.html">Microservices</a> requires a lightweight
+communication channel.
+The two most used protocols are HTTP request-response with resource API's and lightweight messaging. The latter
+is supported by prooph/service-bus out-of-the-box but HTTP API's can be integrated too.
+The QueryBus is responsible for routing a query message to a so called finder. The query indicates that the
+producer expects a response.
+The finder's responsibility is to fetch data from a data source using the query parameters defined in the query
+message. It is up to the finder if the data is fetched synchronous or asynchronous, so the QueryBus returns
+a <code>React\Promise\Promise</code> to the callee.</p>
+<h2 id="2-3-4">API</h2>
+<p>All three bus types extend the same base class <code>Prooph\ServiceBus\MessageBus</code> and therefore make use of an
+event-driven message dispatch process. Take a look at the CommandBus API. It is the same for EventBus and
+QueryBus except that the QueryBus returns a promise from <code>QueryBus::dispatch</code>.</p>
+<pre><code class="language-php">class CommandBus extends MessageBus
+{
+    public function attach(string $eventName, callable $listener, int $priority = 0): ListenerHandler
+
+    public function detach(ListenerHandler $handler): void
+
+    /**
+     * @param mixed $command
+     *
+     * @throws CommandDispatchException
+     */
+    public function dispatch($command): void;
+}
+</code></pre>
+<p>The public API of a message bus is very simple. You can attach and detach plugins which are simple event
+listener aggregates and you can dispatch a message.</p>
+<h2 id="2-3-5">Event-Driven Dispatch</h2>
+<p>Internally a prooph message bus uses an <a href="https://github.com/prooph/common#actioneventemitter">event-driven process</a>
+to dispatch messages.
+This offers a lot of flexibility without the need to define interfaces for messages.
+A message can be everything even a string. prooph/service-bus doesn't care. But using some defaults will reduce
+the number of required plugins and increase performance.</p>
+<p>But first let's take a look at the internals of a message dispatch process and the differences between the
+bus types.</p>
+<h3 id="2-3-5-1">dispatch</h3>
+<p>This action event is triggered right after <code>MessageBus::dispatch($message)</code> is invoked.</p>
+<p>The following default priorities are integrated:</p>
+<pre><code class="language-php">public const PRIORITY_INITIALIZE = 400000;
+public const PRIORITY_DETECT_MESSAGE_NAME = 300000;
+public const PRIORITY_ROUTE = 200000;
+public const PRIORITY_LOCATE_HANDLER = 100000;
+public const PRIORITY_INVOKE_HANDLER = 0;
+</code></pre>
+<h4 id="2-3-5-1-1">initialize</h4>
+<p>At this time the action event only contains the <code>message</code>. You can attach any listeners for initialization.</p>
+<h4 id="2-3-5-1-2">detect-message-name</h4>
+<p>Before a message handler can be located, the message bus needs to know how the message is named. Their are two
+possibilities to provide the information. The message can implement the
+<a href="https://github.com/prooph/common/blob/master/src/Messaging/HasMessageName.php">Prooph\Common\Messaging\HasMessageName</a>
+interface.
+In this case the message bus picks the name directly from the message and set it as param <code>message-name</code> in the
+action event for later use. The <code>detect-message-name</code> event is not triggered. If the message
+does not implement the interface the <code>detect-message-name</code> priority can be used to add a plugin to inject the
+name using <code>ActionEvent::setParam('message-name', $messageName)</code>.
+If no <code>message-name</code> was set by a listener the message bus uses a fallback:</p>
+<ul>
+<li>FQCN of message in case of object</li>
+<li>message =&gt; message-name in case of string</li>
+<li>
+<code>gettype($message)</code> in all other cases</li>
+</ul>
+<h4 id="2-3-5-1-3">route</h4>
+<p>During the <code>route</code> phase a plugin (typically a router) should provide the responsible message handler either
+in form of a ready to use <code>callable</code>, an object or just a string.
+The latter should be a service id that can be passed to a service locator to get an instance of the message
+handler.
+The message handler should be set as action event param <code>message-handler</code> (for CommandBus and QueryBus) or
+<code>event-listeners</code> (for EventBus).</p>
+<p>As you can see command and query bus work with a single message handler whereby the event bus works with
+multiple listeners.
+This is one of the most important differences. Only the event bus allows multiple message handlers per
+message and therefor uses a slightly different dispatch process.</p>
+<h4 id="2-3-5-1-4">locate-handler</h4>
+<p>After routing the message, the message bus checks if the handler was provided as a string. This is the
+latest time to provide an object or callable as message handler. If no plugin was able to provide one the
+message bus throws an exception.</p>
+<h4 id="2-3-5-1-5">invoke-handler</h4>
+<p>Having the message handler in place it's time to invoke it with the message. <code>callable</code> message handlers
+are invoked by the bus. However, the <code>invoke-handler</code> / <code>invoke-finder</code> events are always triggered.
+At this stage all three bus types behave a bit different.</p>
+<ul>
+<li>CommandBus: invokes the handler with the command message. A <code>invoke-handler</code> event is triggered.</li>
+<li>QueryBus: much the same as the command bus but the message handler is invoked with the query message
+and a <code>React\Promise\Deferred</code> that needs to be resolved by the message handler aka finder. The query bus
+triggers a <code>invoke-finder</code> action event to indicate that a finder should be invoked and not a normal message
+handler.</li>
+<li>EventBus: loops over all <code>event-listeners</code> and triggers the <code>locate-handler</code> and <code>invoke-handler</code> action
+events for each message listener.</li>
+</ul>
+<p>*Note: * The command and query bus have a mechanism to check if the command or query was handled. If not they
+throw an exception.
+The event bus does not have such a mechanism as having no listener for an event is a valid case.</p>
+<h3 id="2-3-5-2">finalize</h3>
+<p>This action event is always triggered at the end of the process no matter if the process was successful
+or an exception was thrown. It is the ideal place to attach a monitoring plugin.</p>
+<p>If at any time a plugin or the message bus itself throws an exception it is caught and passed as param
+<code>exception</code> to this action event. The normal action event chain breaks and a <code>finalize</code> event is triggered
+instead. Plugins can then access the exception by getting it from the action event.
+A <code>finalize</code> plugin can unset the exception by calling <code>ActionEvent::setParam("exception", null)</code>.
+When all plugins are informed about the error and no one has unset the exception the message bus
+throws a Prooph\ServiceBus\Exception\MessageDispatchException to inform the outside world about the error.</p>
+<p>Note: The query bus has another additional priority <code>PRIORITY_PROMISE_REJECT</code> which is used to reject the promise
+in case of an exception during the finalize event. If you want to remove the exception with a listener, you need
+to add your listener with a higher priority than that.</p>
+<h2 id="2-3-6">Migration from v5</h2>
+<h3 id="2-3-6-1">Events &amp; Priorities</h3>
+<p>Two things are to consider, when upgrading from v5.</p>
+<ol>
+<li>The <code>handle-error</code> event is gone. If you want to have a plugin that tracks exception, you need to use the
+<code>finalize</code> event and check for existence of an exception. This can look like this:</li>
+</ol>
+<pre><code class="language-php">$commandBus-&gt;attach(
+    CommandBus::EVENT_FINALIZE,
+    function (ActionEvent $actionEvent) {
+        if ($ex = $actionEvent-&gt;getParam(CommandBus::EVENT_PARAM_EXCEPTION) {
+            // do something
+        }
+    }
+);
+</code></pre>
+<ol start="2">
+<li>There is a new <code>dispatch</code> event replacing all other previously existing events. It is controlled by
+event priorities instead. So if your previous plugin looked like this:</li>
+</ol>
+<pre><code class="language-php">$commandBus-&gt;attach(
+    CommandBus::EVENT_INVOKE_HANDLER,
+    function (ActionEvent $actionEvent) {
+        if ($ex = $actionEvent-&gt;getParam(CommandBus::EVENT_PARAM_EXCEPTION) {
+            // do something
+        }
+    }
+);
+</code></pre>
+<p>it now has to look like this:</p>
+<pre><code class="language-php">$commandBus-&gt;attach(
+    CommandBus::EVENT_DISPATCH,
+    function (ActionEvent $actionEvent) {
+        if ($ex = $actionEvent-&gt;getParam(CommandBus::EVENT_PARAM_EXCEPTION) {
+            // do something
+        }
+    },
+    CommandBus::PRIORITY_INVOKE_HANDLER
+);
+</code></pre>
+<ol start="3">
+<li>Attaching to ActionEvents</li>
+</ol>
+<p>Instead of calling:</p>
+<pre><code class="language-php">$commandBus
+    -&gt;getActionEventEmitter()
+    -&gt;attachListener(string $event, callable $listener, int $priority = 1): ListenerHandler;
+</code></pre>
+<p>It's more simple now:</p>
+<pre><code class="language-php">$commandBus-&gt;attach(string $event, callable $listener, int $priority = 1): ListenerHandler;
+</code></pre>
+<ol start="4">
+<li>Plugins</li>
+</ol>
+<p>Instead of implementing <code>Prooph\Common\Event\ActionEventListenerAggregate</code> a plugin now has to
+implement <code>Prooph\ServiceBus\Plugin\Plugin</code>. The signature is:</p>
+<pre><code class="language-php">public function attachToMessageBus(MessageBus $messageBus): void;
+    
+public function detachFromMessageBus(MessageBus $messageBus): void;
+</code></pre>
+<h3 id="2-3-6-2">Further changes</h3>
+<h4 id="2-3-6-2-1">FinderInvokeStrategy</h4>
+<p>Instead of having this:</p>
+<pre><code class="language-php">$finder-&gt;findQueryOne(QueryOne $query, Deferred $deferred = null): void;
+</code></pre>
+<p>you simply have this:</p>
+<pre><code class="language-php">$finder-&gt;find(QueryOne $query, Deferred $deferred = null): void;
+</code></pre>
+<p>If you want to go back to the old behaviour, you can do the following things:</p>
+<p>a)</p>
+<pre><code class="language-php">class MyFinder
+{
+    public function find(Query $query, Deferred $deferred = null): void
+    {
+        if ($query instanceof QueryOne) {
+            $this-&gt;findQueryOne($query, $deferred);
+        } elseif ($query instanceof QueryTwo) {
+            $this-&gt;findQueryTwo($query, $deferred);
+        } else {
+            throw new \InvalidArgumentException('Unknown query passed');
+        }
+    }
+}
+</code></pre>
+<p>or b) Write a custom FinderInvokeStrategy.</p>
+<h4 id="2-3-6-2-2">HandleCommandStrategy</h4>
+<p>Same as for FinderInvokeStrategy, the handler is only expected have a <code>handle(Command $command): void</code> method.
+If you need the old behaviour back, implement this in your handlers or write a custom plugin.</p>
+<h4 id="2-3-6-2-3">OnEventStrategy</h4>
+<p>Same as above: There handler is only expected to have a <code>onEvent(Event $message): void</code> method.</p>
+</div>        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="links">
+        <div class="container">
+            <div class="row">
+                <div class="prev col-xs-6">
+                                            <a href="/docs/html/service-bus/overview.html">Previous</a>                                    </div>
+                <div class="next col-xs-6">
+                                            <a href="/docs/html/service-bus/plugins.html">Next</a>                                    </div>
+            </div>
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Powered by <a href="https://github.com/prooph/bookdown-template" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+    <script src="https://prooph.github.io/share/prismjs/main.js"></script>
+    <script src="https://prooph.github.io/share/prismjs/prism.js"></script>
+</body>
+</html>
