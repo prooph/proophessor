@@ -72,8 +72,14 @@ hr {
 .section-header {
   margin-bottom: 50px;
 }
+
+@media (min-width: 992px) {
+  .section-header .section-title {
+    font-size: 44px;
+  }
+}
+
 .section-header .section-title {
-  font-size: 44px;
   color: #272727;
   text-transform: uppercase;
   position: relative;
@@ -83,7 +89,7 @@ hr {
 .section-header .section-title + p {
    text-transform: uppercase;
   font-weight: 600;
-  letter-spacing: 0.1em; 
+  letter-spacing: 0.1em;
 }
 .section-header .section-title:before {
   content: "";
@@ -192,32 +198,32 @@ ul.nostyle i {
 }
 .header {
   background:
-       url(../images/prooph-logo.svg)    
+       url(../images/prooph-logo.svg)
      center 40px / 220px 220px /* position / size */
-     no-repeat                
-     fixed,  
-      url(../images/prooph-logo.svg)    
+     no-repeat
+     fixed,
+      url(../images/prooph-logo.svg)
      center -50px / 400px 400px /* position / size */
-     no-repeat                
-     fixed, 
-      url(../images/prooph-logo.svg)    
+     no-repeat
+     fixed,
+      url(../images/prooph-logo.svg)
      center -200px / 700px 700px /* position / size */
-     no-repeat                
-     fixed, 
-      url(../images/prooph-logo.svg)    
+     no-repeat
+     fixed,
+      url(../images/prooph-logo.svg)
      center -450px / 1200px 1200px /* position / size */
-     no-repeat                
+     no-repeat
      fixed,
        url(../images/prooph-logo.svg)
        center -800px / 1900px 1900px /* position / size */
        no-repeat
        fixed/*,
-     url(../images/popov-69419.jpg) top center / cover no-repeat*/;      
-     background-color: rgba(33, 33, 33, .75);       
+     url(../images/popov-69419.jpg) top center / cover no-repeat*/;
+     background-color: rgba(33, 33, 33, .75);
 }
 .header .section_overlay {
   background:
-  url(../images/prooph-logo-2-1@0.5x.png)    
+  url(../images/prooph-logo-2-1@0.5x.png)
      center 100px / 200px 100px /* position / size */
      no-repeat;
     background-color: rgba(33, 33, 33, .75);
@@ -245,7 +251,7 @@ ul.nostyle i {
 .home_text {
   color: #fff;
   margin-top: 20%;
-  padding: 20px 0;  
+  padding: 20px 0;
 }
 .home_text h1 {
   font-size: 36px;
@@ -445,15 +451,15 @@ ul.nostyle i {
   position: relative
 }
 .portfolio-item-inner img {
-    max-height: 100%;  
-    max-width: 100%; 
+    max-height: 100%;
+    max-width: 100%;
     width: auto;
     height: auto;
-    position: absolute;  
-    top: 0;  
-    bottom: 0;  
-    left: 0;  
-    right: 0;  
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     margin: auto;
 }
 /* Start: Recommended Isotope styles */
@@ -528,7 +534,7 @@ ul.nostyle i {
   margin-bottom: 0;
 }
 #testimonial .item {
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 #testimonial .item p {
   text-align: left;
@@ -536,7 +542,7 @@ ul.nostyle i {
   line-height: 200%;
   font-style: italic;
   font-weight: normal;
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 #carousel-testimonial .carousel-inner {
   min-height: 160px;
@@ -725,7 +731,7 @@ ul.nostyle i {
 }
 #get-in-touch a .get-in-touch_inner p,
 #get-in-touch a:hover .get-in-touch_inner h2 {
-  opacity: 0; 
+  opacity: 0;
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
   -o-transition: all 0.5s;
@@ -733,7 +739,7 @@ ul.nostyle i {
 }
 #get-in-touch a:hover .get-in-touch_inner p,
 #get-in-touch a .get-in-touch_inner h2  {
-  opacity: 1; 
+  opacity: 1;
 }
 
 #blog {
@@ -1001,8 +1007,8 @@ i.prooph-eventsourcing {
     }
     ul.navbar-nav {
         padding: 0 20px;
-        background-color:#15A2B0; 
-        border-radius: 0 0 5px 5px;       
+        background-color:#15A2B0;
+        border-radius: 0 0 5px 5px;
         border-bottom: 6px solid #0E7E86;
     }
     .navbar-default {
