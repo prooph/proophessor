@@ -1,6 +1,7 @@
 {
   "title": "Getting Started",
   "content": [
-    {"beginner-tutorial": "beginner_tutorial.md"}
+    {"beginner-tutorial": "beginner_tutorial.md"},
+    {"event-sourcing-first-steps": "first_steps_with_event_sourcing.md"}
   ]
 }
