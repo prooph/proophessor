@@ -2,9 +2,9 @@
   "title": "proophessor - Exploring prooph components",
   "content": [
     {"proophessor": "book/bookdown.json"},
-    {"service-bus": "https://raw.githubusercontent.com/prooph/service-bus/develop/docs/bookdown.json"},
-    {"event-store": "https://raw.githubusercontent.com/prooph/event-store/develop/docs/bookdown.json"},
-    {"event-store-bus-bridge": "https://raw.githubusercontent.com/prooph/event-store-bus-bridge/develop/docs/bookdown.json"},
+    {"service-bus": "https://raw.githubusercontent.com/prooph/service-bus/master/docs/bookdown.json"},
+    {"event-store": "https://raw.githubusercontent.com/prooph/event-store/master/docs/bookdown.json"},
+    {"event-store-bus-bridge": "https://raw.githubusercontent.com/prooph/event-store-bus-bridge/master/docs/bookdown.json"},
     {"snapshotter": "https://raw.githubusercontent.com/prooph/snapshotter/master/docs/bookdown.json"}
   ],
   "target": "./html",
