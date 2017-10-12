@@ -1,27 +1,38 @@
 {
-    "name": "prooph/proophessor",
-    "description": "Exploring prooph components",
-    "type": "library",
-    "license": "BSD-3-Clause",
-    "homepage": "http://getprooph.org/",
-    "authors": [
-        {
-            "name": "Alexander Miertsch",
-            "email": "contact@prooph.de",
-            "homepage": "http://www.prooph.de"
-        },
-        {
-            "name": "Sascha-Oliver Prolic",
-            "email": "saschaprolic@googlemail.com"
-        }
-    ],
-    "keywords": [
-        "EventStore",
-        "EventSourcing",
-        "DDD",
-        "prooph"
-    ],
-    "require-dev": {
-        "tobiju/bookdown-bootswatch-templates": "^0.2.0"
+  "name": "prooph/proophessor",
+  "description": "Exploring prooph components",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "homepage": "http://getprooph.org/",
+  "authors": [
+    {
+      "name": "Alexander Miertsch",
+      "email": "contact@prooph.de",
+      "homepage": "http://www.prooph.de"
+    },
+    {
+      "name": "Sascha-Oliver Prolic",
+      "email": "saschaprolic@googlemail.com"
     }
+  ],
+  "keywords": [
+    "prooph",
+    "bookdown",
+    "templates",
+    "syntax",
+    "highlighting",
+    "docbook",
+    "markdown",
+    "manual",
+    "documentation",
+    "static site",
+    "docs"
+  ],
+  "require": {
+    "bookdown/bookdown": "1.x-dev",
+    "webuni/commonmark-table-extension": "^0.6.1",
+    "webuni/commonmark-attributes-extension": "^0.5.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
