@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta name="HandheldFriendly" content="True"/>
-<title>Interop + Factories</title>
+<title>Aggregate Dependencies</title>
 <link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
@@ -578,8 +578,8 @@
 <div class="container">
     <ol class="breadcrumb">
                         <li><a href="/">prooph components documentation</a></li>
-                                <li><a href="/service-bus/">Service Bus</a></li>
-                                <li class="active">Interop + Factories</li>
+                                <li><a href="/tutorial/">Tutorial</a></li>
+                                <li class="active">Aggregate Dependencies</li>
             </ol>
     <div class="row">
 
@@ -587,49 +587,611 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-6" title="Interop&#x20;&#x2B;&#x20;Factories">Interop + Factories</a>
+                <a href="#1-5" title="Aggregate&#x20;Dependencies">Aggregate Dependencies</a>
             </li>
                                 <li>
-                <a href="#3-6-1" title="Factory-Driven&#x20;Message&#x20;Bus&#x20;Creation">Factory-Driven Message B...</a>
+                <a href="#1-5-1" title="Method&#x20;Injection">Method Injection</a>
             </li>
-                                            <li>
-                <a href="#3-6-2" title="Customizing&#x20;via&#x20;Configuration">Customizing via Configur...</a>
+                                <li>
+                <a href="#1-5-2" title="Be&#x20;Careful">Be Careful</a>
+            </li>
+                                <li>
+                <a href="#1-5-3" title="Links">Links</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-6">Interop + Factories</h1>
-<p>Instead of providing a module, a bundle, a bridge or similar framework integration prooph/service-bus ships with
-<code>interop factories</code>.</p>
-<h2 id="3-6-1">Factory-Driven Message Bus Creation</h2>
-<p>The concept behind these factories is simple but powerful. It allows us to provide you with bootstrapping logic for
-the message buses without the need to rely on a specific framework. However, the factories have three requirements.</p>
-<h3 id="3-6-1-1">Requirements</h3>
-<ol>
-<li>Your Inversion of Control container must implement the <a href="https://github.com/container-interop/container-interop">interop-container interface</a>.</li>
+<div id="section-main"><h1 id="1-5">Aggregate Dependencies</h1>
+<p>In the previous chapters we've learned that an aggregate protects invariants and records an event for each state transition.
+It then applies recorded events to its internal state and uses the state to validate if the next state transition can take place.</p>
+<p>But not in all cases an aggregate can rely on its internal state only. Sometimes the aggregate needs to get information
+from somewhere else to make a decision. In this case the aggregate has a dependency to an external service and in this
+chapter we will learn how to give access to such a service and of course how to test it.</p>
+<h2 id="1-5-1">Method Injection</h2>
+<p>You may have noticed that we've left a <code>@TODO Check stock</code> in the <code>Basket::addProduct()</code> method. Products are handled
+in an external ERP system and we can request current stock of a product from that system. When implementing Domain-Driven Design
+it is a common approach to integrate an external system by defining an interface for it in the domain model but move
+the implementation to the <code>infrastucture</code> layer. A good example of such an integration is shown in the PHP DDD Cargo Sample¹
+where the Cargo domain makes use of an external GraphTraversalService. This is called Hexagonal Architecture or Ports &amp; Adapters².</p>
+<p>We want to use the same approach for the ERP system but limit the implementation to the interface only as we don't have
+access to the ERP system right now. We only know the interface specification. But that's enough because we can easily
+mock the ERP and use the interface to decouple our domain model from it.</p>
+<p><em>File: ./Basket/src/Model/ERP/ERP.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\ERP;
+
+use App\Basket\Model\Exception\UnknownProduct;
+
+interface ERP
+{
+    /**
+     * Get stock information of given product
+     *
+     * If stock information cannot be fetched from the ERP system
+     * this method returns null.
+     *
+     * If product is not known by the ERP system this method must throw an UnknownProduct exception
+     *
+     * @param ProductId $productId
+     * @return ProductStock|null
+     * @throws UnknownProduct
+     */
+    public function getProductStock(ProductId $productId): ?ProductStock;
+}
+
+
+</code></pre>
+<p>As you can see the <code>ERP</code> interface defines a method <code>getProductStock</code> which takes a <code>ProductId</code> as argument and returns a
+<code>ProductStock</code> value object or null in case the request failed. You may have noticed that we use value objects a lot. In fact everything except our <code>Basket</code>
+aggregate is modeled as a value object so far. It is a rule of thumb to model everything as value objects and only
+use an aggregate if the object really has a lifecycle in YOUR domain. Products of course have a lifecycle but in
+the ERP system and not in our basket domain. We only consume product data as read-only information. Hence, we are better
+of with using value objects to represent different aspects of a product like its stock information.</p>
+<p>Having said this, let's add the value object.</p>
+<p><em>File: ./Basket/src/Model/ERP/ProductStock.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\ERP;
+
+final class ProductStock
+{
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var int
+     */
+    private $quantity;
+
+    /**
+     * @var int
+     */
+    private $version;
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            ProductId::fromString($data['product_id'] ?? ''),
+            $data['quantity'] ?? 0,
+            $data['version'] ?? 0
+        );
+    }
+
+    private function __construct(ProductId $productId, int $quantity, int $version)
+    {
+        $this-&gt;productId = $productId;
+        $this-&gt;quantity = $quantity;
+        $this-&gt;version = $version;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function productId(): ProductId
+    {
+        return $this-&gt;productId;
+    }
+
+    /**
+     * @return int
+     */
+    public function quantity(): int
+    {
+        return $this-&gt;quantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function version(): int
+    {
+        return $this-&gt;version;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'product_id' =&gt; $this-&gt;productId-&gt;toString(),
+            'quantity' =&gt; $this-&gt;quantity,
+            'version' =&gt; $this-&gt;version
+        ];
+    }
+
+    public function equals($other): bool
+    {
+        if(!$other instanceof self) {
+            return false;
+        }
+
+        return $this-&gt;toArray() === $other-&gt;toArray();
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this-&gt;toArray());
+    }
+}
+
+</code></pre>
+<p><code>ProductStock</code> gives us two important information:</p>
+<ul>
+<li>stock quantity</li>
+<li>a version</li>
+</ul>
+<p>Stock quantity is self-explaining and the version is related to that quantity. Whenever stock quantity of a product
+changes the version is increased by one. We can use the version during checkout to verify if the last known quantity of
+the product is still valid or if the quantity known by the basket is out-of-date.</p>
+<p>We also need a new <code>UnknownProduct</code> exception which is thrown by the <code>ERP</code> adapter in case the ERP system returns a not found response.</p>
+<p><em>File: ./Basket/src/Model/Exception/UnknownProduct.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Exception;
+
+use App\Basket\Model\ERP\ProductId;
+
+final class UnknownProduct extends \InvalidArgumentException
+{
+    public static function withProductId(ProductId $productId): self
+    {
+        return new self(sprintf(
+            'Product with %s is unknown.',
+            $productId-&gt;toString()
+        ));
+    }
+}
+
+</code></pre>
+<p>Now the <code>Basket</code> aggregate should use the <code>ERP</code> system to request stock information before adding a product to the basket.
+The aggregate should reject the product if it is out of stock.</p>
+<p><em>Note: We keep the example simple. In a real world system this stock check would include many more variants for example permanent or
+temporarily out of stock products, checkout even if a product is out of stock, and so on.</em></p>
+<p>But how do we get the <code>ERP</code> adapter into the aggregate? The answer is <strong>Method Injection</strong>. The <code>Basket::addProduct</code> defines
+the <code>ÈRP</code> system as a dependency for that method. The caller of the method is responsible for providing an implementation.
+We see that in action when we look at command handlers. For now we align the method and update our test case.</p>
+<p><em>File: ./Basket/src/Model/Basket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model;
+
+//...
+use App\Basket\Model\ERP\ERP;
+use App\Basket\Model\Exception\ProductOutOfStock;
+
+final class Basket extends AggregateRoot
+{
+    //...
+    
+    public function addProduct(ProductId $productId, ERP $ERP): void
+    {
+        if(array_key_exists($productId-&gt;toString(), $this-&gt;products)) {
+            throw ProductAddedTwice::toBasket($this-&gt;basketId, $productId);
+        }
+
+        //If the ERP system does not know the product an exception will be thrown here
+        //which will stop the operation. The aggregate can not deal with that situation
+        //as this is one of these "this should never happen" situations
+        //If we want an unbreakable domain model we would need to talk to the business
+        //and work out a failover plan triggered by a UnknownProductAddedToBasket event.
+        $productStock = $ERP-&gt;getProductStock($productId);
+
+        if(!$productStock) {
+            $this-&gt;recordThat(ProductAddedToBasket::occur($this-&gt;basketId-&gt;toString(), [
+                    'product_id' =&gt; $productId-&gt;toString(),
+                    //If we did not get a response, we add the product and check stock later again
+                    //the shopping session should not be blocked by a temporarily unavailable ERP system
+                    'stock_version' =&gt; null,
+                    'stock_quantity'=&gt; null,
+                    'quantity' =&gt; 1,
+            ]));
+            return;
+        }
+
+        if($productStock-&gt;quantity() === 0) {
+            throw ProductOutOfStock::withProductId($productId);
+        }
+
+        $this-&gt;recordThat(ProductAddedToBasket::occur($this-&gt;basketId-&gt;toString(), [
+            'product_id' =&gt; $productId-&gt;toString(),
+            'stock_version' =&gt; $productStock-&gt;version(),
+            'stock_quantity' =&gt; $productStock-&gt;quantity(),
+            'quantity' =&gt; 1,
+        ]));
+    }
+
+    /**
+     * Apply given event
+     */
+    protected function apply(AggregateChanged $event): void
+    {
+        switch ($event-&gt;messageName()) {
+            case ShoppingSessionStarted::class:
+                //...
+            case ProductAddedToBasket::class:
+                /** @var $event ProductAddedToBasket */
+
+                //Use ProductId as index to avoid adding a product twice
+                $this-&gt;products[$event-&gt;productId()-&gt;toString()] = [
+                    'stock_quantity' =&gt; $event-&gt;stockQuantity(),
+                    'stock_version' =&gt; $event-&gt;stockVersion(),
+                    'quantity' =&gt; $event-&gt;quantity()
+                ];
+                break;
+        }
+    }
+}
+
+</code></pre>
+<p><code>Basket::addProduct()</code> has quite some logic now and uses an external <code>ERP</code> system to request stock information of the product.
+In case the ERP system is temporarily unavailable the <code>Basket</code> aggregate accepts the product without a stock quantity
+check. Later in the checkout process we need to take care of this situation and check stock again. If we have
+a quantity stock conflict during checkout the order is routed to a support team who needs to contact the customer and
+offer an alternative.</p>
+<p>If we got stock information from the ERP system we check quantity and throw a <code>ProductOutOfStock</code> exception if it is zero.</p>
+<p><em>File: ./Basket/src/Model/Exception/ProductOutOfStock.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Exception;
+
+use App\Basket\Model\ERP\ProductId;
+
+final class ProductOutOfStock extends \RuntimeException
+{
+    public static function withProductId(ProductId $productId): self
+    {
+        return new self(sprintf(
+            'Product with %s is out of stock.',
+            $productId-&gt;toString()
+        ));
+    }
+}
+
+</code></pre>
+<p>If everything is ok the <code>Basket</code> aggregate accepts the product and records the <code>ProductAddedToBasket</code> event but now
+with additional information so we need to add new getter methods to the event.</p>
+<p><em>File: ./Baset/src/Model/Event/ProductAddedToBasket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Event;
+
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\ERP\ProductId;
+use Prooph\EventSourcing\AggregateChanged;
+
+final class ProductAddedToBasket extends AggregateChanged
+{
+    public function basketId(): BasketId
+    {
+        return BasketId::fromString($this-&gt;aggregateId());
+    }
+
+    public function productId(): ProductId
+    {
+        return ProductId::fromString($this-&gt;payload()['product_id']);
+    }
+
+    public function stockQuantity(): ?int
+    {
+        return $this-&gt;payload()['stock_quantity'];
+    }
+
+    public function stockVersion(): ?int
+    {
+        return $this-&gt;payload()['stock_version'];
+    }
+
+    public function quantity(): int
+    {
+        return $this-&gt;payload()['quantity'];
+    }
+}
+
+</code></pre>
+<p>In the <code>apply</code> method of the <code>Basket</code> aggregate these additional information is added to the internal state
+so that we have access to it later.</p>
+<p>Testing the expanded version of <code>Basket::addProduct()</code> is still relatively simple but we end up with a lot more test methods
+to cover the different results of the method call. Check the additions below and see how we can use PHPUnit's <code>prophecy</code>
+integration to mock the ERP system and simulate different situations.</p>
+<p><em>File: ./Basket/tests/Model/BasketTest.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\BasketTest\Model;
+
+use App\Basket\Model\Basket;
+use App\Basket\Model\ERP\ERP;
+use App\Basket\Model\ERP\ProductId;
+use App\Basket\Model\ERP\ProductStock;
+use App\Basket\Model\Event\ProductAddedToBasket;
+use App\Basket\Model\Event\ShoppingSessionStarted;
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\Basket\ShoppingSession;
+use App\Basket\Model\Exception\UnknownProduct;
+use App\BasketTest\TestCase;
+use Prooph\EventSourcing\AggregateChanged;
+use Prophecy\Argument;
+use Ramsey\Uuid\Uuid;
+
+class BasketTest extends TestCase
+{
+    /**
+     * @var ShoppingSession
+     */
+    private $shoppingSession;
+
+    /**
+     * @var BasketId
+     */
+    private $basketId;
+
+    /**
+     * @var ProductId
+     */
+    private $product1;
+
+    protected function setUp()
+    {
+        $this-&gt;shoppingSession = ShoppingSession::fromString('123');
+        $this-&gt;basketId = BasketId::fromString(Uuid::uuid4()-&gt;toString());
+        $this-&gt;product1 = ProductId::fromString('A1');
+    }
+
+    /**
+     * @test
+     */
+    public function it_starts_a_shopping_session()
+    {
+        $basket = Basket::startShoppingSession($this-&gt;shoppingSession, $this-&gt;basketId);
+
+        /** @var AggregateChanged[] $events */
+        $events = $this-&gt;popRecordedEvents($basket);
+
+        $this-&gt;assertCount(1, $events);
+
+        /** @var ShoppingSessionStarted $event */
+        $event = $events[0];
+
+        $this-&gt;assertSame(ShoppingSessionStarted::class, $event-&gt;messageName());
+        $this-&gt;assertTrue($this-&gt;basketId-&gt;equals($event-&gt;basketId()));
+        $this-&gt;assertTrue($this-&gt;shoppingSession-&gt;equals($event-&gt;shoppingSession()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_a_product_if_stock_quantity_is_greater_than_zero()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted()
+        );
+
+        $basket-&gt;addProduct($this-&gt;product1, $this-&gt;product1ERP());
+
+        /** @var AggregateChanged[] $events */
+        $events = $this-&gt;popRecordedEvents($basket);
+
+        $this-&gt;assertCount(1, $events);
+
+        /** @var ProductAddedToBasket $event */
+        $event = $events[0];
+
+        $this-&gt;assertSame(ProductAddedToBasket::class, $event-&gt;messageName());
+        $this-&gt;assertTrue($this-&gt;basketId-&gt;equals($event-&gt;basketId()));
+        $this-&gt;assertTrue($this-&gt;product1-&gt;equals($event-&gt;productId()));
+        $this-&gt;assertSame(5, $event-&gt;payload()['stock_quantity']);
+        $this-&gt;assertSame(1, $event-&gt;payload()['stock_version']);
+        $this-&gt;assertSame(1, $event-&gt;payload()['quantity']);
+    }
+
+    /**
+     * @test
+     * @expectedException \App\Basket\Model\Exception\ProductAddedTwice
+     */
+    public function it_throws_exception_if_product_is_added_twice()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted(),
+            $this-&gt;product1Added()
+        );
+
+        //Add same product again
+        $basket-&gt;addProduct($this-&gt;product1, $this-&gt;product1ERP());
+    }
+
+    /**
+     * @test
+     * @expectedException \App\Basket\Model\Exception\UnknownProduct
+     */
+    public function it_stops_operation_if_product_is_unknown()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted()
+        );
+
+        $ERP = $this-&gt;prophesize(ERP::class);
+
+        //This ERP mock knows no product
+        $ERP-&gt;getProductStock(Argument::any())-&gt;willThrow(UnknownProduct::withProductId($this-&gt;product1));
+
+        $basket-&gt;addProduct($this-&gt;product1, $ERP-&gt;reveal());
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_product_without_stock_info_if_ERP_is_unavailable()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted()
+        );
+
+        $ERP = $this-&gt;prophesize(ERP::class);
+
+        //This ERP is unavailable
+        $ERP-&gt;getProductStock(Argument::any())-&gt;willReturn(null);
+
+        $basket-&gt;addProduct($this-&gt;product1, $ERP-&gt;reveal());
+
+        /** @var AggregateChanged[] $events */
+        $events = $this-&gt;popRecordedEvents($basket);
+
+        $this-&gt;assertCount(1, $events);
+
+        /** @var ProductAddedToBasket $event */
+        $event = $events[0];
+
+        $this-&gt;assertSame(ProductAddedToBasket::class, $event-&gt;messageName());
+        $this-&gt;assertTrue($this-&gt;basketId-&gt;equals($event-&gt;basketId()));
+        $this-&gt;assertTrue($this-&gt;product1-&gt;equals($event-&gt;productId()));
+        $this-&gt;assertSame(1, $event-&gt;payload()['quantity']);
+        //No stock info present
+        $this-&gt;assertSame(null, $event-&gt;payload()['stock_quantity']);
+        $this-&gt;assertSame(null, $event-&gt;payload()['stock_version']);
+    }
+
+    /**
+     * @test
+     * @expectedException \App\Basket\Model\Exception\ProductOutOfStock
+     */
+    public function it_does_not_add_product_if_product_is_out_of_stock()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted()
+        );
+
+        //Set stock quantity to zero in the ERP mock
+        $basket-&gt;addProduct($this-&gt;product1, $this-&gt;product1ERP(0));
+    }
+
+    /**
+     * Helper method to reconstitute a Basket from history
+     *
+     * With this helper we get better type hinting in the test methods
+     * because type hint for reconstituteAggregateFromHistory() is only AggregateRoot
+     *
+     * @param AggregateChanged[] ...$events
+     * @return Basket
+     */
+    private function reconstituteBasketFromHistory(AggregateChanged ...$events): Basket
+    {
+        return $this-&gt;reconstituteAggregateFromHistory(
+            Basket::class,
+            $events
+        );
+    }
+
+    /**
+     * Test helper to create a ShoppingSessionStarted event
+     *
+     * If we need to change signature of the event later, we have a central place in the test case
+     * where we can align the creation.
+     *
+     * @return ShoppingSessionStarted
+     */
+    private function shoppingSessionStarted(): ShoppingSessionStarted
+    {
+        return ShoppingSessionStarted::occur($this-&gt;basketId-&gt;toString(), [
+            'shopping_session' =&gt; $this-&gt;shoppingSession-&gt;toString()
+        ]);
+    }
+
+    /**
+     * Test helper to create a ProductAddedToBasket event
+     *
+     * If we need to change signature of the event later, we have a central place in the test case
+     * where we can align the creation.
+     *
+     * @return ProductAddedToBasket
+     */
+    private function product1Added(): ProductAddedToBasket
+    {
+        return ProductAddedToBasket::occur($this-&gt;basketId-&gt;toString(), [
+            'product_id' =&gt; $this-&gt;product1-&gt;toString(),
+            'stock_quantity' =&gt; 5,
+            'stock_version' =&gt; 1,
+            'quantity' =&gt; 1,
+        ]);
+    }
+
+    private function product1ERP(int $stockQuantity = 5): ERP
+    {
+        //Create a Mock of the ERP interface
+        $ERP = $this-&gt;prophesize(ERP::class);
+
+        $ERP-&gt;getProductStock(Argument::exact($this-&gt;product1))-&gt;willReturn(ProductStock::fromArray(
+            [
+                'product_id' =&gt; $this-&gt;product1-&gt;toString(),
+                'quantity' =&gt; $stockQuantity,
+                'version' =&gt; 1
+            ]
+        ));
+
+        return $ERP-&gt;reveal();
+    }
+}
+
+</code></pre>
+<pre><code class="language-bash">$ php vendor/bin/phpunit
+
+PHPUnit 6.3.1 by Sebastian Bergmann and contributors.
+......                                                              6 / 6 (100%)
+
+Time: 27 ms, Memory: 4.00MB
+
+OK (6 tests, 21 assertions)
+
+</code></pre>
+<h2 id="1-5-2">Be Careful</h2>
+<p>You need to be careful when Using a dependency insight of an aggregate method. In the example shown above we only
+read data from an external system and we can handle the cases when communication goes wrong be it that the product
+could not be found or the external system is unavailable.</p>
+<p>Things get even more complex when you want to write data to an external system. Let's say we want to update stock quantity
+for a product instead of requesting it. Such write operations should not be performed by the aggregate itself but instead
+by a process manager or a saga. In the next two chapters we're going to learn more about process managers and sagas
+and the difference between the two.</p>
+<h2 id="1-5-3">Links</h2>
+<ul>
 <li>
-<a href="https://github.com/sandrokeil/interop-config">interop-config</a> must be installed</li>
-<li>The application configuration should be registered with the service id <code>config</code> in the container.</li>
-</ol>
-<p><em>Note: Don't worry, if your environment doesn't provide the requirements. You can
-always bootstrap a message bus by hand. Just look at the factories for inspiration in this case.</em></p>
-<h2 id="3-6-2">Customizing via Configuration</h2>
-<p>In the <code>config</code> folder of prooph/service-bus you will find example configuration files.
-Configuration is a simple PHP array flavored with some comments to help you understand the structure.</p>
-<p>Now follow the simple steps below to integrate prooph/service-bus in your framework and/or application.</p>
-<ol>
-<li>Merge configuration into your application config either by hand or by using your framework's mechanism.</li>
-<li>Customize the configuration so that it meet your needs. The comments in the config file will tell you more.</li>
-<li>(Only required if not done by your framework) Make your application config available as a service in the
-Inversion of Control container. Use <code>config</code> as the service id (common id for application config).</li>
-<li>Register the message buses as services in your IoC container and use the factories located in <code>src/Container</code> to create the different message buses.
-How you register a message bus depends on your container. Some containers like <a href="https://github.com/zendframework/zend-servicemanager">zend-servicemanager</a>
-or <a href="https://github.com/moufmouf/pimple-interop">pimple-interop</a> allow you to map a service id to an <code>invokable factory</code>.
-If you use such an IoC container you are lucky. In this case you can use the prooph/service-bus factories as-is.
-We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;::class</code> as the service id.</li>
-</ol>
-<p><em>Note: If you're still unsure how to do it you might have a look at the <code>BusFactoriesTest</code> located in the <code>tests</code> folder.</em></p>
+<a href="https://github.com/codeliner/php-ddd-cargo-sample">PHP DDD Cargo Sample</a>¹</li>
+<li>
+<a href="http://alistair.cockburn.us/Hexagonal+architecture">Hexagonal Architecture</a>²</li>
+</ul>
 </div>        </div>
     </div>
 </div>
@@ -639,9 +1201,9 @@ We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;:
         <div class="container">
             <div class="row">
                 <div class="prev col-xs-6">
-                                            <a href="/service-bus/async_message_producer.html">Previous</a>                                    </div>
+                                            <a href="/tutorial/testing_aggregates.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="/event-store/">Next</a>                                    </div>
+                                            <a href="/tutorial/process_managers.html">Next</a>                                    </div>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta name="HandheldFriendly" content="True"/>
-<title>Interop + Factories</title>
+<title>Why Event Sourcing?</title>
 <link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
@@ -578,8 +578,8 @@
 <div class="container">
     <ol class="breadcrumb">
                         <li><a href="/">prooph components documentation</a></li>
-                                <li><a href="/service-bus/">Service Bus</a></li>
-                                <li class="active">Interop + Factories</li>
+                                <li><a href="/tutorial/">Tutorial</a></li>
+                                <li class="active">Why Event Sourcing?</li>
             </ol>
     <div class="row">
 
@@ -587,49 +587,43 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-6" title="Interop&#x20;&#x2B;&#x20;Factories">Interop + Factories</a>
-            </li>
-                                <li>
-                <a href="#3-6-1" title="Factory-Driven&#x20;Message&#x20;Bus&#x20;Creation">Factory-Driven Message B...</a>
-            </li>
-                                            <li>
-                <a href="#3-6-2" title="Customizing&#x20;via&#x20;Configuration">Customizing via Configur...</a>
+                <a href="#1-2" title="Why&#x20;Event&#x20;Sourcing&#x3F;">Why Event Sourcing?</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-6">Interop + Factories</h1>
-<p>Instead of providing a module, a bundle, a bridge or similar framework integration prooph/service-bus ships with
-<code>interop factories</code>.</p>
-<h2 id="3-6-1">Factory-Driven Message Bus Creation</h2>
-<p>The concept behind these factories is simple but powerful. It allows us to provide you with bootstrapping logic for
-the message buses without the need to rely on a specific framework. However, the factories have three requirements.</p>
-<h3 id="3-6-1-1">Requirements</h3>
-<ol>
-<li>Your Inversion of Control container must implement the <a href="https://github.com/container-interop/container-interop">interop-container interface</a>.</li>
-<li>
-<a href="https://github.com/sandrokeil/interop-config">interop-config</a> must be installed</li>
-<li>The application configuration should be registered with the service id <code>config</code> in the container.</li>
-</ol>
-<p><em>Note: Don't worry, if your environment doesn't provide the requirements. You can
-always bootstrap a message bus by hand. Just look at the factories for inspiration in this case.</em></p>
-<h2 id="3-6-2">Customizing via Configuration</h2>
-<p>In the <code>config</code> folder of prooph/service-bus you will find example configuration files.
-Configuration is a simple PHP array flavored with some comments to help you understand the structure.</p>
-<p>Now follow the simple steps below to integrate prooph/service-bus in your framework and/or application.</p>
-<ol>
-<li>Merge configuration into your application config either by hand or by using your framework's mechanism.</li>
-<li>Customize the configuration so that it meet your needs. The comments in the config file will tell you more.</li>
-<li>(Only required if not done by your framework) Make your application config available as a service in the
-Inversion of Control container. Use <code>config</code> as the service id (common id for application config).</li>
-<li>Register the message buses as services in your IoC container and use the factories located in <code>src/Container</code> to create the different message buses.
-How you register a message bus depends on your container. Some containers like <a href="https://github.com/zendframework/zend-servicemanager">zend-servicemanager</a>
-or <a href="https://github.com/moufmouf/pimple-interop">pimple-interop</a> allow you to map a service id to an <code>invokable factory</code>.
-If you use such an IoC container you are lucky. In this case you can use the prooph/service-bus factories as-is.
-We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;::class</code> as the service id.</li>
-</ol>
-<p><em>Note: If you're still unsure how to do it you might have a look at the <code>BusFactoriesTest</code> located in the <code>tests</code> folder.</em></p>
+<div id="section-main"><h1 id="1-2">Why Event Sourcing?</h1>
+<p>Event Sourcing is a fascinating topic, but it turns out that the learning curve is steep. The reason for it is not
+that Event Sourcing is a complex pattern but instead it <strong>conflicts</strong> with our current understanding of object oriented
+programming <strong>centered around data</strong>.
+More or less this understanding is driven by the way how we work with databases, mostly relational databases but
+it is not limited to them.</p>
+<p>Our primary goal is to put consistent data in a database and keep it consistent there. One of the common ways is to normalize
+data. Here the problem starts.</p>
+<p><strong>Mapping the real world to a normalized view is a complex task</strong> and we tend to do it before
+we do anything else. Business describes a new feature and we immediately think of a possible
+data structure that fits into our favorite database design. We can share this thinking with our
+teammates because every programmer did the same in their head already so we can simply match results and are good to go. Are we?</p>
+<p><img src="/tutorial/img/process_to_uml.png" alt="Map process to UML"></p>
+<p>Well, not really. Often the first idea of a data structure does not work as expected so we have to reshape it and try again.
+Oh and not to forget this shitty real world. No one wants to view normalized data. So we have to write queries and make heavy use of data
+joins. Then we recognize that fetching the data with joins is inefficient and we use caches and other techniques to work around
+the limitation instead of solving the problem in the first place!</p>
+<p>But that's not all. The worst thing with this approach is that we design our application logic around data
+and not around behaviour.</p>
+<p><strong>We skip the behaviour part of a feature description, turn the feature into our own view of normalized state
+and then reverse engineer behaviour.</strong></p>
+<p>It's not hard to imagine that this approach leads to an application design driven by the database. So in fact it is a
+technical design which is far away from the original idea of the business.
+If you think this is the best way to tackle complexity of software then you can likely stop reading here because you won't have any
+fun with Event Sourcing.</p>
+<p>But if you cannot get rid of the feeling that there is something inherently wrong with database driven designs then
+you should read on, follow the tutorial and slowly but surely become a software developer focused on real business behaviour.</p>
+<p>Event Sourcing has many advantages in modern systems. It helps with coordinating work across different services.
+It can be used to solve performance and concurrency problems and many more.</p>
+<p><strong>But the most important advantage of Event Sourcing is the focus on behaviour.</strong></p>
+<p><img src="/tutorial/img/no_uml.png" alt="No UML"></p>
 </div>        </div>
     </div>
 </div>
@@ -639,9 +633,9 @@ We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;:
         <div class="container">
             <div class="row">
                 <div class="prev col-xs-6">
-                                            <a href="/service-bus/async_message_producer.html">Previous</a>                                    </div>
+                                            <a href="/tutorial/introduction.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="/event-store/">Next</a>                                    </div>
+                                            <a href="/tutorial/event_sourcing_basics.html">Next</a>                                    </div>
             </div>
         </div>
     </div>

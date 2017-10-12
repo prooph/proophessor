@@ -1,227 +1,376 @@
+
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
     <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-    <meta name="HandheldFriendly" content="True"/>
-    <title>Prooph Event Store</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="HandheldFriendly" content="True"/>
+<title>Prooph Event Store</title>
+<link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://getprooph.org/images/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="http://getprooph.org/images/ico/apple-touch-icon-57-precomposed.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@prooph_software">
+<meta name="twitter:title" content="prooph components">
+<meta name="twitter:description" content="Enterprise-ready CQRS and Event Sourcing packages for PHP with support for the most famous PHP web frameworks">
+<meta name="twitter:image" content="http://getprooph.org/images/prooph-components-intro.png">
     <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="https://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
-    <link rel="stylesheet"
-          href="https://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
-    <style>
-        body, html {
-            height: 100%;
-            padding-top: 36px;
+      href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/cerulean/bootstrap.min.css">
+<link rel="stylesheet"
+      href="https://tobiju.github.io/share/prismjs/prism-ghcolors.css"/>
+<link rel="stylesheet"
+      href="https://tobiju.github.io/share/prismjs/prism-linenumbers.css"/>
+<style>
+    body, html {
+        height: 100%;
+        padding-top: 36px;
+        position: relative;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    code span {
+        white-space: nowrap;
+    }
+    code span.comment {
+        white-space: pre;
+    }
+
+    .highlight {
+        background: #FFFF88;
+    }
+
+    .page-wrapper {
+        min-height: 100%;
+        padding-bottom: 170px;
+        position: relative;
+    }
+
+    .box-header {
+        position: relative;
+    }
+
+    /* Header Section */
+    header {
+        background: white;
+        color: black;
+        font-size: 16px;
+        font-weight: 300;
+    }
+
+    h1:first-child {
+        margin-top: 0;
+    }
+
+    /* anchor link will be displayed after the static top nav */
+    h1:before,
+    h2:before,
+    h3:before,
+    h4:before,
+    h5:before,
+    h6:before {
+        display: block;
+        content: " ";
+        margin-top: -64px;
+        height: 64px;
+        visibility: hidden;
+    }
+
+    .navbar-brand {
+        padding: 0;
+    }
+
+    .navbar-brand img {
+        max-height: 100%;
+    }
+
+    /* Content Section */
+    #content {
+        margin-bottom: 17px;
+        font-size: 17px;
+        min-height: 200px;
+    }
+
+    .breadcrumb {
+        position: relative;
+        z-index: 999;
+    }
+
+    .links {
+        background: #f8f8f8;
+        border-top: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 16px 0;
+    }
+
+    .links .prev {
+        text-align: left;
+    }
+
+    .links .parent {
+        text-align: center;
+    }
+
+    .links .next {
+        text-align: right;
+    }
+
+    /* Search */
+    .form-search {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 999;
+    }
+
+    @media (max-width: 767px) {
+        .form-search {
             position: relative;
-        }
-
-        img {
-            max-width: 100%;
-        }
-
-        .page-wrapper {
-            min-height: 100%;
-            padding-bottom: 170px;
-            position: relative;
-        }
-
-        /* Header Section */
-        header {
-            background: white;
-            color: black;
-            font-size: 16px;
-            font-weight: 300;
-        }
-
-        h1:first-child {
             margin-top: 0;
         }
+    }
 
-        /* anchor link will be displayed after the static top nav */
-        h1:before,
-        h2:before,
-        h3:before,
-        h4:before,
-        h5:before,
-        h6:before {
+    .form-search .form-control {
+        border: 0;
+        width: 80px;
+    }
+
+    @media (max-width: 767px) {
+        .form-search .form-control {
+            width: 100% !important;
+        }
+    }
+
+    .form-search .list-search-results {
+        position: relative;
+    }
+
+    .form-search .list-search-results ul {
+        background: #eee;
+        border: 1px solid inherit;
+        list-style: none;
+        max-height: 300px;
+        overflow: auto;
+        padding: 0;
+        position: absolute;
+        width: 100%;
+        z-index: 999;
+    }
+
+    .form-search .list-search-results ul li:nth-child(even) {
+        background: rgba(255, 255, 255, 0.3)
+    }
+
+    .form-search .list-search-results ul li.selected {
+        background: #ccc;
+    }
+
+    .form-search .list-search-results ul li a {
+        display: block;
+        padding: 4px 8px;
+    }
+
+    /* TOC */
+    .list-toc {
+        padding: 0;
+    }
+
+    .list-toc .list-group-item {
+        background: 0 none;
+        position: relative;
+        font-weight: bold;
+        padding: 0;
+        margin: 0;
+    }
+
+    .list-toc li .text-number {
+        padding-left: 20px;
+    }
+    .list-toc li li .text-number {
+        padding-left: 40px;
+    }
+    .list-toc li li li .text-number {
+        padding-left: 60px;
+    }
+    .list-toc li li li li .text-number {
+        padding-left: 80px;
+    }
+    .list-toc li li li li li .text-number {
+        padding-left: 100px;
+    }
+    .list-toc .text-number {
+        padding-left: 100px;
+    }
+
+    .list-toc .list-group-item .row {
+        padding: 7px 0 7px;
+    }
+
+    .list-toc .list-group-item .bbt-toc-toggle {
+        display: block;
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        font-weight: normal;
+    }
+
+    .list-toc .list-group-item .bbt-toc-toggle:before {
+        content: "";
+        display: block;
+    }
+
+    .list-toc .list-group-item .bbt-toc-toggle.collapsed:before {
+        content: "";
+        display: block;
+    }
+
+    .list-toc > li:nth-child(2n+1) {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    .bbt-theme-cyborg .list-toc > li:nth-child(2n+1),
+    .bbt-theme-darkly .list-toc > li:nth-child(2n+1),
+    .bbt-theme-slate .list-toc > li:nth-child(2n+1),
+    .bbt-theme-superhero .list-toc > li:nth-child(2n+1) {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .list-toc .list-group-item {
+        border-bottom: 0 none;
+        border-left: 0 none;
+        border-right: 0 none;
+        font-size: inherit;
+    }
+
+    .list-toc .list-group-item:first-child {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    .list-toc .list-group-item:last-child {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    /* Left navigation */
+    .nav-left ul li a {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        border-left: 1px solid transparent;
+    }
+
+    .nav-left ul li.active a,
+    .nav-left ul li a:hover {
+        background: none !important;
+        color: inherit;
+        border-color: inherit;
+    }
+
+    .navbar-top {
+        position: relative;
+    }
+
+    .affix {
+        top: 60px;
+    }
+
+    .badge {
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    /* Footer Section */
+    footer {
+        color: black;
+        background: white;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    }
+
+    footer #copyright {
+        padding: 30px;
+        text-align: center;
+        color: #444;
+    }
+
+    footer #copyright p {
+        margin: 0;
+    }
+
+    footer #copyright span a {
+        color: white;
+    }
+
+    /* Top Navigation */
+    @media (max-width: 767px) {
+        ul.navbar-nav {
+            margin: 0 -15px
+        }
+
+        ul.navbar-nav li {
+            border-radius: 0;
+        }
+
+        ul.navbar-nav li ul {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
             display: block;
-            content: " ";
-            margin-top: -64px;
-            height: 64px;
-            visibility: hidden;
-        }
-
-        .navbar-brand {
+            float: none;
+            left: auto;
             padding: 0;
+            position: static;
         }
 
-        .navbar-brand img {
-            max-height: 100%;
+        ul.navbar-nav li ul li a {
+            padding: 8px 30px;
         }
 
-        /* Content Section */
-        #content {
-            margin-bottom: 17px;
-            font-size: 17px;
-            min-height: 200px;
+        ul.navbar-nav li ul li ul li a {
+            padding: 6px 40px;
         }
+    }
 
-        .breadcrumb {
+    @media (min-width: 768px) {
+
+        ul.navbar-nav li {
+            display: block;
             position: relative;
-            z-index: 999;
+            float: left;
         }
 
-        .links {
-            background: #f8f8f8;
-            border-top: 1px solid #e5e5e5;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 16px 0;
+        ul.navbar-nav li ul {
+            display: none;
         }
 
-        .links .prev {
-            text-align: left;
+        ul.navbar-nav li a {
+            display: block;
         }
 
-        .links .parent {
-            text-align: center;
-        }
-
-        .links .next {
-            text-align: right;
-        }
-
-        /* TOC */
-        .list-toc .list-group-item {
-            background: 0 none;
-            position: relative;
-            font-weight: bold;
-            padding: 0;
-        }
-
-        .list-toc .list-group-item.level-2 {
-            padding-left: 20px;
-        }
-
-        .list-toc .list-group-item.level-3 {
-            padding-left: 40px;
-        }
-
-        .list-toc .list-group-item.level-4 {
-            padding-left: 20px;
-        }
-
-        .list-toc .list-group-item .row {
-            padding: 7px 0;
-        }
-
-        .list-toc .list-group-item .text-number {
-            padding-left: 10px;
-        }
-
-        .list-toc .list-toc-nested .list-group-item {
-            font-weight: normal;
-            border: 0 none !important;
-        }
-
-        .list-toc .list-toc-nested {
-            margin-bottom: 0;
-            padding-bottom: 10px;
-        }
-
-        .list-toc .list-group-item .bbt-toc-toggle {
+        ul.navbar-nav li:hover > ul {
             display: block;
             position: absolute;
-            top: 5px;
-            right: 10px;
-            font-weight: normal;
-        }
-        .list-toc .list-group-item .bbt-toc-toggle:before {
-            content: "";
-            display: block;
-        }
-        .list-toc .list-group-item .bbt-toc-toggle.collapsed:before {
-            content: "";
-            display: block;
         }
 
-        .list-toc > li:nth-child(2n+1) {
-            background: rgba(0, 0, 0, 0.03);
+        ul.navbar-nav li:hover li {
+            float: none;
         }
 
-        .bbt-theme-cyborg .list-toc > li:nth-child(2n+1),
-        .bbt-theme-darkly .list-toc > li:nth-child(2n+1),
-        .bbt-theme-slate .list-toc > li:nth-child(2n+1),
-        .bbt-theme-superhero .list-toc > li:nth-child(2n+1) {
-            background: rgba(255, 255, 255, 0.05);
+        ul.navbar-nav ul ul {
+            left: 100%;
+            top: 0;
         }
-
-        .list-toc .list-group-item {
-            border-bottom: 0 none;
-            border-left: 0 none;
-            border-right: 0 none;
-            font-size: inherit;
-        }
-
-        .list-toc .list-group-item:first-child {
-            border-top-right-radius: 0;
-            border-top-left-radius: 0;
-        }
-
-        .list-toc .list-group-item:last-child {
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        /* Left navigation */
-        .nav-left ul li a {
-            padding-top: 3px;
-            padding-bottom: 3px;
-            border-left: 1px solid transparent;
-        }
-        .nav-left ul li.active a,
-        .nav-left ul li a:hover {
-            background: none !important;
-            color: inherit;
-            border-color: inherit;
-        }
-
-        .affix {
-            top: 60px;
-        }
-
-        .badge {
-            border-radius: 4px;
-            padding: 5px;
-        }
-
-        /* Footer Section */
-        footer {
-            color: black;
-            background: white;
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-        }
-
-        footer #copyright {
-            padding: 30px;
-            text-align: center;
-            color: #444;
-        }
-
-        footer #copyright p {
-            margin: 0;
-        }
-
-        footer #copyright span a {
-            color: white;
-        }
-
-        .prooph-logo {
+    }
+</style>
+    <style>
+    .prooph-logo {
             float: left;
             margin-left: 8px;
             margin-right: 8px;
@@ -236,75 +385,25 @@
             transition-timing-function: ease-out;
             transform: rotate(360deg);
         }
+</style>
+</head>
+<body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
+<div class="page-wrapper">
+    <header>
+    
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="box-header container">
+        <form class="form-search navbar-form navbar-right" role="search">
+            <div class="form-group">
+                <input type="text"
+                       placeholder="Search"
+                       class="js-search-input form-control"
+                       data-roothref="/">
 
-        /* Top Navigation */
-        @media (max-width: 767px) {
-            ul.navbar-nav {
-                margin: 0 -15px
-            }
+                <div class="js-search-results"></div>
+            </div>
+        </form>
 
-            ul.navbar-nav li {
-                border-radius: 0;
-            }
-
-            ul.navbar-nav li ul {
-                background: rgba(255, 255, 255, 0.2);
-                border: none;
-                border-radius: 0;
-                box-shadow: none;
-                display: block;
-                float: none;
-                left: auto;
-                padding: 0;
-                position: static;
-            }
-
-            ul.navbar-nav li ul li a {
-                padding: 8px 30px;
-            }
-
-            ul.navbar-nav li ul li ul li a {
-                padding: 6px 40px;
-            }
-        }
-
-        @media (min-width: 768px) {
-
-            ul.navbar-nav li {
-                display: block;
-                position: relative;
-                float: left;
-            }
-
-            ul.navbar-nav li ul {
-                display: none;
-            }
-
-            ul.navbar-nav li a {
-                display: block;
-            }
-
-            ul.navbar-nav li:hover > ul {
-                display: block;
-                position: absolute;
-            }
-
-            ul.navbar-nav li:hover li {
-                float: none;
-            }
-
-            ul.navbar-nav ul ul {
-                left: 100%;
-                top: 0;
-            }
-        }
-    </style>
-    </head>
-    <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
-    <div class="page-wrapper">
-        <header>
-    <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#js-navbar-collapse" aria-expanded="false">
@@ -313,245 +412,158 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-                    </div>
+            <a class="navbar-brand" href="http://getprooph.org">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
+                    <defs>
+                        <style>
+                            .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
+                        </style>
+                    </defs>
+                    <title>prooph-logo</title>
+                    <g id="artwork">
+                        <g id="Layer_5" data-name="Layer 5">
+                            <path class="cls-1"
+                                  d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
+                            <path class="cls-2"
+                                  d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
+                            <path class="cls-3"
+                                  d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
+                            <path class="cls-4"
+                                  d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
+                            <path class="cls-5"
+                                  d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
+                            <path class="cls-6"
+                                  d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
+                        </g>
+                    </g>
+                </svg>
+            </a>
+
+        </div>
 
         <div class="collapse navbar-collapse" id="js-navbar-collapse">
             
     
     <ul class="nav navbar-nav">
-        <a href="/docs/html/">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
-                <defs>
-                    <style>
-                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
-                    </style>
-                </defs>
-                <title>prooph-logo</title>
-                <g id="artwork">
-                    <g id="Layer_5" data-name="Layer 5">
-                        <path class="cls-1"
-                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
-                        <path class="cls-2"
-                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
-                        <path class="cls-3"
-                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
-                        <path class="cls-4"
-                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
-                        <path class="cls-5"
-                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
-                        <path class="cls-6"
-                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
-                    </g>
-                </g>
-            </svg>
-        </a>
                         <li>
-    <a href="/docs/html/overview/">Overview</a>
+    <a href="/tutorial/">Tutorial</a>
     
     <ul class="dropdown-menu">
-        <a href="/docs/html/overview/">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
-                <defs>
-                    <style>
-                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
-                    </style>
-                </defs>
-                <title>prooph-logo</title>
-                <g id="artwork">
-                    <g id="Layer_5" data-name="Layer 5">
-                        <path class="cls-1"
-                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
-                        <path class="cls-2"
-                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
-                        <path class="cls-3"
-                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
-                        <path class="cls-4"
-                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
-                        <path class="cls-5"
-                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
-                        <path class="cls-6"
-                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
-                    </g>
-                </g>
-            </svg>
-        </a>
                         <li>
-    <a href="/docs/html/overview/prooph-in-a-nutshell.html">prooph in a nutshell</a>
+    <a href="/tutorial/introduction.html">Introduction</a>
 
     </li>
                         <li>
-    <a href="/docs/html/overview/components.html">prooph components</a>
+    <a href="/tutorial/why_event_sourcing.html">Why Event Sourcing?</a>
+
+    </li>
+                        <li>
+    <a href="/tutorial/event_sourcing_basics.html">Event Sourcing Basics</a>
+
+    </li>
+                        <li>
+    <a href="/tutorial/testing_aggregates.html">Testing Aggregates</a>
+
+    </li>
+                        <li>
+    <a href="/tutorial/aggregate_dependencies.html">Aggregate Dependencies</a>
+
+    </li>
+                        <li>
+    <a href="/tutorial/process_managers.html">Process Managers</a>
 
     </li>
             </ul>
 
     </li>
                         <li>
-    <a href="/docs/html/service-bus/">Service Bus</a>
+    <a href="/event-sourcing/">Event Sourcing</a>
     
     <ul class="dropdown-menu">
-        <a href="/docs/html/service-bus/">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
-                <defs>
-                    <style>
-                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
-                    </style>
-                </defs>
-                <title>prooph-logo</title>
-                <g id="artwork">
-                    <g id="Layer_5" data-name="Layer 5">
-                        <path class="cls-1"
-                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
-                        <path class="cls-2"
-                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
-                        <path class="cls-3"
-                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
-                        <path class="cls-4"
-                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
-                        <path class="cls-5"
-                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
-                        <path class="cls-6"
-                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
-                    </g>
-                </g>
-            </svg>
-        </a>
                         <li>
-    <a href="/docs/html/service-bus/intro.html">PSB - ProophServiceBus</a>
+    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
 
     </li>
                         <li>
-    <a href="/docs/html/service-bus/overview.html">PSB Overview</a>
+    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
 
     </li>
                         <li>
-    <a href="/docs/html/service-bus/message_bus.html">Message Buses</a>
+    <a href="/event-sourcing/snapshots.html">Snapshots</a>
 
     </li>
                         <li>
-    <a href="/docs/html/service-bus/plugins.html">PSB Plugins</a>
+    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
 
     </li>
                         <li>
-    <a href="/docs/html/service-bus/async_message_producer.html">Async Message Producer</a>
+    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
 
     </li>
                         <li>
-    <a href="/docs/html/service-bus/factories.html">Interop + Factories</a>
+    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
 
     </li>
             </ul>
 
     </li>
                         <li>
-    <a href="/docs/html/event-store/">Event Store</a>
+    <a href="/service-bus/">Service Bus</a>
     
     <ul class="dropdown-menu">
-        <a href="/docs/html/event-store/">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
-                <defs>
-                    <style>
-                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
-                    </style>
-                </defs>
-                <title>prooph-logo</title>
-                <g id="artwork">
-                    <g id="Layer_5" data-name="Layer 5">
-                        <path class="cls-1"
-                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
-                        <path class="cls-2"
-                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
-                        <path class="cls-3"
-                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
-                        <path class="cls-4"
-                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
-                        <path class="cls-5"
-                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
-                        <path class="cls-6"
-                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
-                    </g>
-                </g>
-            </svg>
-        </a>
                         <li>
-    <a href="/docs/html/event-store/intro.html">ProophEventStore</a>
+    <a href="/service-bus/intro.html">PSB - ProophServiceBus</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-store/event_store.html">Prooph Event Store</a>
+    <a href="/service-bus/overview.html">PSB Overview</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-store/projections.html">Projections</a>
+    <a href="/service-bus/message_bus.html">Message Buses</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-store/upcasting.html">Upcasting</a>
+    <a href="/service-bus/plugins.html">PSB Plugins</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-store/interop_factories.html">Interop Factories</a>
+    <a href="/service-bus/async_message_producer.html">Async Message Producer</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-store/migration.html">Migration from v6 to v7</a>
+    <a href="/service-bus/factories.html">Interop + Factories</a>
 
     </li>
             </ul>
 
     </li>
                         <li>
-    <a href="/docs/html/event-sourcing/">Event Sourcing</a>
+    <a href="/event-store/">Event Store</a>
     
     <ul class="dropdown-menu">
-        <a href="/docs/html/event-sourcing/">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="prooph-logo">
-                <defs>
-                    <style>
-                        .cls-1{fill:#04a1b0;}.cls-2{fill:#26896c;}.cls-3{fill:#eeca50;}.cls-4{fill:#eb6842;}.cls-5{fill:#cc3340;}.cls-6{fill:#715671;}
-                    </style>
-                </defs>
-                <title>prooph-logo</title>
-                <g id="artwork">
-                    <g id="Layer_5" data-name="Layer 5">
-                        <path class="cls-1"
-                              d="M57.22,17,67.84,35.43a1.77,1.77,0,0,0,1.53.89h61.25a1.77,1.77,0,0,0,1.53-.89L142.78,17a1.77,1.77,0,0,0-1.53-2.66H58.76A1.77,1.77,0,0,0,57.22,17Z"/>
-                        <path class="cls-2"
-                              d="M29.54,94.68l30.63-53a1.77,1.77,0,0,0,0-1.77L49.55,21.48a1.77,1.77,0,0,0-3.07,0L5.24,92.91a1.77,1.77,0,0,0,1.53,2.66H28A1.77,1.77,0,0,0,29.54,94.68Z"/>
-                        <path class="cls-3"
-                              d="M60.16,158.36l-30.63-53a1.77,1.77,0,0,0-1.53-.89H6.78a1.77,1.77,0,0,0-1.53,2.66l41.24,71.43a1.77,1.77,0,0,0,3.07,0l10.61-18.38A1.77,1.77,0,0,0,60.16,158.36Z"/>
-                        <path class="cls-4"
-                              d="M130.63,163.68H69.37a1.77,1.77,0,0,0-1.53.89L57.22,183a1.77,1.77,0,0,0,1.53,2.66h82.48a1.77,1.77,0,0,0,1.53-2.66l-10.61-18.38A1.77,1.77,0,0,0,130.63,163.68Z"/>
-                        <path class="cls-5"
-                              d="M170.46,105.32l-30.63,53a1.77,1.77,0,0,0,0,1.77l10.61,18.38a1.77,1.77,0,0,0,3.07,0l41.24-71.43a1.77,1.77,0,0,0-1.53-2.66H172A1.77,1.77,0,0,0,170.46,105.32Z"/>
-                        <path class="cls-6"
-                              d="M139.84,41.64l30.63,53a1.77,1.77,0,0,0,1.53.89h21.23a1.77,1.77,0,0,0,1.53-2.66L153.52,21.48a1.77,1.77,0,0,0-3.07,0L139.84,39.86A1.77,1.77,0,0,0,139.84,41.64Z"/>
-                    </g>
-                </g>
-            </svg>
-        </a>
                         <li>
-    <a href="/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+    <a href="/event-store/intro.html">Prooph Event Store</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-sourcing/repositories.html">Working with Repositories</a>
+    <a href="/event-store/event_store.html">Prooph Event Store</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+    <a href="/event-store/projections.html">Projections</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+    <a href="/event-store/upcasting.html">Upcasting</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-sourcing/interop_factories.html">Interop Factories</a>
+    <a href="/event-store/interop_factories.html">Interop Factories</a>
 
     </li>
                         <li>
-    <a href="/docs/html/event-sourcing/migration.html">Migration from v4 to v5</a>
+    <a href="/event-store/migration.html">Migration from v6 to v7</a>
 
     </li>
             </ul>
@@ -565,8 +577,8 @@
 </header>
 <div class="container">
     <ol class="breadcrumb">
-                        <li><a href="/docs/html/">prooph components documentation</a></li>
-                                <li><a href="/docs/html/event-store/">Event Store</a></li>
+                        <li><a href="/">prooph components documentation</a></li>
+                                <li><a href="/event-store/">Event Store</a></li>
                                 <li class="active">Prooph Event Store</li>
             </ol>
     <div class="row">
@@ -575,35 +587,43 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-2" title="Prooph&#x20;Event&#x20;Store">Prooph Event Store</a>
+                <a href="#4-2" title="Prooph&#x20;Event&#x20;Store">Prooph Event Store</a>
             </li>
                                 <li>
-                <a href="#3-2-1" title="Event&#x20;Hooks">Event Hooks</a>
+                <a href="#4-2-1" title="ReadOnlyEventStoreWrapper">ReadOnlyEventStoreWrappe...</a>
             </li>
                                 <li>
-                <a href="#3-2-2" title="Attaching&#x20;Plugins">Attaching Plugins</a>
+                <a href="#4-2-2" title="Event&#x20;Hooks">Event Hooks</a>
             </li>
                                 <li>
-                <a href="#3-2-3" title="Plugin&#x20;Use&#x20;Cases">Plugin Use Cases</a>
+                <a href="#4-2-3" title="Attaching&#x20;Plugins">Attaching Plugins</a>
             </li>
                                 <li>
-                <a href="#3-2-4" title="Metadata&#x20;enricher">Metadata enricher</a>
+                <a href="#4-2-4" title="Plugin&#x20;Use&#x20;Cases">Plugin Use Cases</a>
             </li>
                                 <li>
-                <a href="#3-2-5" title="Internal&#x20;metadata">Internal metadata</a>
+                <a href="#4-2-5" title="Metadata&#x20;enricher">Metadata enricher</a>
+            </li>
+                                <li>
+                <a href="#4-2-6" title="Internal&#x20;metadata">Internal metadata</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-2">Prooph Event Store</h1>
+<div id="section-main"><h1 id="4-2">Prooph Event Store</h1>
 <p>Prooph Event Store is the central component of this package. If you are familiar with doctrine
 you can compare it with doctrine's EntityManager.
 However, Prooph Event Store is especially designed to add a centralized, event-driven system on top
 of different low level event stream persistence adapters (f.e. MySQL or Postgres).
 The event-driven store is the unique selling point of prooph/event-store compared to other libraries.
 So let's directly jump into it and see what you can do with it.</p>
-<h2 id="3-2-1">Event Hooks</h2>
+<h2 id="4-2-1">ReadOnlyEventStoreWrapper</h2>
+<p>In case you need a read only event store, you can wrap your existing event store implementation with the
+ReadOnlyEventStoreWrapper.</p>
+<pre><code class="language-php">$readOnlyEventStore = new ReadOnlyEventStoreWrapper($eventStore);
+</code></pre>
+<h2 id="4-2-2">Event Hooks</h2>
 <p>Requirements: an event store wrapped with <code>Prooph\EventStore\ActionEventEmitterEventStore</code>.</p>
 <p>Action events are triggered when methods of the event store are invoked. The action events are named like the
 event store methods. The following events are available (event target is always the event store):</p>
@@ -645,7 +665,7 @@ event store methods. The following events are available (event target is always 
 <code>fetchCategoryNamesRegex</code>: event params: <code>filter</code>, <code>offset</code>, <code>limit</code> - result params: <code>categoryNames</code>
 </li>
 </ul>
-<p>If the event store implements additionally \Prooph\EventStore\CanControlTransactionActionEventEmitterAwareEventStore,
+<p>If the event store implements \Prooph\EventStore\TransactionalActionEventEmitterEventStore,
 the following additional events are available:</p>
 <ul>
 <li>
@@ -657,8 +677,8 @@ the following additional events are available:</p>
 <li>
 <code>rollback</code>: event params: none - result params: `transactionNotStarted</li>
 </ul>
-<h2 id="3-2-2">Attaching Plugins</h2>
-<p>If you had a look at the quick start you should already be familiar with one possibility to attach an event listener plugin.</p>
+<h2 id="4-2-3">Attaching Plugins</h2>
+<p>If you took a look at the quick start, you should already be familiar with the possibility to attach an event listener plugin.</p>
 <pre><code class="language-php">$eventStore-&gt;attach(
     'commit',
     function (\Prooph\Common\Event\ActionEvent $actionEvent) {
@@ -667,24 +687,24 @@ the following additional events are available:</p>
     1000 // priority
 );
 </code></pre>
-<p>More complex plugins are typically provided as classes with own dependencies. A plugin can implement the <code>Prooph\EventStore\Plugin\Plugin</code> interface
+<p>More complex plugins are typically provided as classes with their own dependencies. A plugin can implement the <code>Prooph\EventStore\Plugin\Plugin</code> interface
 and can then attach itself to the event store in the <code>Plugin::attachToEventStore($eventStore)</code> method.
 Implementing the interface is especially useful when you use the event store factory.</p>
-<h2 id="3-2-3">Plugin Use Cases</h2>
-<p>The event-driven system opens the door for customizations. Here are some ideas what you can do with it:</p>
+<h2 id="4-2-4">Plugin Use Cases</h2>
+<p>The event-driven system opens the door for customizations. Here are some ideas of what you can do with it:</p>
 <ul>
 <li>Attach a domain event dispatcher on the <code>create</code> and <code>appendTo</code> event</li>
 <li>Filter events before they are stored</li>
 <li>Add event metadata like a <code>causation id</code> (id of the command which caused the event)</li>
 <li>Convert events into custom event objects before they are passed back to a repository</li>
-<li>Implement your own Unit of Work and synchronizes it with the <code>transaction</code>, <code>commit</code> and <code>rollback</code> events</li>
+<li>Implement your own Unit of Work and synchronize it with the <code>transaction</code>, <code>commit</code> and <code>rollback</code> events</li>
 <li>...</li>
 </ul>
-<h2 id="3-2-4">Metadata enricher</h2>
-<p>By default the component is shipped with a plugin to automatically add metadata for each events.
-For instance you may want to add information about the command which caused the event or even
+<h2 id="4-2-5">Metadata enricher</h2>
+<p>By default, the component is shipped with a plugin to automatically add metadata to each event.
+For instance, you may want to add information about the command which caused the event or even
 the user who triggered that command.</p>
-<p>Here is an example of usage:</p>
+<p>Here is an example of its usage:</p>
 <pre><code class="language-php">&lt;?php
 
 use Prooph\Common\Messaging\Message;
@@ -716,7 +736,7 @@ $plugin = new MetadataEnricherPlugin(new MetadataEnricherAggregate([
 
 $plugin-&gt;attachToEventStore($eventStore);
 </code></pre>
-<h2 id="3-2-5">Internal metadata</h2>
+<h2 id="4-2-6">Internal metadata</h2>
 <p>All internal metadata is prefixed with <code>_</code> (underscore), f.e. <code>_causation_id</code>. Do not use metadata keys starting with an
 underscore, as this is reserved for prooph internals.</p>
 </div>        </div>
@@ -728,9 +748,9 @@ underscore, as this is reserved for prooph internals.</p>
         <div class="container">
             <div class="row">
                 <div class="prev col-xs-6">
-                                            <a href="/docs/html/event-store/intro.html">Previous</a>                                    </div>
+                                            <a href="/event-store/intro.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="/docs/html/event-store/projections.html">Next</a>                                    </div>
+                                            <a href="/event-store/projections.html">Next</a>                                    </div>
             </div>
         </div>
     </div>
@@ -738,18 +758,233 @@ underscore, as this is reserved for prooph internals.</p>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <p>Powered by <a href="https://github.com/prooph/bookdown-template" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.</p>
+                    <p>Powered by <a href="https://github.com/tobiju/bookdown-bootswatch-templates" title="Visit project to generate your own docs">Bookdown Bootswatch Templates</a>.</p>
                 </div>
             </div>
         </div>
     </div>
 </footer>
-    </div>
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-            crossorigin="anonymous"></script>
-    <script src="https://prooph.github.io/share/prismjs/main.js"></script>
-    <script src="https://prooph.github.io/share/prismjs/prism.js"></script>
-</body>
-</html>
+</div>
+<a href="https://github.com/prooph/proophessor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/0.6.0/lunr.min.js"></script>
+<script src="http://bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
+<script src="https://tobiju.github.io/share/prismjs/main.js"></script>
+<script src="https://tobiju.github.io/share/prismjs/prism.js"></script>
+<script type="text/javascript">
+
+    function Search() {
+        this.store = {};
+        this.index = lunr(function () {
+            this.ref('id');
+            this.field('title', {boost: 10});
+            this.field('content');
+        });
+        this.searchResults = $('.js-search-results').addClass('list-search-results');
+    }
+
+    Search.prototype = {
+        constructor: Search,
+        init: function () {
+            this.createIndex();
+            this.bindEvents();
+        },
+        createIndex: function () {
+            var $this = this,
+                indexFilePath = $('.js-search-input').data('roothref') + 'index.json';
+
+            $.getJSON(indexFilePath, function (data) {
+                $.each(data, function (key, item) {
+                    $this.index.add({
+                        id: item.id,
+                        title: item.title,
+                        content: item.content
+                    });
+
+                    $this.store[item.id] = {
+                        href: item.id,
+                        title: item.title,
+                        content: item.content
+                    }
+                });
+            });
+        },
+        bindEvents: function () {
+            var $this = this;
+
+            $('html')
+                .on('click', function (event) {
+                    $this.close($(this), event);
+                });
+
+            $('.js-search-input, .js-search-results')
+                .on('click', function (event) {
+                    $this.click($(this), event);
+                });
+
+            $('.js-search-input')
+                .on('focus', function (event) {
+                    $this.focus($(this), event);
+                })
+                .on('keyup', function (event) {
+                    $this.search($(this), event)
+                })
+                .on('keydown', function (event) {
+                    if ($('.js-search-results ul').is(':visible')){
+                        $this.navigation($(this), event)
+                    }
+                })
+        },
+        click: function (element, event) {
+            event.stopPropagation();
+        },
+        focus: function (element, event) {
+            this.searchInputWidth = element.css('width');
+            element.animate({
+                'width': 600
+            }, 500);
+            $('#js-navbar-collapse > ul').fadeOut();
+        },
+        close: function (element, event) {
+            var $this = this;
+
+            $('.js-search-results').hide();
+            $('.js-search-input').animate({
+                'width': $this.searchInputWidth
+            }, 500);
+            $('#js-navbar-collapse > ul').fadeIn();
+        },
+        search: function (element, event) {
+            var $this = this;
+
+            if (event.keyCode == 13 || event.keyCode == 38 || event.keyCode == 40) {
+                return;
+            }
+
+            var query = element.val(),
+                results = $this.index.search(query);
+
+            if (!results.length) {
+                $this.searchResults.empty();
+                return;
+            }
+
+            var resultsList = results.reduce(function (ul, result) {
+                var item = $this.store[result.ref];
+                var title = $('<b>').text(item.title);
+
+                var cropText = $this.cropText(item.content, query);
+                if (cropText.length === 0) {
+                    cropText = $('<p>').html(item.content.substring(0, 120) + "...");
+                }
+                var content = content = $('<p>').html(cropText);
+
+                var div = $('<div>')
+                    .append(title)
+                    .append(content);
+                var a = $('<a>').attr('href', item.href)
+                    .append(div);
+                var li = $('<li>')
+                    .append(a);
+                ul.append(li);
+
+                return ul;
+            }, $('<ul>'));
+
+            this.searchResults.html(resultsList);
+
+            $('.js-search-results').show();
+            $(".js-search-results li:first-child").addClass('selected');
+        },
+        cropText: function (content, query) {
+            var cropedText = '',
+                re = new RegExp("\\s?(.{0,30})?" + query + ".*?\\b(.{0,30}.)?\\s?", "gi");
+
+            $.each(content.match(re), function (key, value) {
+                cropedText += '...' + value + '...';
+            });
+
+            return cropedText;
+        },
+        navigation: function (element, event) {
+            var selected = null,
+                listSelector = ".js-search-results ul",
+                listItemSelector = listSelector + " li",
+                selectedListItemSelector = listItemSelector + ".selected",
+                selectedListItemSelectorAnchor = listItemSelector + ".selected a";
+
+            // enter
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                this.close();
+                window.location.replace($(selectedListItemSelectorAnchor).attr('href'));
+            }
+
+            // up
+            if (event.keyCode == 38) {
+                selected = $(selectedListItemSelector);
+                $(listItemSelector).removeClass("selected");
+
+                if (selected.prev().length == 0) {
+                    selected.siblings().last().addClass("selected");
+                } else {
+                    selected.prev().addClass("selected");
+                }
+
+                selected = $(selectedListItemSelector);
+                this.scrollListUp(selected);
+            }
+
+            // down
+            if (event.keyCode == 40) {
+                selected = $(selectedListItemSelector);
+                $(listItemSelector).removeClass("selected");
+
+                if (selected.next().length == 0) {
+                    selected.siblings().first().addClass("selected");
+                } else {
+                    selected.next().addClass("selected");
+                }
+
+                selected = $(selectedListItemSelector);
+                this.scrollListDown(selected);
+            }
+        },
+        scrollListDown: function (element) {
+            var ul = element.parent(),
+                ulHeight = ul.height(),
+                ulBottomPosition = ulHeight + ul.scrollTop(),
+                liBottomPosition = element.position().top + element.height();
+
+            if (liBottomPosition > ulBottomPosition) {
+                ul.scrollTop(liBottomPosition - ulHeight);
+            }
+
+            if (element.is(':first-child')) {
+                ul.scrollTop(0);
+            }
+        },
+        scrollListUp: function (element) {
+            var ul = element.parent(),
+                ulTopPosition = ul.scrollTop(),
+                liTopPosition = element.position().top;
+
+            if (liTopPosition < ulTopPosition) {
+                ul.scrollTop(element.position().top);
+            }
+
+            if (element.is(':last-child')) {
+                ul.scrollTop(element.position().top - element.height());
+            }
+        }
+    };
+
+    $(function () {
+        var search = new Search();
+        search.init();
+    });
+</script>
+</body></html>

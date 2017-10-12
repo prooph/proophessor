@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta name="HandheldFriendly" content="True"/>
-<title>Interop + Factories</title>
+<title>Testing Aggregates</title>
 <link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
@@ -578,8 +578,8 @@
 <div class="container">
     <ol class="breadcrumb">
                         <li><a href="/">prooph components documentation</a></li>
-                                <li><a href="/service-bus/">Service Bus</a></li>
-                                <li class="active">Interop + Factories</li>
+                                <li><a href="/tutorial/">Tutorial</a></li>
+                                <li class="active">Testing Aggregates</li>
             </ol>
     <div class="row">
 
@@ -587,49 +587,504 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-6" title="Interop&#x20;&#x2B;&#x20;Factories">Interop + Factories</a>
+                <a href="#1-4" title="Testing&#x20;Aggregates">Testing Aggregates</a>
             </li>
                                 <li>
-                <a href="#3-6-1" title="Factory-Driven&#x20;Message&#x20;Bus&#x20;Creation">Factory-Driven Message B...</a>
+                <a href="#1-4-1" title="Test&#x20;Recorded&#x20;Events">Test Recorded Events</a>
             </li>
-                                            <li>
-                <a href="#3-6-2" title="Customizing&#x20;via&#x20;Configuration">Customizing via Configur...</a>
+                                <li>
+                <a href="#1-4-2" title="Reconstitute&#x20;From&#x20;History">Reconstitute From Histor...</a>
+            </li>
+                                <li>
+                <a href="#1-4-3" title="Links">Links</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-6">Interop + Factories</h1>
-<p>Instead of providing a module, a bundle, a bridge or similar framework integration prooph/service-bus ships with
-<code>interop factories</code>.</p>
-<h2 id="3-6-1">Factory-Driven Message Bus Creation</h2>
-<p>The concept behind these factories is simple but powerful. It allows us to provide you with bootstrapping logic for
-the message buses without the need to rely on a specific framework. However, the factories have three requirements.</p>
-<h3 id="3-6-1-1">Requirements</h3>
+<div id="section-main"><h1 id="1-4">Testing Aggregates</h1>
+<p><strong>Event Sourcing makes it easy to test aggregates</strong>. In this chapter we will learn why. Don't underestimate this advantage.
+Easy testability is crucial for long-lived applications that evolve over time.
+Event Sourced aggregates sit at the heart of software. They are the engine to drive business forward.</p>
+<h2 id="1-4-1">Test Recorded Events</h2>
+<p>When testing an event sourced aggregate we only need to test for two things:</p>
 <ol>
-<li>Your Inversion of Control container must implement the <a href="https://github.com/container-interop/container-interop">interop-container interface</a>.</li>
+<li>Does the aggregate record the correct domain event(s)?</li>
+<li>Does the aggregate either reject an action or record a failed event if a business rule is not met?</li>
+</ol>
+<p>The fact that an aggregate is event sourced is hidden from the public API. If we want to test recorded events
+we need a test helper to get them from the aggregate. <code>prooph/event-sourcing</code> uses a so called <code>AggregateTranslator</code>
+to perform operations on protected methods of an aggregate. We can use the <code>ÀggregateTranslator</code> for our tests, too.
+Add a project <code>TestCase</code> class that includes some helper methods which we can use in our test cases.</p>
+<p><em>File: ./Basket/tests/TestCase.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\BasketTest;
+
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use Prooph\EventSourcing\Aggregate\AggregateType;
+use Prooph\EventSourcing\AggregateRoot;
+use Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator;
+
+class TestCase extends PHPUnitTestCase
+{
+    /**
+     * @var AggregateTranslator
+     */
+    private $aggregateTranslator;
+    
+    protected function popRecordedEvents(AggregateRoot $aggregateRoot): array
+    {
+        return $this-&gt;getAggregateTranslator()-&gt;extractPendingStreamEvents($aggregateRoot);
+    }
+    /**
+     * @return object
+     */
+    protected function reconstituteAggregateFromHistory(string $aggregateRootClass, array $events)
+    {
+        return $this-&gt;getAggregateTranslator()-&gt;reconstituteAggregateFromHistory(
+            AggregateType::fromAggregateRootClass($aggregateRootClass),
+            new \ArrayIterator($events)
+        );
+    }
+    
+    private function getAggregateTranslator(): AggregateTranslator
+    {
+        if (null === $this-&gt;aggregateTranslator) {
+            $this-&gt;aggregateTranslator = new AggregateTranslator();
+        }
+        return $this-&gt;aggregateTranslator;
+    }
+}
+
+</code></pre>
+<p>The same <code>TestCase</code> is used in the example application <code>proophessor-do</code>¹. Besides the <code>popRecordedEvents</code> method
+we've also added a <code>reconstituteAggregateFromHistory</code> method. With the latter we can prepare an aggregate for a test
+case by just using events. So we can "move" the aggregate to a certain point in the business process and start testing
+from there. This is really powerful and as a benefit also self documenting. We'll see that in a minute.</p>
+<p>In the "Event Sourcing Basics" chapter we've implemented the <code>Basket::startShoppingSession()</code> method. Let's
+test it now with a <code>BasketTest</code>.</p>
+<p><em>File: ./Basket/tests/Model/BasketTest.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\BasketTest\Model;
+
+use App\Basket\Model\Basket;
+use App\Basket\Model\Event\ShoppingSessionStarted;
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\Basket\ShoppingSession;
+use App\BasketTest\TestCase;
+use Prooph\EventSourcing\AggregateChanged;
+use Ramsey\Uuid\Uuid;
+
+class BasketTest extends TestCase
+{
+    /**
+     * @var ShoppingSession
+     */
+    private $shoppingSession;
+
+    /**
+     * @var BasketId
+     */
+    private $basketId;
+
+    protected function setUp()
+    {
+        $this-&gt;shoppingSession = ShoppingSession::fromString('123');
+        $this-&gt;basketId = BasketId::fromString(Uuid::uuid4()-&gt;toString());
+    }
+
+    /**
+     * @test
+     */
+    public function it_starts_a_shopping_session()
+    {
+        $basket = Basket::startShoppingSession($this-&gt;shoppingSession, $this-&gt;basketId);
+
+        /** @var AggregateChanged[] $events */
+        $events = $this-&gt;popRecordedEvents($basket);
+
+        $this-&gt;assertCount(1, $events);
+
+        /** @var ShoppingSessionStarted $event */
+        $event = $events[0];
+
+        $this-&gt;assertSame(ShoppingSessionStarted::class, $event-&gt;messageName());
+        $this-&gt;assertTrue($this-&gt;basketId-&gt;equals($event-&gt;basketId()));
+        $this-&gt;assertTrue($this-&gt;shoppingSession-&gt;equals($event-&gt;shoppingSession()));
+    }
+}
+
+</code></pre>
+<p>The two value objects needed to start a shopping session are created in the <code>setUp()</code> method of the test case. This way
+we get fresh objects for each test without the need to create them manually in each test method.</p>
+<p>To run the test we need to tell <code>PHPUnit</code> where to find our test cases and how to use <code>composer autoloader</code> to locate
+the domain model. Just put a <code>phpunit.xml.dist</code> file in the project root with following content:</p>
+<p><em>File: ./phpunit.xml.dist</em></p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;phpunit bootstrap="vendor/autoload.php"&gt;
+    &lt;testsuites&gt;
+        &lt;testsuite name="BasketModel"&gt;
+            &lt;directory&gt;./Basket/tests&lt;/directory&gt;
+        &lt;/testsuite&gt;
+    &lt;/testsuites&gt;
+&lt;/phpunit&gt;
+</code></pre>
+<p>Now we can run the tests with <code>php vendor/bin/phpunit</code></p>
+<pre><code class="language-bash">$ php vendor/bin/phpunit
+
+PHPUnit 6.3.1 by Sebastian Bergmann and contributors.
+
+.                                                                   1 / 1 (100%)
+
+Time: 20 ms, Memory: 4.00MB
+
+OK (1 test, 4 assertions)
+</code></pre>
+<p>Nice, a green test. That's a good feeling, isn't it? Half a year later the feeling is even better when we have hundreds
+of green tests and need to refactor something in the domain model. So do yourself and your colleagues a favor
+and test the domain model!</p>
+<h2 id="1-4-2">Reconstitute From History</h2>
+<p>For the first test we did not need the <code>reconstituteAggregateFromHistory()</code> test helper but if we add more behaviour to the
+<code>Basket</code> aggregate the test helper becomes quite handy. To see the test helper in action we're going to add a second
+method to the <code>Basket</code> aggregate that allows us to add a <code>Product</code>.</p>
+<p>We start simple in this chapter and leave a more complex implementation to the next chapter "Aggregate Dependencies".
+First we need a new value object to reference a <code>Product</code>. Products are not part of our domain but are manged by an external ERP system.</p>
+<p><em>File: ./Basket/src/Model/ERP/ProductId.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\ERP;
+
+final class ProductId
+{
+    private $id;
+
+    public static function fromString(string $id): self
+    {
+        return new self($id);
+    }
+
+    private function __construct(string $id)
+    {
+        if($id === '') {
+            throw new \InvalidArgumentException("Product id must not be an empty string");
+        }
+
+        $this-&gt;id = $id;
+    }
+
+    public function toString(): string
+    {
+        return $this-&gt;id;
+    }
+
+    public function equals($other): bool
+    {
+        if(!$other instanceof self) {
+            return false;
+        }
+
+        return $this-&gt;id === $other-&gt;id;
+    }
+
+    public function __toString(): string
+    {
+        return $this-&gt;id;
+    }
+}
+
+</code></pre>
+<p>We need a new domain event, too.</p>
+<p><em>File: ./Basket/src/Model/Event/ProductAddedToBasket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Event;
+
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\ERP\ProductId;
+use Prooph\EventSourcing\AggregateChanged;
+
+final class ProductAddedToBasket extends AggregateChanged
+{
+    public function basketId(): BasketId
+    {
+        return BasketId::fromString($this-&gt;aggregateId());
+    }
+
+    public function productId(): ProductId
+    {
+        return ProductId::fromString($this-&gt;payload()['product_id']);
+    }
+}
+
+</code></pre>
+<p>And finally we add a new method to the <code>Basket</code> aggregate that we're going to test in a few seconds.</p>
+<p><em>File: ./Basket/src/Model/Basket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+//...
+use App\Basket\Model\ERP\ProductId;
+use App\Basket\Model\Exception\ProductAddedTwice;
+
+final class Basket extends AggregateRoot
+{
+    //...
+
+    /**
+     * @var ProductId[]
+     */
+    private $products = [];
+
+    public static function startShoppingSession(ShoppingSession $shoppingSession, BasketId $basketId)
+    {
+        //...
+    }
+
+    public function addProduct(ProductId $productId): void
+    {
+        if(array_key_exists($productId-&gt;toString(), $this-&gt;products)) {
+            throw ProductAddedTwice::toBasket($this-&gt;basketId, $productId);
+        }
+                
+        //@TODO: Check stock
+        $this-&gt;recordThat(ProductAddedToBasket::occur($this-&gt;basketId-&gt;toString(), [
+            'product_id' =&gt; $productId-&gt;toString()]
+        ));
+    }
+
+    //...
+
+    /**
+     * Apply given event
+     */
+    protected function apply(AggregateChanged $event): void
+    {
+        switch ($event-&gt;messageName()) {
+            case ShoppingSessionStarted::class:
+                //...
+            case ProductAddedToBasket::class:
+                /** @var $event ProductAddedToBasket */
+
+                //Use ProductId as index to avoid adding a product twice
+                $this-&gt;products[$event-&gt;productId()-&gt;toString()] = $event-&gt;productId();
+                break;
+        }
+    }
+}
+</code></pre>
+<p>We have a new <code>$products</code> property which is a list of <code>ProductId</code>s whereby the string representation of the <code>ProductId</code>
+is also used as index. This way we can easily check if a product is added twice.</p>
+<p>The new <code>addProduct()</code> method takes a <code>ProductId</code> as argument and records a new domain event <code>ProductAddedToBasket</code>
+which then gets applied using a new <code>case</code> in the <code>apply</code> method.</p>
+<p>In case of a product being added twice the method throws a <code>ProductAddedTwice</code> exception. Here is the implementation of
+that exception.</p>
+<p><em>File: ./Basket/src/Model/Exception/ProductAddedTwice.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Exception;
+
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\ERP\ProductId;
+
+final class ProductAddedTwice extends \RuntimeException
+{
+    public static function toBasket(BasketId $basketId, ProductId $productId): self
+    {
+        return new self(sprintf(
+            'Product %s added twice to basket %s',
+            $productId-&gt;toString(),
+            $basketId-&gt;toString()
+        ));
+    }
+}
+
+</code></pre>
+<p>Back to the test case. We want to see if our implementation works as expected.</p>
+<p><em>File: ./Basket/tests/Model/BasketTest.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\BasketTest\Model;
+
+use App\Basket\Model\Basket;
+use App\Basket\Model\ERP\ProductId;
+use App\Basket\Model\Event\ProductAddedToBasket;
+use App\Basket\Model\Event\ShoppingSessionStarted;
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\Basket\ShoppingSession;
+use App\BasketTest\TestCase;
+use Prooph\EventSourcing\AggregateChanged;
+use Ramsey\Uuid\Uuid;
+
+class BasketTest extends TestCase
+{
+    /**
+     * @var ShoppingSession
+     */
+    private $shoppingSession;
+
+    /**
+     * @var BasketId
+     */
+    private $basketId;
+
+    /**
+     * @var ProductId
+     */
+    private $product1;
+
+    protected function setUp()
+    {
+        $this-&gt;shoppingSession = ShoppingSession::fromString('123');
+        $this-&gt;basketId = BasketId::fromString(Uuid::uuid4()-&gt;toString());
+        $this-&gt;product1 = ProductId::fromString('A1');
+    }
+
+    /**
+     * @test
+     */
+    public function it_starts_a_shopping_session()
+    {
+        $basket = Basket::startShoppingSession($this-&gt;shoppingSession, $this-&gt;basketId);
+
+        /** @var AggregateChanged[] $events */
+        $events = $this-&gt;popRecordedEvents($basket);
+
+        $this-&gt;assertCount(1, $events);
+
+        /** @var ShoppingSessionStarted $event */
+        $event = $events[0];
+
+        $this-&gt;assertSame(ShoppingSessionStarted::class, $event-&gt;messageName());
+        $this-&gt;assertTrue($this-&gt;basketId-&gt;equals($event-&gt;basketId()));
+        $this-&gt;assertTrue($this-&gt;shoppingSession-&gt;equals($event-&gt;shoppingSession()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_a_product()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted()
+        );
+
+        $basket-&gt;addProduct($this-&gt;product1);
+
+        /** @var AggregateChanged[] $events */
+        $events = $this-&gt;popRecordedEvents($basket);
+
+        $this-&gt;assertCount(1, $events);
+
+        /** @var ProductAddedToBasket $event */
+        $event = $events[0];
+
+        $this-&gt;assertSame(ProductAddedToBasket::class, $event-&gt;messageName());
+        $this-&gt;assertTrue($this-&gt;basketId-&gt;equals($event-&gt;basketId()));
+        $this-&gt;assertTrue($this-&gt;product1-&gt;equals($event-&gt;productId()));
+    }
+
+    /**
+     * @test
+     * @expectedException \App\Basket\Model\Exception\ProductAddedTwice
+     */
+    public function it_throws_exception_if_product_is_added_twice()
+    {
+        $basket = $this-&gt;reconstituteBasketFromHistory(
+            $this-&gt;shoppingSessionStarted(),
+            $this-&gt;product1Added()
+        );
+
+        //Add same product again
+        $basket-&gt;addProduct($this-&gt;product1);
+    }
+
+    /**
+     * Helper method to reconstitute a Basket from history
+     *
+     * With this helper we get better type hinting in the test methods
+     * because type hint for reconstituteAggregateFromHistory() is only AggregateRoot
+     *
+     * @param AggregateChanged[] ...$events
+     * @return Basket
+     */
+    private function reconstituteBasketFromHistory(AggregateChanged ...$events): Basket
+    {
+        return $this-&gt;reconstituteAggregateFromHistory(
+            Basket::class,
+            $events
+        );
+    }
+
+    /**
+     * Test helper to create a ShoppingSessionStarted event
+     *
+     * If we need to change signature of the event later, we have a central place in the test case
+     * where we can align the creation.
+     *
+     * @return ShoppingSessionStarted
+     */
+    private function shoppingSessionStarted(): ShoppingSessionStarted
+    {
+        return ShoppingSessionStarted::occur($this-&gt;basketId-&gt;toString(), [
+            'shopping_session' =&gt; $this-&gt;shoppingSession-&gt;toString()
+        ]);
+    }
+
+    /**
+     * Test helper to create a ProductAddedToBasket event
+     *
+     * If we need to change signature of the event later, we have a central place in the test case
+     * where we can align the creation.
+     *
+     * @return ProductAddedToBasket
+     */
+    private function product1Added(): ProductAddedToBasket
+    {
+        return ProductAddedToBasket::occur($this-&gt;basketId-&gt;toString(), [
+            'product_id' =&gt; $this-&gt;product1-&gt;toString()
+        ]);
+    }
+}
+
+</code></pre>
+<p>Looks good.</p>
+<pre><code class="language-bash">$ php vendor/bin/phpunit
+
+PHPUnit 6.3.1 by Sebastian Bergmann and contributors.
+
+...                                                                 3 / 3 (100%)
+
+Time: 19 ms, Memory: 4.00MB
+
+OK (3 tests, 9 assertions)
+</code></pre>
+<p>We covered two new possibilities. First, we learned how to reconstitute an aggregate from history. We just added a
+few basket specific test helpers to get better type hinting support and keep creation of events in a central place
+for easier refactoring.</p>
+<p>Second, we learned how to test exceptions. Using exceptions to communicate errors is not always the best choice.
+Another possibility is to use domain events for failure scenarios, too. Later in the tutorial we will see this in action
+and discuss the pros and cons of such an approach.</p>
+<p>Anyway, testing failure cases where the aggregate records a failed event is not different from testing normal event recording.
+Reconstitute the aggregate to move it to a certain point in the business process, provoke the recording of a failure event and
+test if the event was correctly recorded. It's easy as that.</p>
+<h2 id="1-4-3">Links</h2>
+<ul>
 <li>
-<a href="https://github.com/sandrokeil/interop-config">interop-config</a> must be installed</li>
-<li>The application configuration should be registered with the service id <code>config</code> in the container.</li>
-</ol>
-<p><em>Note: Don't worry, if your environment doesn't provide the requirements. You can
-always bootstrap a message bus by hand. Just look at the factories for inspiration in this case.</em></p>
-<h2 id="3-6-2">Customizing via Configuration</h2>
-<p>In the <code>config</code> folder of prooph/service-bus you will find example configuration files.
-Configuration is a simple PHP array flavored with some comments to help you understand the structure.</p>
-<p>Now follow the simple steps below to integrate prooph/service-bus in your framework and/or application.</p>
-<ol>
-<li>Merge configuration into your application config either by hand or by using your framework's mechanism.</li>
-<li>Customize the configuration so that it meet your needs. The comments in the config file will tell you more.</li>
-<li>(Only required if not done by your framework) Make your application config available as a service in the
-Inversion of Control container. Use <code>config</code> as the service id (common id for application config).</li>
-<li>Register the message buses as services in your IoC container and use the factories located in <code>src/Container</code> to create the different message buses.
-How you register a message bus depends on your container. Some containers like <a href="https://github.com/zendframework/zend-servicemanager">zend-servicemanager</a>
-or <a href="https://github.com/moufmouf/pimple-interop">pimple-interop</a> allow you to map a service id to an <code>invokable factory</code>.
-If you use such an IoC container you are lucky. In this case you can use the prooph/service-bus factories as-is.
-We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;::class</code> as the service id.</li>
-</ol>
-<p><em>Note: If you're still unsure how to do it you might have a look at the <code>BusFactoriesTest</code> located in the <code>tests</code> folder.</em></p>
+<a href="https://github.com/prooph/proophessor-do">proophessor-do example app</a>¹</li>
+</ul>
 </div>        </div>
     </div>
 </div>
@@ -639,9 +1094,9 @@ We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;:
         <div class="container">
             <div class="row">
                 <div class="prev col-xs-6">
-                                            <a href="/service-bus/async_message_producer.html">Previous</a>                                    </div>
+                                            <a href="/tutorial/event_sourcing_basics.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="/event-store/">Next</a>                                    </div>
+                                            <a href="/tutorial/aggregate_dependencies.html">Next</a>                                    </div>
             </div>
         </div>
     </div>

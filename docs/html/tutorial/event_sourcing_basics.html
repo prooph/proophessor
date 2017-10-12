@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta name="HandheldFriendly" content="True"/>
-<title>Interop + Factories</title>
+<title>Event Sourcing Basics</title>
 <link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
@@ -578,8 +578,8 @@
 <div class="container">
     <ol class="breadcrumb">
                         <li><a href="/">prooph components documentation</a></li>
-                                <li><a href="/service-bus/">Service Bus</a></li>
-                                <li class="active">Interop + Factories</li>
+                                <li><a href="/tutorial/">Tutorial</a></li>
+                                <li class="active">Event Sourcing Basics</li>
             </ol>
     <div class="row">
 
@@ -587,49 +587,519 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-6" title="Interop&#x20;&#x2B;&#x20;Factories">Interop + Factories</a>
+                <a href="#1-3" title="Event&#x20;Sourcing&#x20;Basics">Event Sourcing Basics</a>
             </li>
                                 <li>
-                <a href="#3-6-1" title="Factory-Driven&#x20;Message&#x20;Bus&#x20;Creation">Factory-Driven Message B...</a>
+                <a href="#1-3-1" title="Thinking&#x20;in&#x20;Events">Thinking in Events</a>
             </li>
-                                            <li>
-                <a href="#3-6-2" title="Customizing&#x20;via&#x20;Configuration">Customizing via Configur...</a>
+                                <li>
+                <a href="#1-3-2" title="Defining&#x20;Events">Defining Events</a>
+            </li>
+                                <li>
+                <a href="#1-3-3" title="Event&#x20;Sourced&#x20;Aggregates">Event Sourced Aggregates</a>
+            </li>
+                                <li>
+                <a href="#1-3-4" title="Related&#x20;reads">Related reads</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-6">Interop + Factories</h1>
-<p>Instead of providing a module, a bundle, a bridge or similar framework integration prooph/service-bus ships with
-<code>interop factories</code>.</p>
-<h2 id="3-6-1">Factory-Driven Message Bus Creation</h2>
-<p>The concept behind these factories is simple but powerful. It allows us to provide you with bootstrapping logic for
-the message buses without the need to rely on a specific framework. However, the factories have three requirements.</p>
-<h3 id="3-6-1-1">Requirements</h3>
-<ol>
-<li>Your Inversion of Control container must implement the <a href="https://github.com/container-interop/container-interop">interop-container interface</a>.</li>
+<div id="section-main"><h1 id="1-3">Event Sourcing Basics</h1>
+<p>Event Sourcing focuses on business processes. The reason is simple. Every write operation in a domain model causes
+a state change. When using Event Sourcing those state changes are described by domain events. For example if an order gets payed
+this is a state change (company gets $$$) and we can describe it with an event using past tense: <strong>OrderPayed</strong>.
+We simply do that for all state changes. What we get is a series of domain events¹.</p>
+<p><img src="/tutorial/img/order_stream.png" alt="Order Stream"></p>
+<p><strong>Events happen one after another. They tell us a story about a business process handled by the application.</strong></p>
+<h2 id="1-3-1">Thinking in Events</h2>
+<p>The previous page "Why Event Sourcing" made a point about database driven designs and how Event Sourcing differs from that.
+In Event Sourcing we start with thinking in events.</p>
+<p>Every coding tutorial needs a playground. Ours is an eCommerce domain and our first job is to implement a shopping basket.
+Business tells us that customers can browse an online shop frontend and add available products to their basket.
+The customers don't need to be signed in so their basket is assigned to a shopping session until checkout.
+So far, so good. But the business wants us to implement realtime stock updates.
+While browsing the online shop customers should see constantly updated information about how many other customers
+have the same products in their basket: "<em>5 other customers want to buy the same product at the minute</em>".
+If one customer performs a checkout stock of the product should be reduced immediately along with a notification:
+"<em>Product {name} was bought by customer from {localization} {time span} ago</em>".</p>
+<p>Here is a simplified result of the event storming² session:</p>
+<p><img src="/tutorial/img/shopping_session_event_storming.png" alt="Shopping Session Event Storming"></p>
+<p>As you can see we have a variety of different events. We not only have events that are caused by the customer while
+interacting with their shopping basket but also events caused by changes in foreign shopping sessions. We even have
+two "error events" defined: <em>QuantityStockConflictDetected, ShoppingSessionTimedOut</em>.</p>
+<h2 id="1-3-2">Defining Events</h2>
+<p>In the tutorial introduction we already took a look at prooph messages and created our first command. Events are created in a
+similar fashion. In fact they are just another type of message. Hence, each prooph event is an implementation of <code>Prooph\Common\Messaging\Message</code>.</p>
+<p>You still have the <code>prooph_tutorial</code> project at hand with <code>prooph/common</code> installed via composer? If not, please go back to
+the <a href="introduction.html">introduction</a> and follow the steps there before continuing with the Event Sourcing tutorial.</p>
+<p>We need a project structure for our shopping basket implementation.</p>
+<pre><code>|_ Basket
+| |_ scripts           
+| |_ src
+| | |_ Infrastructure
+| | | |_ Prooph
+| | |_ Model
+| | | |_ Basket
+| | | |_ Command
+| | | |_ Event
+| | | |_ ERP
+| | | |_ Exception
+| | |_ Projection
+| |   |_ Query
+| |_ tests
+|    |_Model
+|_ scripts
+</code></pre>
+<p>Run the following command in the <code>prooph_tutorial</code> directory.</p>
+<pre><code class="language-bash">$ mkdir -p ./Basket/src/Infrastruture/Prooph \
+    ./Basket/src/Model/Command/ \
+   ./Basket/src/Model/Event/ \
+   ./Basket/src/Model/Basket/ \
+   ./Basket/src/Model/ERP/ \
+   ./Basket/src/Model/Exception/ \
+   ./Basket/src/Projection/Query \
+   ./Basket/tests/Model \
+   ./scripts
+</code></pre>
+<p>Replace <code>composer.json</code> with this version and run <code>composer update</code>:</p>
+<pre><code class="language-json">{
+    "autoload": {
+        "psr-4": {"App\\Basket\\": "Basket/src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {"App\\BasketTest\\": "Basket/tests/"}
+    },
+    "require": {
+        "prooph/common": "^4.1",
+        "prooph/event-sourcing": "^5.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    }
+}
+</code></pre>
+<p>We just configured composer's autoloader to use the namespace <code>App\Basket</code>  for our <code>Basket</code> context and the appropriate
+test namespace <code>Àpp\BasketTest</code>.
+We've also added the package <code>prooph/event-sourcing</code> to the list of dependencies and told composer to install <code>phpunit/phpunit</code>
+when we're in dev mode.</p>
+<p>You can guess that <code>prooph/event-sourcing</code> provides the basic implementation needed to develop an event sourced domain model.</p>
+<p>Now it's time to define our first domain event. We place all events in <code>./Basket/src/Model/Event/</code></p>
+<p><em>File: ./Basket/src/Model/Event/ShoppingSessionStarted.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Event;
+
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\Basket\ShoppingSession;
+use Prooph\EventSourcing\AggregateChanged;
+
+final class ShoppingSessionStarted extends AggregateChanged
+{
+    public function basketId(): BasketId
+    {
+        //Note: Internally, we work with scalar types, but the getter returns the value object
+        return BasketId::fromString($this-&gt;aggregateId());
+    }
+
+    public function shoppingSession(): ShoppingSession
+    {
+        //Same here, return domain specific value object
+        return ShoppingSession::fromString($this-&gt;payload['shopping_session']);
+    }
+}
+
+</code></pre>
+<p>What we do here is extending the base event class <code>AggregateChanged</code> from the <code>prooph/event-sourcing</code> package.
+More about aggregates in a minute. First let's have a look at what the base event class has to offer:</p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Prooph\EventSourcing;
+
+use Assert\Assertion;
+use Prooph\Common\Messaging\DomainEvent;
+
+class AggregateChanged extends DomainEvent
+{
+    /**
+     * @var array
+     */
+    protected $payload = [];
+
+    public static function occur(string $aggregateId, array $payload = []): self
+    {
+        return new static($aggregateId, $payload);
+    }
+    //...
+}
+</code></pre>
+<p><code>AggregateChanged</code> extends <code>Prooph\Common\Messaging\DomainEvent</code>. That's the link back to <code>prooph/common</code> and turns
+all events into prooph messages. Keep that in mind as this is an important information needed later when we want to
+send events around.</p>
+<p>We also see a static factory method called <code>occur</code> that takes an <code>$aggregateId</code> and <code>$payload</code> as arguments.
+The <code>$aggregateId</code> is a reference to the corresponding aggregate. <strong>Every domain event belongs to exactly one aggregate</strong>.</p>
+<h2 id="1-3-3">Event Sourced Aggregates</h2>
+<p>Event Sourced Aggregates are Domain-Driven Aggregates - units of consistency.
+They protect invariants. This basically means that an aggregate makes sure that it can transition to a new state.
+Different business rules can permit or prevent those state transitions. The aggregate has to enforce the business rules.</p>
+<p>In our case we need to consider following business rules:</p>
+<ul>
 <li>
-<a href="https://github.com/sandrokeil/interop-config">interop-config</a> must be installed</li>
-<li>The application configuration should be registered with the service id <code>config</code> in the container.</li>
-</ol>
-<p><em>Note: Don't worry, if your environment doesn't provide the requirements. You can
-always bootstrap a message bus by hand. Just look at the factories for inspiration in this case.</em></p>
-<h2 id="3-6-2">Customizing via Configuration</h2>
-<p>In the <code>config</code> folder of prooph/service-bus you will find example configuration files.
-Configuration is a simple PHP array flavored with some comments to help you understand the structure.</p>
-<p>Now follow the simple steps below to integrate prooph/service-bus in your framework and/or application.</p>
-<ol>
-<li>Merge configuration into your application config either by hand or by using your framework's mechanism.</li>
-<li>Customize the configuration so that it meet your needs. The comments in the config file will tell you more.</li>
-<li>(Only required if not done by your framework) Make your application config available as a service in the
-Inversion of Control container. Use <code>config</code> as the service id (common id for application config).</li>
-<li>Register the message buses as services in your IoC container and use the factories located in <code>src/Container</code> to create the different message buses.
-How you register a message bus depends on your container. Some containers like <a href="https://github.com/zendframework/zend-servicemanager">zend-servicemanager</a>
-or <a href="https://github.com/moufmouf/pimple-interop">pimple-interop</a> allow you to map a service id to an <code>invokable factory</code>.
-If you use such an IoC container you are lucky. In this case you can use the prooph/service-bus factories as-is.
-We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;::class</code> as the service id.</li>
-</ol>
-<p><em>Note: If you're still unsure how to do it you might have a look at the <code>BusFactoriesTest</code> located in the <code>tests</code> folder.</em></p>
+<em>A shopping session is started with an empty basket.</em>
+</li>
+<li>
+<em>Each shopping session gets its own basket assigned.</em>
+</li>
+<li>
+<em>A product can only be added to a basket if at least one product is available in stock.</em>
+</li>
+<li>
+<em>Product quantity in a basket must not be higher than available stock.</em>
+</li>
+<li>
+<em>If stock is reduced by a checkout, product quantity in currently active baskets need to be checked and conflicts resolved.</em>
+</li>
+<li>
+<em>If product quantity in a basket is reduced to zero or less the product is removed from the basket.</em>
+</li>
+<li>
+<em>A checkout can only be made if no unresolved quantity-stock-conflicts exist for the basket.</em>
+</li>
+</ul>
+<p>Looking at the rules we can identify a repeating pattern. Every rule includes a state check against a basket and/or describes
+a state transition of a basket. With our current understanding of the domain we're good to go with a <code>Basket</code> aggregate that
+enforces the business rules described above.</p>
+<p>Even if we name our aggregate only <code>Basket</code> you can think of it like it would be named <code>BasketProcess</code>.
+We don't do it that way because it does not reflect the Ubiquitous Language³ which we draw off from the language used by the business.
+However, when implementing Event Sourcing you can always keep that <code>Process</code> suffix in mind.</p>
+<p>Recap: Every state transition is described by an event. Events happen one after another. They tell us a story about
+a business <strong>process</strong>. Indeed, an aggregate is a process consisting of multiple steps happening in a sequence.
+Whereby, each next step is validated by the aggregate upfront using current state:</p>
+<p><em>A checkout can only be made if no unresolved quantity-stock-conflicts exist for the basket.</em></p>
+<p>Effective Aggregate Design¹¹ is possibly the hardest part of a well crafted domain model. And it evolves over time so
+be prepared to constantly refactor previous design decisions. Thinking of aggregates as processes and model them in an event
+sourced fashion can help a lot, but it remains a task that needs practice. So don't worry if your first attempts end up
+being unpractical. You will get better. <strong>Thinking in events and processes is the key.</strong></p>
+<p>Let's add the <code>Basket</code> aggregate now.</p>
+<p><em>File: ./Basket/src/Model/Basket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model;
+
+use Prooph\EventSourcing\AggregateChanged;
+use Prooph\EventSourcing\AggregateRoot;
+
+final class Basket extends AggregateRoot
+{
+    protected function aggregateId(): string
+    {
+        // TODO: Implement aggregateId() method.
+    }
+
+    /**
+     * Apply given event
+     */
+    protected function apply(AggregateChanged $event): void
+    {
+        // TODO: Implement apply() method.
+    }
+}
+</code></pre>
+<p>Our <code>Basket</code> class extends <code>Prooph\EventSourcing\AggregateRoot</code>. This is the base class for all event sourced aggregates.
+Later we'll also look at an alternative approach using traits instead of extending a prooph class but the
+version shown here is easier to understand and helps us with the first steps. <code>AggregateRoot</code> is an abstract class and asks us to implement
+two methods <code>aggregateId()</code> which should provide the string representation of the globally unique identifier of the aggregate
+and an <code>apply()</code> method.</p>
+<p>The <code>apply()</code> method is best explained with an example so let us dive into the implementation. Each aggregate has a
+lifecycle. To start such a lifecycle we need to create the aggregate. But prooph's <code>AggregateRoot</code> does not allow to use
+the class constructor as public method. Instead we're asked to use a so called <strong>named constructor</strong> aka static factory method.</p>
+<p><em>File: ./Basket/src/Model/Basket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model;
+
+use App\Basket\Model\Event\ShoppingSessionStarted;
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\Basket\ShoppingSession;
+use Prooph\EventSourcing\AggregateChanged;
+use Prooph\EventSourcing\AggregateRoot;
+
+final class Basket extends AggregateRoot
+{
+    public static function startShoppingSession(
+        ShoppingSession $shoppingSession, 
+        BasketId $basketId)
+    {
+        //Start new aggregate lifecycle by creating an "empty" instance
+        $self = new self();
+        
+        //Record the very first domain event of the new aggregate
+        //Note: we don't pass the value objects directly to the event but use their
+        //primitive counterparts. This makes it much easier to work with the events later
+        //and we don't need complex serializers when storing events.
+        $self-&gt;recordThat(ShoppingSessionStarted::occur($basketId-&gt;toString(), [
+            'shopping_session' =&gt; $shoppingSession-&gt;toString()
+        ]));
+        
+        //Return the new aggregate
+        return $self;
+    }
+
+    protected function aggregateId(): string
+    {
+        // TODO: Implement aggregateId() method.
+    }
+
+    /**
+     * Apply given event
+     */
+    protected function apply(AggregateChanged $event): void
+    {
+        // TODO: Implement apply() method.
+    }
+}
+
+</code></pre>
+<p>A meaningful named constructor using the Ubiquitous Language is a great way to let the code document itself.
+The <code>Basket</code> aggregate requires a <code>ShoppingSession</code> and a <code>BasketId</code> to start the shopping session.
+Both are value objects that we're going to add next.</p>
+<p><em>Note: BasketId becomes the identifier of the aggregate but it is created outside of the aggregate. That's a common pattern in
+a CQRS system. For example the frontend can create a BasketId using a JavaScript UUID library and send the BasketId to
+the backend. Remember from the introduction chapter: Handling a command has no response other than success or failure. In case
+of success the frontend can use the BasketId to fetch state of the Basket from a read model. Later in the tutorial we'll
+see that in action. For now just keep in mind that aggregate ids are created by the client or application layer
+if a CQRS architecture is used.</em></p>
+<p><em>File: ./Basket/src/Model/Basket/ShoppingSession.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model\Basket;
+
+final class ShoppingSession
+{
+    private $shoppingSession;
+
+    public static function fromString(string $shoppingSession): self
+    {
+        return new self($shoppingSession);
+    }
+
+    private function __construct(string $shoppingSession)
+    {
+        if($shoppingSession === '') {
+            throw new \InvalidArgumentException("Shopping session must not be an empty string");
+        }
+
+        $this-&gt;shoppingSession = $shoppingSession;
+    }
+
+    public function toString(): string
+    {
+        return $this-&gt;shoppingSession;
+    }
+
+    public function equals($other): bool
+    {
+        if(!$other instanceof self) {
+            return false;
+        }
+
+        return $this-&gt;shoppingSession === $other-&gt;shoppingSession;
+    }
+
+    public function __toString(): string
+    {
+        return $this-&gt;shoppingSession;
+    }
+}
+
+</code></pre>
+<p><em>File: ./Basket/src/Model/Basket/BasketId.php</em></p>
+<pre><code class="language-php">&lt;?php
+declare(strict_types=1);
+
+namespace App\Basket\Model\Basket;
+
+use Ramsey\Uuid\Uuid;
+
+final class BasketId
+{
+    private $basketId;
+
+    public static function fromString(string $basketId): self
+    {
+        return new self($basketId);
+    }
+
+    private function __construct(string $basketId)
+    {
+        if(!Uuid::isValid($basketId)) {
+            throw new \InvalidArgumentException("Given basket id is not a valid UUID. Got " . $basketId);
+        }
+
+        $this-&gt;basketId = $basketId;
+    }
+
+    public function toString(): string
+    {
+        return $this-&gt;basketId;
+    }
+
+    public function equals($other): bool
+    {
+        if(!$other instanceof self) {
+            return false;
+        }
+
+        return $this-&gt;basketId === $other-&gt;basketId;
+    }
+
+    public function __toString(): string
+    {
+        return $this-&gt;basketId;
+    }
+}
+
+</code></pre>
+<p>Recap: We used a named constructor to create the <code>Basket</code> aggregate. The named constructor defines the requirements needed
+to start a shopping session, namely the <code>ShoppingSession</code> and <code>BasketId</code>. Instead of setting those value objects as properties
+in the <code>Basket</code> aggregate we <strong>record</strong> the first domain event <code>ShoppingSessionStarted</code> of the aggregate.</p>
+<p>Now the <code>apply()</code> method comes into play. Our <code>Basket</code> aggregate will have many more methods later to deal with all things
+happening during a shopping session. And in those methods we will often need the current <strong>state</strong> of the aggregate to
+<strong>protect invariants</strong>. To get access to the state we need to <code>apply()</code> recorded domain events in the exact same order as
+they were recorded. Prooph's <code>ÀggregateRoot</code> takes care of the latter but it does not know <strong>how</strong> a domain event should
+be applied. Hence, we need to take over that task.</p>
+<p><em>File: ./Basket/src/Model/Basket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model;
+
+use App\Basket\Model\Event\ShoppingSessionStarted;
+use App\Basket\Model\Basket\BasketId;
+use App\Basket\Model\Basket\ShoppingSession;
+use Prooph\EventSourcing\AggregateChanged;
+use Prooph\EventSourcing\AggregateRoot;
+
+final class Basket extends AggregateRoot
+{
+    /**
+     * @var BasketId
+     */
+    private $basketId;
+
+    /**
+     * @var ShoppingSession
+     */
+    private $shoppingSession;
+
+    public static function startShoppingSession(ShoppingSession $shoppingSession, BasketId $basketId)
+    {
+        $self = new self();
+        $self-&gt;recordThat(ShoppingSessionStarted::occur($basketId-&gt;toString(), [
+            'shopping_session' =&gt; $shoppingSession-&gt;toString()
+        ]));
+        return $self;
+    }
+
+    protected function aggregateId(): string
+    {
+        // TODO: Implement aggregateId() method.
+    }
+
+    /**
+     * Apply given event
+     */
+    protected function apply(AggregateChanged $event): void
+    {
+        //A simple switch by event name is the fastest way,
+        //but you're free to split things up here and have for example methods like
+        //private function whenShoppingSessionStarted()
+        //To delegate work to them and keep the apply method lean 
+        switch ($event-&gt;messageName()) {
+            case ShoppingSessionStarted::class:
+                /** @var $event ShoppingSessionStarted */
+                
+                $this-&gt;basketId = $event-&gt;basketId();
+                $this-&gt;shoppingSession = $event-&gt;shoppingSession();
+                break;
+        }
+    }
+}
+
+</code></pre>
+<p>Now that we have access to the current state we can finally implement the <code>aggregateId()</code> method to fulfill the contract
+defined by prooph's <code>AggregateRoot</code> class.</p>
+<p><em>File: ./Basket/src/Model/Basket.php</em></p>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Basket\Model;
+
+//...
+
+final class Basket extends AggregateRoot
+{
+    /**
+     * @var BasketId
+     */
+    private $basketId;
+
+    /**
+     * @var ShoppingSession
+     */
+    private $shoppingSession;
+
+    public static function startShoppingSession(ShoppingSession $shoppingSession, BasketId $basketId)
+    {
+        //...
+    }
+
+    protected function aggregateId(): string
+    {
+        //Return string representation of the globally unique identifier of the aggregate
+        return $this-&gt;basketId-&gt;toString();
+    }
+
+    /**
+     * Apply given event
+     */
+    protected function apply(AggregateChanged $event): void
+    {
+        //...
+    }
+}
+
+</code></pre>
+<p>Ok, that are the basics of Event Sourcing. Many new things to learn, right? But don't worry. You'll get used to it while
+we look at some more aspects of Event Sourcing. In the next part we will look at testing event sourced aggregates
+which is super easy when you have a clean and decoupled domain model.</p>
+<p><em>Advise: Revisit the basics part whenever you feel lost. Event Sourcing is really simple once you understand it.
+In the section below you can find links to related blog posts. But before you follow them take a break and let
+the basics sink in. You can read the posts later when you feel more comfortable with Event Sourcing. Don't overload your
+head with too much information at a time.</em></p>
+<h2 id="1-3-4">Related reads</h2>
+<ul>
+<li>
+<a href="http://verraes.net/2014/11/domain-events/">Domain Events - Mathias Verraes</a>¹</li>
+<li>
+<a href="http://ziobrando.blogspot.de/2013/11/introducing-event-storming.html">What is EventStorming - Alberto Brandolini</a>²</li>
+<li>
+<a href="https://martinfowler.com/bliki/UbiquitousLanguage.html">Ubiquitous Language - Martin Fowler</a>³</li>
+<li>
+<a href="https://vaughnvernon.co/?p=838">Effective Aggregate Design - Vaughn Vernon</a>¹¹</li>
+</ul>
 </div>        </div>
     </div>
 </div>
@@ -639,9 +1109,9 @@ We recommend using <code>Prooph\ServiceBus\&lt;CommandBus/EventBus/QueryBus&gt;:
         <div class="container">
             <div class="row">
                 <div class="prev col-xs-6">
-                                            <a href="/service-bus/async_message_producer.html">Previous</a>                                    </div>
+                                            <a href="/tutorial/why_event_sourcing.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="/event-store/">Next</a>                                    </div>
+                                            <a href="/tutorial/testing_aggregates.html">Next</a>                                    </div>
             </div>
         </div>
     </div>
