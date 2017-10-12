@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the prooph/pdo-event-store.
+ * This file is part of the prooph/proophessor.
  * (c) 2017 prooph software GmbH <contact@prooph.de>
  * (c) 2017 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
