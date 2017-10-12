@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the prooph/pdo-event-store.
+ * This file is part of the prooph/proophessor.
  * (c) 2017 prooph software GmbH <contact@prooph.de>
  * (c) 2017 Sascha-Oliver Prolic <saschaprolic@googlemail.com>
  *
@@ -30,7 +30,7 @@ $templates->set('head', __DIR__ . '/head.php');
 $templates->set('meta', __DIR__ . '/meta.php');
 $templates->set('style', $templatePath . '/style.php');
 $templates->set('styleProoph', __DIR__ . '/style.php');
-$templates->set('body', $templatePath . '/body.php');
+$templates->set('body', __DIR__ . '/body.php');
 $templates->set('script', $templatePath . '/script.php');
 $templates->set('nav', __DIR__ . '/nav.php');
 $templates->set('core', $templatePath . '/core.php');

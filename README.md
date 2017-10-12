@@ -16,6 +16,13 @@ $ docker run -it --rm -p 8080:8080 -v $(pwd):/app php:7.1-cli php -S 0.0.0.0:808
 
 Then browse to [http://localhost:8080/](http://localhost:8080/)
 
+## Remote Docs
+
+We use the remote content feature of bookdown to pull docs from our prooph component repos into a single online documentation.
+This means that if you want to work on the docs - fix spelling, add new pages, improve wording or correct some logical bugs - 
+then take a look at the root [bookdown.json](docs/bookdown.json) to see where the docs are pulled from. Head over to the target
+repository and apply your changes there. Send us a pull request and we manage the rest. Thank you for your help.
+
 ## Example Application
 
 Try out [proophessor-do](https://github.com/prooph/proophessor-do) and [pick up a task](https://github.com/prooph/proophessor-do#learning-by-doing)!
