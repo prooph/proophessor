@@ -13,6 +13,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta name="HandheldFriendly" content="True"/>
 <title><?= $this->page->getTitle(); ?></title>
+<link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://getprooph.org/images/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="http://getprooph.org/images/ico/apple-touch-icon-57-precomposed.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@prooph_software">
 <meta name="twitter:title" content="prooph components">
