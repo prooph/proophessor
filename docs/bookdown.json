@@ -2,9 +2,9 @@
     "title": "prooph components documentation",
     "content": [
         {"tutorial": "tutorial/bookdown.json"},
-        {"event-sourcing": "https://raw.githubusercontent.com/prooph/event-sourcing/master/docs/bookdown.json"},
         {"service-bus": "https://raw.githubusercontent.com/prooph/service-bus/master/docs/bookdown.json"},
-        {"event-store": "https://raw.githubusercontent.com/prooph/event-store/master/docs/bookdown.json"}
+        {"event-store": "https://raw.githubusercontent.com/prooph/event-store/master/docs/bookdown.json"},
+        {"event-sourcing": "https://raw.githubusercontent.com/prooph/event-sourcing/master/docs/bookdown.json"}
     ],
     "theme": {
         "toc": {
