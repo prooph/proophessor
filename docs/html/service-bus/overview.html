@@ -477,37 +477,6 @@
 
     </li>
                         <li>
-    <a href="/event-sourcing/">Event Sourcing</a>
-    
-    <ul class="dropdown-menu">
-                        <li>
-    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/snapshots.html">Snapshots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
-
-    </li>
-            </ul>
-
-    </li>
-                        <li>
     <a href="/service-bus/">Service Bus</a>
     
     <ul class="dropdown-menu">
@@ -569,6 +538,37 @@
             </ul>
 
     </li>
+                        <li>
+    <a href="/event-sourcing/">Event Sourcing</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/snapshots.html">Snapshots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
+
+    </li>
+            </ul>
+
+    </li>
             </ul>
 
         </div>
@@ -587,47 +587,47 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-2" title="PSB&#x20;Overview">PSB Overview</a>
+                <a href="#2-2" title="PSB&#x20;Overview">PSB Overview</a>
             </li>
                                 <li>
-                <a href="#3-2-1" title="CommandBus">CommandBus</a>
+                <a href="#2-2-1" title="CommandBus">CommandBus</a>
             </li>
                                 <li>
-                <a href="#3-2-2" title="EventBus">EventBus</a>
+                <a href="#2-2-2" title="EventBus">EventBus</a>
             </li>
                                 <li>
-                <a href="#3-2-3" title="QueryBus">QueryBus</a>
+                <a href="#2-2-3" title="QueryBus">QueryBus</a>
             </li>
                                 <li>
-                <a href="#3-2-4" title="Message&#x20;Objects">Message Objects</a>
+                <a href="#2-2-4" title="Message&#x20;Objects">Message Objects</a>
             </li>
                                 <li>
-                <a href="#3-2" title="Synchronous&#x20;Versus&#x20;Asynchronous&#x20;Processing">Synchronous Versus Async...</a>
+                <a href="#2-2" title="Synchronous&#x20;Versus&#x20;Asynchronous&#x20;Processing">Synchronous Versus Async...</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-2">PSB Overview</h1>
+<div id="section-main"><h1 id="2-2">PSB Overview</h1>
 <p>prooph/service-bus acts as a messaging facade. It operates on the application layer and shields your domain model.
 In addition we also provide so-called "message producers" which connect prooph/service-bus
 with messaging infrastructure on the system and network level.</p>
 <p>Three different message bus implementations are available.</p>
-<h2 id="3-2-1">CommandBus</h2>
+<h2 id="2-2-1">CommandBus</h2>
 <p>The CommandBus is designed to dispatch a message to exactly one handler or message producer. It does not return a result.
 Sending a command means <em>fire and forget</em> and enforces the <em>Tell-Don't-Ask</em> principle.</p>
-<h2 id="3-2-2">EventBus</h2>
+<h2 id="2-2-2">EventBus</h2>
 <p>The EventBus is able to dispatch a message to <code>n</code> listeners. Each listener can be a message handler or message producer.
 Like commands the EventBus doesn't return anything.</p>
-<h2 id="3-2-3">QueryBus</h2>
+<h2 id="2-2-3">QueryBus</h2>
 <p>The QueryBus also dispatches a message to exactly one finder (special query message handler)
 but it returns a <code>React\Promise\Promise</code>. The QueryBus hands the query message to a finder along with a <code>React\Promise\Deferred</code> which needs to be resolved by the finder.
 We use promises to allow finders to handle queries asynchronous, for example using <code>curl_multi_exec</code>.</p>
-<h2 id="3-2-4">Message Objects</h2>
+<h2 id="2-2-4">Message Objects</h2>
 <p>You are free to use your own message objects (or even primitive types if you want). All message buses are smart enough to handle them.
 If you need custom logic to handle your messages check out the list of available message bus plugins or write your own bus plugin.
 It is pretty straight forward.</p>
-<h1 id="3-2">Synchronous Versus Asynchronous Processing</h1>
+<h1 id="2-2">Synchronous Versus Asynchronous Processing</h1>
 <p>PSB provides both possibilities behind a unified interface.
 Remember the statement "Messaging means fire and forget".
 The callee never knows if the message is processed synchronously or asynchronously.

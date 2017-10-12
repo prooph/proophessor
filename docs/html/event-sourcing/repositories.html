@@ -477,37 +477,6 @@
 
     </li>
                         <li>
-    <a href="/event-sourcing/">Event Sourcing</a>
-    
-    <ul class="dropdown-menu">
-                        <li>
-    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/snapshots.html">Snapshots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
-
-    </li>
-            </ul>
-
-    </li>
-                        <li>
     <a href="/service-bus/">Service Bus</a>
     
     <ul class="dropdown-menu">
@@ -569,6 +538,37 @@
             </ul>
 
     </li>
+                        <li>
+    <a href="/event-sourcing/">Event Sourcing</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/snapshots.html">Snapshots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
+
+    </li>
+            </ul>
+
+    </li>
             </ul>
 
         </div>
@@ -587,44 +587,44 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#2-2" title="Working&#x20;with&#x20;Repositories">Working with Repositorie...</a>
+                <a href="#4-2" title="Working&#x20;with&#x20;Repositories">Working with Repositorie...</a>
             </li>
                                 <li>
-                <a href="#2-2-1" title="Event&#x20;Sourced&#x20;Aggregates">Event Sourced Aggregates</a>
+                <a href="#4-2-1" title="Event&#x20;Sourced&#x20;Aggregates">Event Sourced Aggregates</a>
             </li>
                                 <li>
-                <a href="#2-2-2" title="AggregateType">AggregateType</a>
+                <a href="#4-2-2" title="AggregateType">AggregateType</a>
             </li>
                                 <li>
-                <a href="#2-2-3" title="AggregateTranslator">AggregateTranslator</a>
+                <a href="#4-2-3" title="AggregateTranslator">AggregateTranslator</a>
             </li>
                                 <li>
-                <a href="#2-2-4" title="Snapshot&#x20;Store">Snapshot Store</a>
+                <a href="#4-2-4" title="Snapshot&#x20;Store">Snapshot Store</a>
             </li>
                                 <li>
-                <a href="#2-2-5" title="Event&#x20;Streams">Event Streams</a>
+                <a href="#4-2-5" title="Event&#x20;Streams">Event Streams</a>
             </li>
                                 <li>
-                <a href="#2-2-6" title="Wiring&#x20;It&#x20;Together">Wiring It Together</a>
+                <a href="#4-2-6" title="Wiring&#x20;It&#x20;Together">Wiring It Together</a>
             </li>
                                             <li>
-                <a href="#2-2-7" title="Aggregate&#x20;Type&#x20;Mapping">Aggregate Type Mapping</a>
+                <a href="#4-2-7" title="Aggregate&#x20;Type&#x20;Mapping">Aggregate Type Mapping</a>
             </li>
                                 <li>
-                <a href="#2-2-8" title="Loading&#x20;of&#x20;thousands&#x20;aggregates">Loading of thousands agg...</a>
+                <a href="#4-2-8" title="Loading&#x20;of&#x20;thousands&#x20;aggregates">Loading of thousands agg...</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="2-2">Working with Repositories</h1>
+<div id="section-main"><h1 id="4-2">Working with Repositories</h1>
 <p>Repositories typically connect your domain model with the persistence layer (part of the infrastructure).
 Following DDD suggestions your domain model should be database agnostic.
 An event store is of course some kind of database so you are likely looking for a third-party event store that gets out of your way.</p>
 <p><em>The good news is:</em> <strong>You've found one!</strong></p>
 <p>But you need to get familiar with the concept. So you're pleased to read this document and follow the example.
 Afterwards you should be able to integrate <code>prooph/event-store</code> into your infrastructure without coupling it with your model.</p>
-<h2 id="2-2-1">Event Sourced Aggregates</h2>
+<h2 id="4-2-1">Event Sourced Aggregates</h2>
 <p>We assume that you want to work with event sourced aggregates. If you are not sure what we are talking about
 please refer to the great educational project <a href="http://buttercup-php.github.io/protects/">Buttercup.Protects</a> by Mathias Verraes.
 prooph/event-store does not include base classes or traits to add event sourced capabilities to your aggregates.</p>
@@ -635,9 +635,9 @@ These events are organized in <code>Prooph\EventStore\Stream</code>s.
 A repository is responsible for extracting pending events from aggregates and putting them in the correct stream.
 And the repository must also be able to load persisted events from a stream and reconstitute an aggregate.
 To provide this functionality the repository makes use of various helper classes explained below.</p>
-<h2 id="2-2-2">AggregateType</h2>
+<h2 id="4-2-2">AggregateType</h2>
 <p>Each repository is responsible for one <code>\Prooph\EventSourcing\Aggregate\AggregateType</code>.</p>
-<h2 id="2-2-3">AggregateTranslator</h2>
+<h2 id="4-2-3">AggregateTranslator</h2>
 <p>To achieve 100% decoupling between layers and/or contexts you can make use of translation adapters.
 For prooph/event-store such a translation adapter is called a <code>Prooph\EventSourcing\Aggregate\AggregateTranslator</code>.</p>
 <p>The interface requires you to implement 5 methods:</p>
@@ -649,11 +649,11 @@ For prooph/event-store such a translation adapter is called a <code>Prooph\Event
 <li>replayStreamEvents</li>
 </ul>
 <p>To make your life easier prooph/event-sourcing ships with a <code>\Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator</code> which implements the interface.</p>
-<h2 id="2-2-4">Snapshot Store</h2>
+<h2 id="4-2-4">Snapshot Store</h2>
 <p>A repository can be set up with a snapshot store to speed up loading of aggregates.</p>
 <p>You need to install <a href="https://github.com/prooph/snapshot-store">Prooph SnapshotStore</a> and a persistable implementation of it,
 like <a href="https://github.com/prooph/pdo-snapshot-store/">pdo-snapshot-store</a> or <a href="https://github.com/prooph/mongodb-snapshot-store/">mongodb-snapshot-store</a>.</p>
-<h2 id="2-2-5">Event Streams</h2>
+<h2 id="4-2-5">Event Streams</h2>
 <p>An event stream can be compared with a table in a relational database (and in case of the pdo-event-store it is a table).
 By default the repository puts all events of all aggregates (no matter the type) in a single stream called <strong>event_stream</strong>.
 If you wish to use another name, you can pass a custom <code>Prooph\EventStore\StreamName</code> to the repository.
@@ -666,9 +666,9 @@ the <code>aggregateId</code> of the aggregate. The stream name for a new <code>A
 <p>Depending on the event store implementation used the stream name is maybe modified by the implementation to replace or removed non supported characters.
 Check your event store implemtation of choice for details. You can also override <code>AggregateRepository::determineStreamName</code> to apply a custom logic
 for building the stream name.</p>
-<h2 id="2-2-6">Wiring It Together</h2>
+<h2 id="4-2-6">Wiring It Together</h2>
 <p>Best way to see a repository in action is by looking at the <code>\ProophTest\EventSourcing\Aggregate\AggregateRepositoryTest</code>.</p>
-<h3 id="2-2-6-1">Set Up</h3>
+<h3 id="4-2-6-1">Set Up</h3>
 <pre><code class="language-php">$this-&gt;repository = new AggregateRepository(
     $this-&gt;eventStore,
     AggregateType::fromAggregateRootClass('ProophTest\EventSourcing\Mock\User'),
@@ -738,7 +738,7 @@ The repository keeps an aggregate only in memory as long as the transaction is a
 processes dealing with the same aggregate would run into concurrency issues very fast.</p>
 <p>The test case has some more tests including snapshot usage and working with different stream names / strategies.
 Just browse through the test methods for details.</p>
-<h2 id="2-2-7">Aggregate Type Mapping</h2>
+<h2 id="4-2-7">Aggregate Type Mapping</h2>
 <p>It's possible to map an aggregate type <code>user</code> to an aggregate root class like <code>My\Model\User</code>. To do that, add the
 aggregate type mapping to your repository and use the provided aggregate type. The aggregate type mapping is implemented
 in the AggregateType class like this:</p>
@@ -761,7 +761,7 @@ in the AggregateType class like this:</p>
     ],
 ]
 </code></pre>
-<h2 id="2-2-8">Loading of thousands aggregates</h2>
+<h2 id="4-2-8">Loading of thousands aggregates</h2>
 <p>If you need to load thousands of aggregates for reading only, your memory can be exhausted, because the
 <code>AggregateRepository</code> uses an identity map. So every loaded aggregate is stored there, unless a commit is executed. If
 you have a read only process, you should consider to clear the identity map at some time. This can be done by calling

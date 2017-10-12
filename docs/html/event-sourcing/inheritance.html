@@ -477,37 +477,6 @@
 
     </li>
                         <li>
-    <a href="/event-sourcing/">Event Sourcing</a>
-    
-    <ul class="dropdown-menu">
-                        <li>
-    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/snapshots.html">Snapshots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
-
-    </li>
-            </ul>
-
-    </li>
-                        <li>
     <a href="/service-bus/">Service Bus</a>
     
     <ul class="dropdown-menu">
@@ -569,6 +538,37 @@
             </ul>
 
     </li>
+                        <li>
+    <a href="/event-sourcing/">Event Sourcing</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/snapshots.html">Snapshots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
+
+    </li>
+            </ul>
+
+    </li>
             </ul>
 
         </div>
@@ -587,30 +587,30 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#2-4" title="Inheritance&#x20;with&#x20;Aggregate&#x20;Roots">Inheritance with Aggrega...</a>
+                <a href="#4-4" title="Inheritance&#x20;with&#x20;Aggregate&#x20;Roots">Inheritance with Aggrega...</a>
             </li>
                                 <li>
-                <a href="#2-4-1" title="An&#x20;example">An example</a>
+                <a href="#4-4-1" title="An&#x20;example">An example</a>
             </li>
                                 <li>
-                <a href="#2-4-2" title="Step&#x20;1&#x3A;&#x20;Create&#x20;a&#x20;UserAggregateTranslator">Step 1: Create a UserAgg...</a>
+                <a href="#4-4-2" title="Step&#x20;1&#x3A;&#x20;Create&#x20;a&#x20;UserAggregateTranslator">Step 1: Create a UserAgg...</a>
             </li>
                                 <li>
-                <a href="#2-4-3" title="Step&#x20;2&#x3A;&#x20;Change&#x20;the&#x20;assertion&#x20;method&#x20;in&#x20;the&#x20;EventStoreUserCollection">Step 2: Change the asser...</a>
+                <a href="#4-4-3" title="Step&#x20;2&#x3A;&#x20;Change&#x20;the&#x20;assertion&#x20;method&#x20;in&#x20;the&#x20;EventStoreUserCollection">Step 2: Change the asser...</a>
             </li>
                                 <li>
-                <a href="#2-4-4" title="Step&#x20;3&#x3A;&#x20;Make&#x20;use&#x20;of&#x20;your&#x20;custom&#x20;AggregateTranslator">Step 3: Make use of your...</a>
+                <a href="#4-4-4" title="Step&#x20;3&#x3A;&#x20;Make&#x20;use&#x20;of&#x20;your&#x20;custom&#x20;AggregateTranslator">Step 3: Make use of your...</a>
             </li>
                                 <li>
-                <a href="#2-4-5" title="Alternative&#x20;to&#x20;AggregateRoot&#x20;inheritance">Alternative to Aggregate...</a>
+                <a href="#4-4-5" title="Alternative&#x20;to&#x20;AggregateRoot&#x20;inheritance">Alternative to Aggregate...</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="2-4">Inheritance with Aggregate Roots</h1>
+<div id="section-main"><h1 id="4-4">Inheritance with Aggregate Roots</h1>
 <p>If you want to make inheritance work with aggregate roots using a common repository for all subtypes, this can also be achieved very easily.</p>
-<h2 id="2-4-1">An example</h2>
+<h2 id="4-4-1">An example</h2>
 <p>Consider the following use case:</p>
 <pre><code class="language-php">abstract class User extends \Prooph\EventSourcing\AggregateRoot
 {
@@ -660,7 +660,7 @@ class Member extends User
 }
 </code></pre>
 <p>So in order to make this work, you need 3 small changes in your application.</p>
-<h2 id="2-4-2">Step 1: Create a UserAggregateTranslator</h2>
+<h2 id="4-4-2">Step 1: Create a UserAggregateTranslator</h2>
 <pre><code class="language-php">final class UserAggregateTranslator extends \Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
 {
     /**
@@ -685,7 +685,7 @@ class Member extends User
     }
 }
 </code></pre>
-<h2 id="2-4-3">Step 2: Change the assertion method in the EventStoreUserCollection</h2>
+<h2 id="4-4-3">Step 2: Change the assertion method in the EventStoreUserCollection</h2>
 <pre><code class="language-php">final class EventStoreUserCollection extends 
     \Prooph\EventStore\Aggregate\AggregateRepository
 {
@@ -703,7 +703,7 @@ class Member extends User
     }
 }
 </code></pre>
-<h2 id="2-4-4">Step 3: Make use of your custom AggregateTranslator</h2>
+<h2 id="4-4-4">Step 3: Make use of your custom AggregateTranslator</h2>
 <pre><code class="language-php">final class EventStoreUserCollectionFactory
 {
     public function __invoke(ContainerInterface $container): EventStoreUserCollection
@@ -720,7 +720,7 @@ class Member extends User
 then you can also just change the <code>aggregate_translator</code> key in your config to point to the new <code>UserAggregateTranslator</code>
 and register the <code>UserAggregateTranslator</code> in your container.</p>
 <p>see also: http://www.sasaprolic.com/2016/02/inheritance-with-aggregate-roots-in.html</p>
-<h2 id="2-4-5">Alternative to AggregateRoot inheritance</h2>
+<h2 id="4-4-5">Alternative to AggregateRoot inheritance</h2>
 <p>Abstract <code>Prooph\EventSourcing\AggregateRoot</code> class provides a solid basis for
 your aggregate roots, however, it is not mandatory. Two traits,
 <code>Prooph\EventSourcing\Aggregate\EventProducerTrait</code> and

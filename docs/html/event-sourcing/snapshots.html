@@ -477,37 +477,6 @@
 
     </li>
                         <li>
-    <a href="/event-sourcing/">Event Sourcing</a>
-    
-    <ul class="dropdown-menu">
-                        <li>
-    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/snapshots.html">Snapshots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
-
-    </li>
-            </ul>
-
-    </li>
-                        <li>
     <a href="/service-bus/">Service Bus</a>
     
     <ul class="dropdown-menu">
@@ -569,6 +538,37 @@
             </ul>
 
     </li>
+                        <li>
+    <a href="/event-sourcing/">Event Sourcing</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/snapshots.html">Snapshots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
+
+    </li>
+            </ul>
+
+    </li>
             </ul>
 
         </div>
@@ -587,21 +587,21 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#2-3" title="Snapshots">Snapshots</a>
+                <a href="#4-3" title="Snapshots">Snapshots</a>
             </li>
                                 <li>
-                <a href="#2-3-1" title="But&#x20;my&#x20;aggregates&#x20;record&#x20;tons&#x20;of&#x20;events&#x21;">But my aggregates record...</a>
+                <a href="#4-3-1" title="But&#x20;my&#x20;aggregates&#x20;record&#x20;tons&#x20;of&#x20;events&#x21;">But my aggregates record...</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="2-3">Snapshots</h1>
+<div id="section-main"><h1 id="4-3">Snapshots</h1>
 <p>One of the counter-arguments against Event-Sourcing you might heard about is that replaying events takes too much time.</p>
 <p>Replaying 20 events for an aggregate is fast, 50 is ok, but 100 events and more become slow depending on the data of the events and the operations needed to replay them.
 A DDD rule of thumb says aggregates should be kept small. Keeping that in mind you should be fine with 50 events per aggregate
 in most cases.</p>
-<h2 id="2-3-1">But my aggregates record tons of events!</h2>
+<h2 id="4-3-1">But my aggregates record tons of events!</h2>
 <p>If aggregate reconstitution gets slow you can add an additional layer to the system which
 is capable of providing aggregate snapshots.</p>
 <p>Choose one of the <code>Prooph\SnapshotStore\*</code> to take snapshots.

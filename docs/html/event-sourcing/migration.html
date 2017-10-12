@@ -477,37 +477,6 @@
 
     </li>
                         <li>
-    <a href="/event-sourcing/">Event Sourcing</a>
-    
-    <ul class="dropdown-menu">
-                        <li>
-    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/snapshots.html">Snapshots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
-
-    </li>
-                        <li>
-    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
-
-    </li>
-            </ul>
-
-    </li>
-                        <li>
     <a href="/service-bus/">Service Bus</a>
     
     <ul class="dropdown-menu">
@@ -569,6 +538,37 @@
             </ul>
 
     </li>
+                        <li>
+    <a href="/event-sourcing/">Event Sourcing</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="/event-sourcing/intro.html">ProophEventSourcing</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/repositories.html">Working with Repositories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/snapshots.html">Snapshots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/inheritance.html">Inheritance with Aggregate Roots</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/interop_factories.html">Interop Factories</a>
+
+    </li>
+                        <li>
+    <a href="/event-sourcing/migration.html">Migration from v4 to v5</a>
+
+    </li>
+            </ul>
+
+    </li>
             </ul>
 
         </div>
@@ -587,29 +587,29 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#2-6" title="Migration&#x20;from&#x20;v4&#x20;to&#x20;v5">Migration from v4 to v5</a>
+                <a href="#4-6" title="Migration&#x20;from&#x20;v4&#x20;to&#x20;v5">Migration from v4 to v5</a>
             </li>
                                 <li>
-                <a href="#2-6-1" title="Aggregate&#x20;Repository">Aggregate Repository</a>
+                <a href="#4-6-1" title="Aggregate&#x20;Repository">Aggregate Repository</a>
             </li>
                                 <li>
-                <a href="#2-6-2" title="Moved&#x20;classes">Moved classes</a>
+                <a href="#4-6-2" title="Moved&#x20;classes">Moved classes</a>
             </li>
                                 <li>
-                <a href="#2-6-3" title="ConfigurableAggregateTranslator">ConfigurableAggregateTra...</a>
+                <a href="#4-6-3" title="ConfigurableAggregateTranslator">ConfigurableAggregateTra...</a>
             </li>
                                 <li>
-                <a href="#2-6-4" title="Snapshot&#x20;Store">Snapshot Store</a>
+                <a href="#4-6-4" title="Snapshot&#x20;Store">Snapshot Store</a>
             </li>
                                 <li>
-                <a href="#2-6-5" title="Aggregate&#x20;Root">Aggregate Root</a>
+                <a href="#4-6-5" title="Aggregate&#x20;Root">Aggregate Root</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="2-6">Migration from v4 to v5</h1>
-<h2 id="2-6-1">Aggregate Repository</h2>
+<div id="section-main"><h1 id="4-6">Migration from v4 to v5</h1>
+<h2 id="4-6-1">Aggregate Repository</h2>
 <p>The aggregate repository has a new method <code>saveAggregateRoot($aggregateRoot)</code> which replaces the
 <code>addAggregateRoot($aggregateRoot)</code> method. Additionally this method has to be called everytime you change an aggregate
 root, so if you're working with the command bus, you have to update all your handlers and call <code>saveAggregateRoot</code> everywhere.</p>
@@ -619,7 +619,7 @@ implementing the <code>Prooph\EventStore\TransactionalEventStore</code> interfac
 action events. Only the ones that are wrapped by <code>Prooph\EventStore\ActionEventEmitterEventStore</code> or <code>Prooph\EventStore\TransactionalActionEventEmitterEventStore</code>.
 In order for the repositories to work in all scenarios (where you can also change the used event store implementation in your app)
 this behaviour has been removed and you always have to call <code>saveAggregateRoot($aggregateRoot)</code> on the aggregate repository yourself.</p>
-<h2 id="2-6-2">Moved classes</h2>
+<h2 id="4-6-2">Moved classes</h2>
 <p>The classes <code>Prooph\EventStore\Aggregate\*</code> are moved from the event-store repository to the event-sourcing repository.
 Hence the new class name <code>Prooph\EventSourcing\Aggregate\*</code>. This includes the <code>AggregateRepository</code>, <code>AggregateTranslator</code>,
 <code>AggregateType</code> and <code>AggregateTypeProvider</code> as well as some exception classes.</p>
@@ -627,14 +627,14 @@ Hence the new class name <code>Prooph\EventSourcing\Aggregate\*</code>. This inc
 <p>Reason:</p>
 <p>The event-store should not know anything about event sourcing at all, it's only a mechanism to store a stream of events.
 Therefore all those classes are moved.</p>
-<h2 id="2-6-3">ConfigurableAggregateTranslator</h2>
+<h2 id="4-6-3">ConfigurableAggregateTranslator</h2>
 <p>The <code>ConfigurableAggregateTranslator</code> was part of <code>Prooph\EventStore</code> v6 and has been completely removed.
 If you want to use something similar (especially when you don't want to extend from <code>Prooph\EventSourcing\AggregateRoot</code>)
 then you can implement the <code>Prooph\EventSourcing\Aggregate\AggregateTranslator</code> interface yourself.</p>
-<h2 id="2-6-4">Snapshot Store</h2>
+<h2 id="4-6-4">Snapshot Store</h2>
 <p>The snapshot store is now a simple interface, see <code>Prooph\SnapshotStore\SnapshotStore</code>. The adapters have all been removed
 and replaced with different snapshot store implementation, f.e. <code>Prooph\SnapshotStore\InMemorySnapshotStore</code>.</p>
-<h2 id="2-6-5">Aggregate Root</h2>
+<h2 id="4-6-5">Aggregate Root</h2>
 <p>The method <code>apply</code> is now an abstract protected method. The old implementation was:</p>
 <pre><code class="language-php">protected function apply(AggregateChanged $e)
 {
@@ -683,7 +683,7 @@ protected function determineEventHandlerMethodFor(AggregateChanged $e)
                 <div class="prev col-xs-6">
                                             <a href="/event-sourcing/interop_factories.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="/service-bus/">Next</a>                                    </div>
+                                    </div>
             </div>
         </div>
     </div>
