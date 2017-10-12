@@ -1,9 +1,0 @@
-{
-  "title": "Exploring prooph components",
-  "content": [
-    {"prooph-in-a-nutshell": "prooph_in_a_nutshell.md"},
-    {"components": "components.md"}
-  ],
-  "target": "./html",
-  "template": "../vendor/tobiju/bookdown-bootswatch-templates/templates/cerulean/main.php"
-}

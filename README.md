@@ -1,16 +1,17 @@
 # Proophessor 
 Exploring prooph components
 
-Welcome at prooph! We are developing and supporting CQRS and EventSourcing infrastructure for PHP 5.5+ environments.
-Proophessor is NOT a framework. Instead we provide components which address individual topics.
+Welcome at prooph! We are developing and supporting CQRS and EventSourcing infrastructure for PHP 7.1+ environments.
+prooph is NOT a framework. Instead we provide components which address individual topics.
 
 ## Documentation
 
-Documentation is [in the doc tree](docs/), and can be compiled using [bookdown](http://bookdown.io).
+Documentation is [in the docs tree](docs/), and can be compiled using [bookdown](http://bookdown.io) and [Docker](https://www.docker.com/).
 
-```console
-$ php ./vendor/bin/bookdown docs/bookdown.json
-$ php -S 0.0.0.0:8080 -t docs/html/
+```bash
+$ docker run --rm -it -v $(pwd):/app prooph/composer:7.1
+$ docker run -it --rm -e CSS_PRISM=ghcolors -v $(pwd):/app sandrokeil/bookdown:develop docs/bookdown.json
+$ docker run -it --rm -p 8080:8080 -v $(pwd):/app php:7.1-cli php -S 0.0.0.0:8080 -t /app/docs/html
 ```
 
 Then browse to [http://localhost:8080/](http://localhost:8080/)

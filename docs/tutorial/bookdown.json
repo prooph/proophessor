@@ -1,0 +1,11 @@
+{
+  "title": "Tutorial",
+  "content": [
+    {"introduction": "introduction.md"},
+    {"why_event_sourcing": "why_event_sourcing.md"},
+    {"event_sourcing_basics": "event_sourcing_basics.md"},
+    {"testing_aggregates": "testing_aggregates.md"},
+    {"aggregate_dependencies": "aggregate_dependencies.md"}
+  ],
+  "tocDepth": 1
+}
