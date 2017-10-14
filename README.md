@@ -36,7 +36,7 @@ Try out [proophessor-do](https://github.com/prooph/proophessor-do) and [pick up 
 
 ## Support
 
-- Ask questions on [prooph-users](https://groups.google.com/forum/?hl=de#!forum/prooph) mailing list.
+- Ask questions on Stack Overflow tagged with [#prooph](https://stackoverflow.com/questions/tagged/prooph).
 - Say hello in the [prooph gitter](https://gitter.im/prooph/improoph) chat.
 
 Happy messaging!
