@@ -371,20 +371,81 @@
 </style>
     <style>
     .prooph-logo {
-            float: left;
-            margin-left: 8px;
-            margin-right: 8px;
-            transition-timing-function: ease-in-out;
-            transition: all 5s;
-            height: 50px;
-            padding: 5px;
+        float: left;
+        margin-left: 8px;
+        margin-right: 8px;
+        transition-timing-function: ease-in-out;
+        transition: all 5s;
+        height: 50px;
+        padding: 5px;
+    }
+
+    .prooph-logo:hover {
+        transition: all .7s;
+        transition-timing-function: ease-out;
+        transform: rotate(360deg);
+    }
+
+    #forkongithub a {
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        font-family: arial, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 40px;
+        font-size: 1rem;
+        line-height: 2rem;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    #forkongithub a:hover {
+        background: #c11;
+        color: #fff;
+    }
+
+    #forkongithub a::before, #forkongithub a::after {
+        content: "";
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 1px;
+        left: 0;
+        height: 1px;
+        background: #fff;
+    }
+
+    #forkongithub a::after {
+        bottom: 1px;
+        top: auto;
+    }
+
+    @media screen and (min-width: 800px) {
+        #forkongithub {
+            position: fixed;
+            display: block;
+            top: 0;
+            right: 0;
+            width: 200px;
+            overflow: hidden;
+            height: 200px;
+            z-index: 1000;
         }
 
-        .prooph-logo:hover {
-            transition: all .7s;
-            transition-timing-function: ease-out;
-            transform: rotate(360deg);
+        #forkongithub a {
+            width: 200px;
+            position: absolute;
+            top: 80px;
+            right: -60px;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
         }
+    }
 </style>
 </head>
 <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
@@ -512,15 +573,37 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/intro.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/intro.html">Introduction</a>
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/event_store.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/">Implementations</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/pdo_event_store/">PDO Event Store</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/event_store_plugins.html">Plugins & Extensions</a>
 
     </li>
                         <li>
     <a href="http://getprooph.org/docs/html/event-store/projections.html">Projections</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/">Standard Projections</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/overview.html">Overview</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -543,7 +626,7 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">Introduction</a>
 
     </li>
                         <li>
@@ -551,7 +634,22 @@
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/">Aggregate Snapshots</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/intro.html">Introduction</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshotter/">Snapshotter</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshot_store/">Snapshot Store</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -586,7 +684,7 @@
 
 <h1>4. Event Sourcing</h1>
 
-<ul class="list-toc"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/intro.html#4-1">Used Third-Party Libraries</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2">Working with Repositories</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-2" data-toggle="collapse" aria-controls="collapse-4-2" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-2"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-1">Event Sourced Aggregates</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.2.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-2">AggregateType</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.3.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-3">AggregateTranslator</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.4.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-4">Snapshot Store</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.5.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-5">Event Streams</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.6.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-6">Wiring It Together</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-2-6" data-toggle="collapse" aria-controls="collapse-4-2-6" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-2-6"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.6.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-6-1">Set Up</a></div></div></li></ul></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.7.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-7">Aggregate Type Mapping</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.8.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2-8">Loading of thousands aggregates</a></div></div></li></ul></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.3.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html#4-3">Snapshots</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-3" data-toggle="collapse" aria-controls="collapse-4-3" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-3"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.3.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html#4-3-1">But my aggregates record tons of events!</a></div></div></li></ul></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4">Inheritance with Aggregate Roots</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-4" data-toggle="collapse" aria-controls="collapse-4-4" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-4"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4-1">An example</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.2.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4-2">Step 1: Create a UserAggregateTranslator</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.3.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4-3">Step 2: Change the assertion method in the EventStoreUserCollection</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.4.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4-4">Step 3: Make use of your custom AggregateTranslator</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.5.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4-5">Alternative to AggregateRoot inheritance</a></div></div></li></ul></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.5.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/interop_factories.html#4-5">Interop Factories</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-5" data-toggle="collapse" aria-controls="collapse-4-5" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-5"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.5.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/interop_factories.html#4-5-1">Factory-Driven Creation</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-5-1" data-toggle="collapse" aria-controls="collapse-4-5-1" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-5-1"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.5.1.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/interop_factories.html#4-5-1-1">Requirements</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.5.1.2.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/interop_factories.html#4-5-1-2">AggregateRepositoryFactory</a></div></div></li></ul></li></ul></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6">Migration from v4 to v5</a></div><a class="bbt-toc-toggle badge glyphicon collapsed" href="#collapse-4-6" data-toggle="collapse" aria-controls="collapse-4-6" aria-expanded="false"></a></div><ul class="list-toc collapse" id="collapse-4-6"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6-1">Aggregate Repository</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.2.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6-2">Moved classes</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.3.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6-3">ConfigurableAggregateTranslator</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.4.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6-4">Snapshot Store</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.5.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6-5">Aggregate Root</a></div></div></li></ul></li></ul><div id="section-main"></div>        </div>
+<ul class="list-toc"><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.1.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/intro.html#4-1">Introduction</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.2.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/repositories.html#4-2">Working with Repositories</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.3.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/snapshots/">Aggregate Snapshots</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.4.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/inheritance.html#4-4">Inheritance with Aggregate Roots</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.5.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/interop_factories.html#4-5">Interop Factories</a></div></div></li><li class="list-group-item"><div class="row clearfix"><div class="col-sm-3"><span class="text-number">4.6.</span></div><div class="col-sm-9"><a href="http://getprooph.org/docs/html/event-sourcing/migration.html#4-6">Migration from v4 to v5</a></div></div></li></ul><div id="section-main"></div>        </div>
     </div>
 </div>
 
@@ -612,8 +710,7 @@
     </div>
 </footer>
 </div>
-<a href="https://github.com/prooph/proophessor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<span id="forkongithub"><a href="https://github.com/prooph/event-sourcing">Fork me on GitHub</a></span><script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>

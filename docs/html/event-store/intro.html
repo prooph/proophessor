@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <meta name="HandheldFriendly" content="True"/>
-<title>Prooph Event Store</title>
+<title>Introduction</title>
 <link rel="shortcut icon" href="http://getprooph.org/images/ico/prooph-logo@0.5x.png">
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getprooph.org/images/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getprooph.org/images/ico/apple-touch-icon-114-precomposed.png">
@@ -371,20 +371,81 @@
 </style>
     <style>
     .prooph-logo {
-            float: left;
-            margin-left: 8px;
-            margin-right: 8px;
-            transition-timing-function: ease-in-out;
-            transition: all 5s;
-            height: 50px;
-            padding: 5px;
+        float: left;
+        margin-left: 8px;
+        margin-right: 8px;
+        transition-timing-function: ease-in-out;
+        transition: all 5s;
+        height: 50px;
+        padding: 5px;
+    }
+
+    .prooph-logo:hover {
+        transition: all .7s;
+        transition-timing-function: ease-out;
+        transform: rotate(360deg);
+    }
+
+    #forkongithub a {
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        font-family: arial, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 40px;
+        font-size: 1rem;
+        line-height: 2rem;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    #forkongithub a:hover {
+        background: #c11;
+        color: #fff;
+    }
+
+    #forkongithub a::before, #forkongithub a::after {
+        content: "";
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 1px;
+        left: 0;
+        height: 1px;
+        background: #fff;
+    }
+
+    #forkongithub a::after {
+        bottom: 1px;
+        top: auto;
+    }
+
+    @media screen and (min-width: 800px) {
+        #forkongithub {
+            position: fixed;
+            display: block;
+            top: 0;
+            right: 0;
+            width: 200px;
+            overflow: hidden;
+            height: 200px;
+            z-index: 1000;
         }
 
-        .prooph-logo:hover {
-            transition: all .7s;
-            transition-timing-function: ease-out;
-            transform: rotate(360deg);
+        #forkongithub a {
+            width: 200px;
+            position: absolute;
+            top: 80px;
+            right: -60px;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
         }
+    }
 </style>
 </head>
 <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
@@ -512,15 +573,37 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/intro.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/intro.html">Introduction</a>
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/event_store.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/">Implementations</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/pdo_event_store/">PDO Event Store</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/event_store_plugins.html">Plugins & Extensions</a>
 
     </li>
                         <li>
     <a href="http://getprooph.org/docs/html/event-store/projections.html">Projections</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/">Standard Projections</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/overview.html">Overview</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -543,7 +626,7 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">Introduction</a>
 
     </li>
                         <li>
@@ -551,7 +634,22 @@
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/">Aggregate Snapshots</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/intro.html">Introduction</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshotter/">Snapshotter</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshot_store/">Snapshot Store</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -579,7 +677,7 @@
     <ol class="breadcrumb">
                         <li><a href="http://getprooph.org/docs/html/">prooph components documentation</a></li>
                                 <li><a href="http://getprooph.org/docs/html/event-store/">Event Store</a></li>
-                                <li class="active">Prooph Event Store</li>
+                                <li class="active">Introduction</li>
             </ol>
     <div class="row">
 
@@ -587,119 +685,137 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-1" title="Prooph&#x20;Event&#x20;Store">Prooph Event Store</a>
+                <a href="#3-1" title="Introduction">Introduction</a>
             </li>
                                 <li>
-                <a href="#3-1-1" title="Overview">Overview</a>
+                <a href="#3-1-1" title="Quickstart">Quickstart</a>
             </li>
                                 <li>
-                <a href="#3-1-2" title="Installation">Installation</a>
-            </li>
-                                <li>
-                <a href="#3-1-3" title="Available&#x20;persistent&#x20;implementations">Available persistent imp...</a>
-            </li>
-                                <li>
-                <a href="#3-1-4" title="Available&#x20;snapshot&#x20;store&#x20;implementations">Available snapshot store...</a>
-            </li>
-                                <li>
-                <a href="#3-1-5" title="Quick&#x20;Start">Quick Start</a>
-            </li>
-                                <li>
-                <a href="#3-1-6" title="Documentation">Documentation</a>
-            </li>
-                                <li>
-                <a href="#3-1-7" title="Support">Support</a>
-            </li>
-                                <li>
-                <a href="#3-1-8" title="Contribute">Contribute</a>
-            </li>
-                                <li>
-                <a href="#3-1-9" title="Version&#x20;Guidance">Version Guidance</a>
-            </li>
-                                <li>
-                <a href="#3-1-10" title="License">License</a>
+                <a href="#3-1-2" title="Video&#x20;Introduction">Video Introduction</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-1">Prooph Event Store</h1>
-<p>PHP 7.1 EventStore Implementation.</p>
-<p><a href="https://travis-ci.org/prooph/event-store"><img src="https://travis-ci.org/prooph/event-store.svg?branch=master" alt="Build Status"></a>
-<a href="https://coveralls.io/github/prooph/event-store?branch=master"><img src="https://coveralls.io/repos/prooph/event-store/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a>
-<a href="https://gitter.im/prooph/improoph"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p>
-<h2 id="3-1-1">Overview</h2>
+<div id="section-main"><h1 id="3-1">Introduction</h1>
 <p>Prooph Event Store is capable of persisting event messages that are organized in streams. <code>Prooph\EventStore\EventStore</code>
-itself is a facade for different persistence adapters (see the list below) and adds event-driven hook points for <code>Prooph\EventStore\Plugin\Plugin</code>s
-which make the Event Store highly customizable.</p>
-<h2 id="3-1-2">Installation</h2>
-<p>You can install prooph/event-store via composer by adding <code>"prooph/event-store": "^7.0"</code> as requirement to your composer.json.</p>
-<h2 id="3-1-3">Available persistent implementations</h2>
-<ul>
-<li>
-<a href="https://github.com/prooph/pdo-event-store">PDO</a> - stable</li>
-</ul>
-<h2 id="3-1-4">Available snapshot store implementations</h2>
-<ul>
-<li>
-<a href="https://github.com/prooph/mongodb-snapshot-store">Mongo DB</a> - stable</li>
-<li>
-<a href="https://github.com/prooph/pdo-snapshot-store">PDO</a> - stable</li>
-<li>
-<a href="https://github.com/prooph/memcached-snapshot-store">Memcached</a> - stable</li>
-<li>
-<a href="https://github.com/prooph/arangodb-snapshot-store">ArangoDB</a> - under development</li>
-</ul>
-<h2 id="3-1-5">Quick Start</h2>
-<p>For a short overview please see the annotated Quickstart in the <code>examples</code> folder.</p>
-<h2 id="3-1-6">Documentation</h2>
-<p>Documentation is <a href="docs/">in the doc tree</a>, and can be compiled using <a href="http://bookdown.io">bookdown</a>.</p>
-<pre><code class="language-console">$ php ./vendor/bin/bookdown docs/bookdown.json
-$ php -S 0.0.0.0:8080 -t docs/html/
+itself is an interface with implementations available for different databases.</p>
+<h2 id="3-1-1">Quickstart</h2>
+<pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Prooph\EventStore\QuickStart;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../examples/event/QuickStartSucceeded.php';
+
+use ArrayIterator;
+use Prooph\Common\Event\ActionEvent;
+use Prooph\Common\Event\ProophActionEventEmitter;
+use Prooph\EventStore\ActionEventEmitterEventStore;
+use Prooph\EventStore\InMemoryEventStore;
+use Prooph\EventStore\QuickStart\Event\QuickStartSucceeded;
+use Prooph\EventStore\Stream;
+use Prooph\EventStore\StreamName;
+use Prooph\EventStore\TransactionalActionEventEmitterEventStore;
+
+/**
+ * Here we use the InMemoryEventStore but in a real project
+ * you need to chose another implementation.
+ * 
+ * The InMemoryEventStore is good for testing purposes, though.
+ *
+ * Prooph\Common\Event\ActionEventEmitter is an interface
+ * that encapsulates functionality of an event dispatcher.
+ * You can use the one provided by prooph/common or
+ * you write a wrapper for the event dispatcher used
+ * by your web framework.
+ */
+$eventEmitter = new ProophActionEventEmitter(TransactionalActionEventEmitterEventStore::ALL_EVENTS);
+
+$eventStore = new ActionEventEmitterEventStore(new InMemoryEventStore(), $eventEmitter);
+
+/**
+ * We need a test event so let's create one.
+ *
+ * As a bare minimum events need to implement
+ * Prooph\Common\Messaging\Message.
+ *
+ * Note: It is possible to use your own events
+ * in your domain and use a translator to
+ * convert them. We'll come to that later.
+ */
+$quickStartSucceeded = QuickStartSucceeded::withSuccessMessage('It works');
+
+/**
+ * Events are organized in so called event streams.
+ * An event stream is a logical unit for a group of events.
+ */
+$streamName = new StreamName('event_stream');
+
+$singleStream = new Stream($streamName, new ArrayIterator());
+
+/**
+ * As we are using the InMemoryEventStore we have to create the event stream
+ * each time running the quick start. With a real persistence adapter this
+ * is not required. In this case you should create the stream once. For example
+ * with the help of a migration script.
+ *
+ * Note: For more details see the docs of the adapter you want to use.
+ */
+$eventStore-&gt;create($singleStream);
+
+/**
+ * Next step would be to commit the transaction.
+ * But let's attach a plugin first that prints some information about currently added events.
+ * Plugins are simple event listeners. See the docs of prooph/common for more details about event listeners.
+ */
+$eventStore-&gt;attach(
+    ActionEventEmitterEventStore::EVENT_APPEND_TO, // InMemoryEventStore provides event hooks
+    function (ActionEvent $actionEvent): void {
+        /**
+         * In the *appendTo* action event a plugin has access to
+         * all recorded events which were added in the current committed transaction.
+         * It is the ideal place to attach a domain event dispatcher.
+         * We only use a closure here to print the recorded events in the terminal
+         */
+        $recordedEvents = $actionEvent-&gt;getParam('streamEvents');
+
+        foreach ($recordedEvents as $recordedEvent) {
+            echo sprintf(
+                "Event with name %s was recorded. It occurred on %s ///\n\n",
+                $recordedEvent-&gt;messageName(),
+                $recordedEvent-&gt;createdAt()-&gt;format('Y-m-d H:i:s')
+            );
+        }
+    },
+    -1000 // low priority, so after action happened
+);
+
+/**
+ * Now we can easily add events to the stream ...
+ */
+$eventStore-&gt;appendTo($streamName, new ArrayIterator([$quickStartSucceeded /*, ...*/]));
+
+/**
+ * Once committed you can of course also load a set of events or the entire stream
+ * Use $eventStore-&gt;loadEventsByMetadataFrom($streamName, $metadata, $minVersion);
+ * to load a list of events
+ *
+ * or the $eventStore-&gt;load($streamName); to get all events
+ */
+$persistedEventStream = $eventStore-&gt;load($streamName);
+
+foreach ($persistedEventStream as $event) {
+    if ($event instanceof QuickStartSucceeded) {
+        echo $event-&gt;getText();
+    }
+}
+
 </code></pre>
-<p>Then browse to <a href="http://localhost:8080/">http://localhost:8080/</a></p>
-<h2 id="3-1-7">Support</h2>
-<ul>
-<li>Ask questions on <a href="https://groups.google.com/forum/?hl=de#!forum/prooph">prooph-users</a> mailing list.</li>
-<li>File issues at <a href="https://github.com/prooph/event-store/issues">https://github.com/prooph/event-store/issues</a>.</li>
-<li>Say hello in the <a href="https://gitter.im/prooph/improoph">prooph gitter</a> chat.</li>
-</ul>
-<h2 id="3-1-8">Contribute</h2>
-<p>Please feel free to fork and extend existing or add new plugins and send a pull request with your changes!
-To establish a consistent code quality, please provide unit tests for all your changes and may adapt the documentation.</p>
-<h2 id="3-1-9">Version Guidance</h2>
-<table>
-<thead>
-<tr>
-<th>Version</th>
-<th>Status</th>
-<th>PHP Version</th>
-<th>Support Until</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>5.x</td>
-<td>EOL</td>
-<td>&gt;= 5.5</td>
-<td>EOL</td>
-</tr>
-<tr>
-<td>6.x</td>
-<td>Maintained</td>
-<td>&gt;= 5.5</td>
-<td>3 Dec 2017</td>
-</tr>
-<tr>
-<td>7.x</td>
-<td>Latest</td>
-<td>&gt;= 7.1</td>
-<td>active</td>
-</tr>
-</tbody>
-</table>
-<h2 id="3-1-10">License</h2>
-<p>Released under the <a href="LICENSE">New BSD License</a>.</p>
+<h2 id="3-1-2">Video Introduction</h2>
+<p><a href="https://www.youtube.com/watch?v=QhpDIqYQzg0"><img src="https://img.youtube.com/vi/QhpDIqYQzg0/0.jpg" alt="Prooph Event Store v7"></a></p>
 </div>        </div>
     </div>
 </div>
@@ -711,7 +827,7 @@ To establish a consistent code quality, please provide unit tests for all your c
                 <div class="prev col-xs-6">
                                             <a href="http://getprooph.org/docs/html/event-store/">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="http://getprooph.org/docs/html/event-store/event_store.html">Next</a>                                    </div>
+                                            <a href="http://getprooph.org/docs/html/event-store/implementations/">Next</a>                                    </div>
             </div>
         </div>
     </div>
@@ -726,8 +842,7 @@ To establish a consistent code quality, please provide unit tests for all your c
     </div>
 </footer>
 </div>
-<a href="https://github.com/prooph/proophessor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<span id="forkongithub"><a href="https://github.com/prooph/event-store">Fork me on GitHub</a></span><script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>

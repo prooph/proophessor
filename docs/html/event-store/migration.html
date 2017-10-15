@@ -371,20 +371,81 @@
 </style>
     <style>
     .prooph-logo {
-            float: left;
-            margin-left: 8px;
-            margin-right: 8px;
-            transition-timing-function: ease-in-out;
-            transition: all 5s;
-            height: 50px;
-            padding: 5px;
+        float: left;
+        margin-left: 8px;
+        margin-right: 8px;
+        transition-timing-function: ease-in-out;
+        transition: all 5s;
+        height: 50px;
+        padding: 5px;
+    }
+
+    .prooph-logo:hover {
+        transition: all .7s;
+        transition-timing-function: ease-out;
+        transform: rotate(360deg);
+    }
+
+    #forkongithub a {
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        font-family: arial, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 40px;
+        font-size: 1rem;
+        line-height: 2rem;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    #forkongithub a:hover {
+        background: #c11;
+        color: #fff;
+    }
+
+    #forkongithub a::before, #forkongithub a::after {
+        content: "";
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 1px;
+        left: 0;
+        height: 1px;
+        background: #fff;
+    }
+
+    #forkongithub a::after {
+        bottom: 1px;
+        top: auto;
+    }
+
+    @media screen and (min-width: 800px) {
+        #forkongithub {
+            position: fixed;
+            display: block;
+            top: 0;
+            right: 0;
+            width: 200px;
+            overflow: hidden;
+            height: 200px;
+            z-index: 1000;
         }
 
-        .prooph-logo:hover {
-            transition: all .7s;
-            transition-timing-function: ease-out;
-            transform: rotate(360deg);
+        #forkongithub a {
+            width: 200px;
+            position: absolute;
+            top: 80px;
+            right: -60px;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
         }
+    }
 </style>
 </head>
 <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
@@ -512,15 +573,37 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/intro.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/intro.html">Introduction</a>
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/event_store.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/">Implementations</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/pdo_event_store/">PDO Event Store</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/event_store_plugins.html">Plugins & Extensions</a>
 
     </li>
                         <li>
     <a href="http://getprooph.org/docs/html/event-store/projections.html">Projections</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/">Standard Projections</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/overview.html">Overview</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -543,7 +626,7 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">Introduction</a>
 
     </li>
                         <li>
@@ -551,7 +634,22 @@
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/">Aggregate Snapshots</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/intro.html">Introduction</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshotter/">Snapshotter</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshot_store/">Snapshot Store</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -587,38 +685,38 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-6" title="Migration&#x20;from&#x20;v6&#x20;to&#x20;v7">Migration from v6 to v7</a>
+                <a href="#3-8" title="Migration&#x20;from&#x20;v6&#x20;to&#x20;v7">Migration from v6 to v7</a>
             </li>
                                 <li>
-                <a href="#3-6-1" title="Moved&#x20;classes">Moved classes</a>
+                <a href="#3-8-1" title="Moved&#x20;classes">Moved classes</a>
             </li>
                                 <li>
-                <a href="#3-6-2" title="Interfaces&#x20;VS&#x20;adapters">Interfaces VS adapters</a>
+                <a href="#3-8-2" title="Interfaces&#x20;VS&#x20;adapters">Interfaces VS adapters</a>
             </li>
                                 <li>
-                <a href="#3-6-3" title="ActionEventEmitterEventStore">ActionEventEmitterEventS...</a>
+                <a href="#3-8-3" title="ActionEventEmitterEventStore">ActionEventEmitterEventS...</a>
             </li>
                                 <li>
-                <a href="#3-6-4" title="Plugins">Plugins</a>
+                <a href="#3-8-4" title="Plugins">Plugins</a>
             </li>
                                 <li>
-                <a href="#3-6-5" title="Interaction&#x20;with&#x20;the&#x20;event&#x20;store">Interaction with the eve...</a>
+                <a href="#3-8-5" title="Interaction&#x20;with&#x20;the&#x20;event&#x20;store">Interaction with the eve...</a>
             </li>
                                 <li>
-                <a href="#3-6-6" title="DB&#x20;migrations">DB migrations</a>
+                <a href="#3-8-6" title="DB&#x20;migrations">DB migrations</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-6">Migration from v6 to v7</h1>
-<h2 id="3-6-1">Moved classes</h2>
+<div id="section-main"><h1 id="3-8">Migration from v6 to v7</h1>
+<h2 id="3-8-1">Moved classes</h2>
 <p>The <code>Prooph\EventStore\Snapshot\*</code> classes are now moved to their own repository, <a href="https://github.com/prooph/snapshot-store">SnapshotStore</a>.</p>
 <p>The <code>Prooph\EventStore\Aggregate\*</code> classes are now moved into the <a href="https://github.com/prooph/event-sourcing/">event-sourcing</a> repository.</p>
-<h2 id="3-6-2">Interfaces VS adapters</h2>
+<h2 id="3-8-2">Interfaces VS adapters</h2>
 <p>The event store now ships with a <code>Prooph\EventStore\ReadOnlyEventStore</code> and a <code>Prooph\EventStore\EventStore</code> interface.
 No event store adapters exist anymore, instead there are different implementations of the event store.</p>
-<h2 id="3-6-3">ActionEventEmitterEventStore</h2>
+<h2 id="3-8-3">ActionEventEmitterEventStore</h2>
 <p>In order to use action events like in v6, you need to wrap your event store.</p>
 <pre><code class="language-php">$eventStore = new ActionEventEmitterEventStore($eventStore);
 </code></pre>
@@ -626,19 +724,19 @@ No event store adapters exist anymore, instead there are different implementatio
 <pre><code class="language-php">$eventStore = new TransactionalActionEventEmitterEventStore($eventStore);
 </code></pre>
 <p>Also, there are no more <code>.pre</code> and <code>.post</code> commit hooks anymore, instead, this is handled with different priorities now.</p>
-<h2 id="3-6-4">Plugins</h2>
+<h2 id="3-8-4">Plugins</h2>
 <p>Instead of calling</p>
 <pre><code class="language-php">$plugin-&gt;setUp($eventStore);
 </code></pre>
 <p>you now need to call</p>
 <pre><code class="language-php">$plugin-&gt;attachToEventStore($eventStore);
 </code></pre>
-<h2 id="3-6-5">Interaction with the event store</h2>
+<h2 id="3-8-5">Interaction with the event store</h2>
 <p>If you are using the event-store together with the <a href="https://github.com/prooph/event-sourcing/">event-sourcing</a> component,
 most stuff is pretty much unchanged for you, as you don't interact with the event store directly (this is done by the
 event-sourcing component).</p>
 <p>If you are making calls to the event store yourself, take a look at the event_store docs on how the new usage is.</p>
-<h2 id="3-6-6">DB migrations</h2>
+<h2 id="3-8-6">DB migrations</h2>
 <p>If you are using v6 with MySQL (using doctrine adpater) and you want to switch to v7 with MySQL (using pdo-event-store),
 you need to upgrade your database before you do this (same for other db vendors of course). The way events are
 persisted has changed and you cannot simply update your source code to make this change. You need to write a migration
@@ -653,7 +751,7 @@ script, take the database offline, perform the migration and go back online.</p>
 <p>As this is a very tough job, we don't provide any migration script currently. For some applications, a downtime is not
 acceptable, in which case v7 might not be the right choice. You should use it when you can take the application offline
 for a while and perform the DB migration, or you can wait until you start a new project to use it.</p>
-<p>We will support v6 series with bugfixes for at least a year (until mid 2018).</p>
+<p>We will support v6 series with bugfixes until 3 Dec 2017.</p>
 </div>        </div>
     </div>
 </div>
@@ -680,8 +778,7 @@ for a while and perform the DB migration, or you can wait until you start a new 
     </div>
 </footer>
 </div>
-<a href="https://github.com/prooph/proophessor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<span id="forkongithub"><a href="https://github.com/prooph/event-store">Fork me on GitHub</a></span><script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>

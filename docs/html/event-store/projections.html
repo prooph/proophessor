@@ -371,20 +371,81 @@
 </style>
     <style>
     .prooph-logo {
-            float: left;
-            margin-left: 8px;
-            margin-right: 8px;
-            transition-timing-function: ease-in-out;
-            transition: all 5s;
-            height: 50px;
-            padding: 5px;
+        float: left;
+        margin-left: 8px;
+        margin-right: 8px;
+        transition-timing-function: ease-in-out;
+        transition: all 5s;
+        height: 50px;
+        padding: 5px;
+    }
+
+    .prooph-logo:hover {
+        transition: all .7s;
+        transition-timing-function: ease-out;
+        transform: rotate(360deg);
+    }
+
+    #forkongithub a {
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        font-family: arial, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 40px;
+        font-size: 1rem;
+        line-height: 2rem;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    #forkongithub a:hover {
+        background: #c11;
+        color: #fff;
+    }
+
+    #forkongithub a::before, #forkongithub a::after {
+        content: "";
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 1px;
+        left: 0;
+        height: 1px;
+        background: #fff;
+    }
+
+    #forkongithub a::after {
+        bottom: 1px;
+        top: auto;
+    }
+
+    @media screen and (min-width: 800px) {
+        #forkongithub {
+            position: fixed;
+            display: block;
+            top: 0;
+            right: 0;
+            width: 200px;
+            overflow: hidden;
+            height: 200px;
+            z-index: 1000;
         }
 
-        .prooph-logo:hover {
-            transition: all .7s;
-            transition-timing-function: ease-out;
-            transform: rotate(360deg);
+        #forkongithub a {
+            width: 200px;
+            position: absolute;
+            top: 80px;
+            right: -60px;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
         }
+    }
 </style>
 </head>
 <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
@@ -512,15 +573,37 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/intro.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/intro.html">Introduction</a>
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/event_store.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/">Implementations</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/pdo_event_store/">PDO Event Store</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/event_store_plugins.html">Plugins & Extensions</a>
 
     </li>
                         <li>
     <a href="http://getprooph.org/docs/html/event-store/projections.html">Projections</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/">Standard Projections</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/overview.html">Overview</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -543,7 +626,7 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">Introduction</a>
 
     </li>
                         <li>
@@ -551,7 +634,22 @@
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/">Aggregate Snapshots</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/intro.html">Introduction</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshotter/">Snapshotter</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshot_store/">Snapshot Store</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -587,30 +685,30 @@
             <nav class="nav-left hidden-xs hidden-sm" id="sideNav">
     <ul class="nav nav-stacked" data-spy="affix" data-offset-top="59" role="tablist">
                                 <li>
-                <a href="#3-3" title="Projections">Projections</a>
+                <a href="#3-4" title="Projections">Projections</a>
             </li>
                                 <li>
-                <a href="#3-3-1" title="Queries">Queries</a>
+                <a href="#3-4-1" title="Queries">Queries</a>
             </li>
                                 <li>
-                <a href="#3-3-2" title="Projections">Projections</a>
+                <a href="#3-4-2" title="Projections">Projections</a>
             </li>
                                             <li>
-                <a href="#3-3-3" title="Read&#x20;Model&#x20;Projections">Read Model Projections</a>
+                <a href="#3-4-3" title="Read&#x20;Model&#x20;Projections">Read Model Projections</a>
             </li>
                                                         <li>
-                <a href="#3-3-4" title="Projection&#x20;Manager">Projection Manager</a>
+                <a href="#3-4-4" title="Projection&#x20;Manager">Projection Manager</a>
             </li>
                                 <li>
-                <a href="#3-3-5" title="Internal&#x20;projection&#x20;mames">Internal projection mame...</a>
+                <a href="#3-4-5" title="Internal&#x20;projection&#x20;mames">Internal projection mame...</a>
             </li>
             </ul>
 </nav>
         </div>
                 <div class="col-md-9">
-<div id="section-main"><h1 id="3-3">Projections</h1>
+<div id="section-main"><h1 id="3-4">Projections</h1>
 <p>New in v7 are queries and projectons.</p>
-<h2 id="3-3-1">Queries</h2>
+<h2 id="3-4-1">Queries</h2>
 <p>Here, we are discussing event store queries, not queries on your read model. An event store query reads one or
 multiple event streams, aggregates some state from it and makes it accessible. A query is a non-persistent function,
 that will only be executed once, and return a result. That's it.</p>
@@ -659,7 +757,7 @@ $query
 <p>Queries can be used to answer a given question easily because you don't need to figure out in which read model the
 data is present (maybe it's not?) and how to query it there (maybe a lot of joins are needed in RDBMS).
 Also you can do temporal queries very easily, which is hard to impossible to do with any other database system.</p>
-<h2 id="3-3-2">Projections</h2>
+<h2 id="3-4-2">Projections</h2>
 <p>Projections are like queries, but they are persistent, the created state is also persistent and can be queried
 later, and the projection runs forever (in most cases).</p>
 <p>Compared to queries, the projectors have a couple of additional methods:</p>
@@ -704,7 +802,7 @@ $projector
     -&gt;run();
 </code></pre>
 <p>This would count all registered users.</p>
-<h3 id="3-3-2-1">Options</h3>
+<h3 id="3-4-2-1">Options</h3>
 <p>There are three options common to all projectors:</p>
 <p>OPTION_CACHE_SIZE = 'cache_size';</p>
 <p>The cache size is how many stream names are cached in memory, the higher the number the less queries are executed and therefore
@@ -734,15 +832,15 @@ pcntl_signal(SIGQUIT, function () use ($projection) {
 });
 $projection-&gt;run();
 </code></pre>
-<h2 id="3-3-3">Read Model Projections</h2>
+<h2 id="3-4-3">Read Model Projections</h2>
 <p>Projections can also be used to create read models. A read model has to implement <code>Prooph\EventStore\Projection\ReadModel</code>.
 Prooph also ships with an <code>Prooph\EventStore\Projection\AbstractReadModel</code> that helps you implement a read model yourself.</p>
 <p>One nice thing about read model projections is that you don't need a migration script for your read models.
 When you need to make a change to your read model, you simply alter your read model implementation, stop your
 current running projections, reset it, and run it again.</p>
-<h3 id="3-3-3-1">Options</h3>
+<h3 id="3-4-3-1">Options</h3>
 <p>The read model projectors have the same options as the normal projectors. See above for more explanations.</p>
-<h3 id="3-3-3-2">Example</h3>
+<h3 id="3-4-3-2">Example</h3>
 <pre><code class="language-php">$projector = $projectionManager-&gt;createReadModelProjection(
     'test_projection',
     $readModel
@@ -766,7 +864,7 @@ $projector
     ])
     -&gt;run();
 </code></pre>
-<h2 id="3-3-4">Projection Manager</h2>
+<h2 id="3-4-4">Projection Manager</h2>
 <p>The projection manager can do the following for you:</p>
 <ul>
 <li>Create queries &amp; projectors</li>
@@ -781,7 +879,7 @@ explanation:</p>
 <p>When you call stopProjection($name) (or delete or reset) a message is sent to the projection. This will notify the
 running projection that it should act accordingly. This means that once you call <code>stopProjection</code>, it could take a few
 seconds before the projection is finally stopped.</p>
-<h2 id="3-3-5">Internal projection mames</h2>
+<h2 id="3-4-5">Internal projection mames</h2>
 <p>All internal projetion names are prefixed with <code>$</code> (dollar-sign), f.e. <code>$ct-</code>. Do not use projection names starting
 with a dollar-sign, as this is reserved for prooph internals.</p>
 </div>        </div>
@@ -793,9 +891,9 @@ with a dollar-sign, as this is reserved for prooph internals.</p>
         <div class="container">
             <div class="row">
                 <div class="prev col-xs-6">
-                                            <a href="http://getprooph.org/docs/html/event-store/event_store.html">Previous</a>                                    </div>
+                                            <a href="http://getprooph.org/docs/html/event-store/event_store_plugins.html">Previous</a>                                    </div>
                 <div class="next col-xs-6">
-                                            <a href="http://getprooph.org/docs/html/event-store/upcasting.html">Next</a>                                    </div>
+                                            <a href="http://getprooph.org/docs/html/event-store/standard_projections/">Next</a>                                    </div>
             </div>
         </div>
     </div>
@@ -810,8 +908,7 @@ with a dollar-sign, as this is reserved for prooph internals.</p>
     </div>
 </footer>
 </div>
-<a href="https://github.com/prooph/proophessor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<span id="forkongithub"><a href="https://github.com/prooph/event-store">Fork me on GitHub</a></span><script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>

@@ -371,20 +371,81 @@
 </style>
     <style>
     .prooph-logo {
-            float: left;
-            margin-left: 8px;
-            margin-right: 8px;
-            transition-timing-function: ease-in-out;
-            transition: all 5s;
-            height: 50px;
-            padding: 5px;
+        float: left;
+        margin-left: 8px;
+        margin-right: 8px;
+        transition-timing-function: ease-in-out;
+        transition: all 5s;
+        height: 50px;
+        padding: 5px;
+    }
+
+    .prooph-logo:hover {
+        transition: all .7s;
+        transition-timing-function: ease-out;
+        transform: rotate(360deg);
+    }
+
+    #forkongithub a {
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        font-family: arial, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 40px;
+        font-size: 1rem;
+        line-height: 2rem;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    #forkongithub a:hover {
+        background: #c11;
+        color: #fff;
+    }
+
+    #forkongithub a::before, #forkongithub a::after {
+        content: "";
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 1px;
+        left: 0;
+        height: 1px;
+        background: #fff;
+    }
+
+    #forkongithub a::after {
+        bottom: 1px;
+        top: auto;
+    }
+
+    @media screen and (min-width: 800px) {
+        #forkongithub {
+            position: fixed;
+            display: block;
+            top: 0;
+            right: 0;
+            width: 200px;
+            overflow: hidden;
+            height: 200px;
+            z-index: 1000;
         }
 
-        .prooph-logo:hover {
-            transition: all .7s;
-            transition-timing-function: ease-out;
-            transform: rotate(360deg);
+        #forkongithub a {
+            width: 200px;
+            position: absolute;
+            top: 80px;
+            right: -60px;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
         }
+    }
 </style>
 </head>
 <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-cerulean">
@@ -512,15 +573,37 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/intro.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/intro.html">Introduction</a>
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-store/event_store.html">Prooph Event Store</a>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/">Implementations</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/implementations/pdo_event_store/">PDO Event Store</a>
+
+    </li>
+            </ul>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/event_store_plugins.html">Plugins & Extensions</a>
 
     </li>
                         <li>
     <a href="http://getprooph.org/docs/html/event-store/projections.html">Projections</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/">Standard Projections</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-store/standard_projections/overview.html">Overview</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -543,7 +626,7 @@
     
     <ul class="dropdown-menu">
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">ProophEventSourcing</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/intro.html">Introduction</a>
 
     </li>
                         <li>
@@ -551,7 +634,22 @@
 
     </li>
                         <li>
-    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots.html">Snapshots</a>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/">Aggregate Snapshots</a>
+    
+    <ul class="dropdown-menu">
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/intro.html">Introduction</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshotter/">Snapshotter</a>
+
+    </li>
+                        <li>
+    <a href="http://getprooph.org/docs/html/event-sourcing/snapshots/snapshot_store/">Snapshot Store</a>
+
+    </li>
+            </ul>
 
     </li>
                         <li>
@@ -1126,8 +1224,7 @@ head with too much information at a time.</em></p>
     </div>
 </footer>
 </div>
-<a href="https://github.com/prooph/proophessor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<span id="forkongithub"><a href="https://github.com/prooph/proophessor">Fork me on GitHub</a></span><script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
