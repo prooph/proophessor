@@ -13,14 +13,22 @@ putenv('MENU_LOGO=http://getprooph.org/images/prooph-logo.svg');
 $templatePath = __DIR__ . '/../vendor/bookdown/themes/templates';
 
 require_once $templatePath . '/helper/tocList.php';
+require_once __DIR__ . '/helper/forkOnGithub.php';
 
 $config = $this->page->getRoot()->getConfig();
+
+$indexPage = $this->page instanceof \Bookdown\Bookdown\Content\IndexPage? $this->page : $this->page->getParent();
+$indexConfig = $indexPage->getConfig();
 
 // register view helper
 $helpers = $this->getHelpers();
 
 $helpers->set('tocListHelper', function () use ($config) {
     return new \tocListHelper($this->get('anchorRaw'), $config);
+});
+
+$helpers->set('forkOnGithub', function () use ($indexConfig) {
+    return new \forkOnGithub($indexConfig);
 });
 
 // register the templates
