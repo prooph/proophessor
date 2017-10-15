@@ -25,7 +25,7 @@ final class forkOnGithub
         if(preg_match('/^https:\/\/raw.githubusercontent.com\/(?P<orga>[\w-_]+)\/(?P<repo>[\w-_]+)\/.*$/', $config->getFile(), $match)) {
             return 'https://github.com/' . $match['orga'] . '/' . $match['repo'];
         } else {
-
+            return $default;
         };
     }
 }
