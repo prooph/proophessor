@@ -474,7 +474,7 @@ class BasketTest extends TestCase
         $ERP = $this->prophesize(ERP::class);
 
         //This ERP mock knows no product
-        $ERP->getProductStock(Argument::any())->willThrow(UnknownProduct::withProductId($this->product1));
+        $ERP->getProductStock($this->product1)->willThrow(UnknownProduct::withProductId($this->product1));
 
         $basket->addProduct($this->product1, $ERP->reveal());
     }
@@ -491,7 +491,7 @@ class BasketTest extends TestCase
         $ERP = $this->prophesize(ERP::class);
 
         //This ERP is unavailable
-        $ERP->getProductStock(Argument::any())->willReturn(null);
+        $ERP->getProductStock($this->product1)->willReturn(null);
 
         $basket->addProduct($this->product1, $ERP->reveal());
 
@@ -581,7 +581,7 @@ class BasketTest extends TestCase
         //Create a Mock of the ERP interface
         $ERP = $this->prophesize(ERP::class);
 
-        $ERP->getProductStock(Argument::exact($this->product1))->willReturn(ProductStock::fromArray(
+        $ERP->getProductStock($this->product1)->willReturn(ProductStock::fromArray(
             [
                 'product_id' => $this->product1->toString(),
                 'quantity' => $stockQuantity,
