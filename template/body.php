@@ -12,7 +12,12 @@ $cssBootswatch = getenv('CSS_BOOTSWATCH') ?: 'cerulean';
 ?>
 <body data-spy="scroll" data-target="#sideNav" data-offset="50" class="bbt-theme-<?php echo $cssBootswatch; ?>">
 <div class="page-wrapper">
-    <?php echo $this->render('core'); ?>
+    <?php
+    //echo $this->render('core');
+    echo $this->render('navheader');
+    echo $this->newLocation();
+    echo $this->render('navfooter');
+    ?>
 </div>
 <?= $this->forkOnGithub(); ?>
 <?= $this->render("script"); ?>

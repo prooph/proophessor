@@ -14,6 +14,7 @@ $templatePath = __DIR__ . '/../vendor/bookdown/themes/templates';
 
 require_once $templatePath . '/helper/tocList.php';
 require_once __DIR__ . '/helper/forkOnGithub.php';
+require_once __DIR__ . '/helper/redirectToDocs.php';
 
 $config = $this->page->getRoot()->getConfig();
 
@@ -29,6 +30,10 @@ $helpers->set('tocListHelper', function () use ($config) {
 
 $helpers->set('forkOnGithub', function () use ($indexConfig) {
     return new \forkOnGithub($indexConfig);
+});
+
+$helpers->set('newLocation', function () {
+    return new \redirectToDocs($this->page);
 });
 
 // register the templates
