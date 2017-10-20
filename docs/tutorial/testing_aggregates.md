@@ -2,18 +2,17 @@
 
 **Event Sourcing makes it easy to test aggregates**. In this chapter we will learn why. Don't underestimate this advantage.
 Easy testability is crucial for long-lived applications that evolve over time.
-Event Sourced aggregates sit at the heart of software. They are the engine to drive business forward.
 
 ## Test Recorded Events
 
-When testing an event sourced aggregate we only need to test for two things:
+When testing an event sourced aggregate we only need to test two things:
 
 1) Does the aggregate record the correct domain event(s)?
 2) Does the aggregate either reject an action or record a failed event if a business rule is not met?
 
-The fact that an aggregate is event sourced is hidden from the public API. If we want to test recorded events
-we need a test helper to get them from the aggregate. `prooph/event-sourcing` uses a so called `AggregateTranslator`
-to perform operations on protected methods of an aggregate. We can use the `ÀggregateTranslator` for our tests, too.
+The fact that an aggregate is event sourced is hidden from the public API. If we want to test recorded events,
+we need a test helper to get them from the aggregate. `prooph/event-sourcing` uses a so-called `AggregateTranslator`
+to perform operations on protected methods of an aggregate. We can use the `AggregateTranslator` for our tests, too.
 Add a project `TestCase` class that includes some helper methods which we can use in our test cases.
 
 *File: ./Basket/tests/TestCase.php*
@@ -35,7 +34,7 @@ class TestCase extends PHPUnitTestCase
      * @var AggregateTranslator
      */
     private $aggregateTranslator;
-    
+
     protected function popRecordedEvents(AggregateRoot $aggregateRoot): array
     {
         return $this->getAggregateTranslator()->extractPendingStreamEvents($aggregateRoot);
@@ -50,7 +49,7 @@ class TestCase extends PHPUnitTestCase
             new \ArrayIterator($events)
         );
     }
-    
+
     private function getAggregateTranslator(): AggregateTranslator
     {
         if (null === $this->aggregateTranslator) {
@@ -61,12 +60,12 @@ class TestCase extends PHPUnitTestCase
 }
 
 ```
-The same `TestCase` is used in the example application `proophessor-do`¹. Besides the `popRecordedEvents` method
+The same `TestCase` is used in the example application, `proophessor-do`¹. Besides the `popRecordedEvents` method
 we've also added a `reconstituteAggregateFromHistory` method. With the latter we can prepare an aggregate for a test
-case by just using events. So we can "move" the aggregate to a certain point in the business process and start testing
-from there. This is really powerful and as a benefit also self documenting. We'll see that in a minute.
+case just using events, so we can "move" the aggregate to a certain point in the business process and start testing
+from there. This is really powerful and, as an added benefit, also self documenting. We'll see that in a minute.
 
-In the "Event Sourcing Basics" chapter we've implemented the `Basket::startShoppingSession()` method. Let's
+In the "Event Sourcing Basics" chapter we implemented the `Basket::startShoppingSession()` method. Let's
 test it now with a `BasketTest`.
 
 *File: ./Basket/tests/Model/BasketTest.php*
@@ -126,10 +125,10 @@ class BasketTest extends TestCase
 
 ```
 The two value objects needed to start a shopping session are created in the `setUp()` method of the test case. This way
-we get fresh objects for each test without the need to create them manually in each test method.
+we get fresh objects for each test without needing to create them manually in each test method.
 
-To run the test we need to tell `PHPUnit` where to find our test cases and how to use `composer autoloader` to locate
-the domain model. Just put a `phpunit.xml.dist` file in the project root with following content:
+To run the test, we need to tell `PHPUnit` where to find our test cases and how to use `composer autoloader` to locate
+the domain model. Just put a `phpunit.xml.dist` file in the project root with the following content:
 
 *File: ./phpunit.xml.dist*
 ```xml
@@ -163,11 +162,11 @@ and test the domain model!
 
 ## Reconstitute From History
 
-For the first test we did not need the `reconstituteAggregateFromHistory()` test helper but if we add more behaviour to the
-`Basket` aggregate the test helper becomes quite handy. To see the test helper in action we're going to add a second
+For the first test, we did not need the `reconstituteAggregateFromHistory()` test helper, but if we add more behaviour to the
+`Basket` aggregate, the test helper becomes quite handy. To see the test helper in action we're going to add a second
 method to the `Basket` aggregate that allows us to add a `Product`.
 
-We start simple in this chapter and leave a more complex implementation to the next chapter "Aggregate Dependencies".
+We start simple in this chapter and leave a more complex implementation to the next chapter, "Aggregate Dependencies".
 First we need a new value object to reference a `Product`. Products are not part of our domain but are manged by an external ERP system.
 
 *File: ./Basket/src/Model/ERP/ProductId.php*
@@ -275,7 +274,7 @@ final class Basket extends AggregateRoot
         if(array_key_exists($productId->toString(), $this->products)) {
             throw ProductAddedTwice::toBasket($this->basketId, $productId);
         }
-                
+
         //@TODO: Check stock
         $this->recordThat(ProductAddedToBasket::occur($this->basketId->toString(), [
             'product_id' => $productId->toString()]
@@ -302,13 +301,13 @@ final class Basket extends AggregateRoot
     }
 }
 ```
-We have a new `$products` property which is a list of `ProductId`s whereby the string representation of the `ProductId`
+We have a new `$products` property which is a list of `ProductId`s, where the string representation of the `ProductId`
 is also used as index. This way we can easily check if a product is added twice.
 
-The new `addProduct()` method takes a `ProductId` as argument and records a new domain event `ProductAddedToBasket`
+The new `addProduct()` method takes a `ProductId` as an argument and records a new domain event `ProductAddedToBasket`,
 which then gets applied using a new `case` in the `apply` method.
 
-In case of a product being added twice the method throws a `ProductAddedTwice` exception. Here is the implementation of
+If a product is added twice, the method throws a `ProductAddedTwice` exception. Here is the implementation of
 that exception.
 
 *File: ./Basket/src/Model/Exception/ProductAddedTwice.php*
@@ -503,17 +502,17 @@ Time: 19 ms, Memory: 4.00MB
 OK (3 tests, 9 assertions)
 ```
 
-We covered two new possibilities. First, we learned how to reconstitute an aggregate from history. We just added a
-few basket specific test helpers to get better type hinting support and keep creation of events in a central place 
+We covered two new possibilities. First, we learned how to reconstitute an aggregate from history. We also added a
+few basket specific test helpers to get better type hinting support and keep creation of events in a central place
 for easier refactoring.
 
 Second, we learned how to test exceptions. Using exceptions to communicate errors is not always the best choice.
-Another possibility is to use domain events for failure scenarios, too. Later in the tutorial we will see this in action 
+Another possibility is to use domain events for failure scenarios, too. Later in the tutorial we will see this in action
 and discuss the pros and cons of such an approach.
 
-Anyway, testing failure cases where the aggregate records a failed event is not different from testing normal event recording.
-Reconstitute the aggregate to move it to a certain point in the business process, provoke the recording of a failure event and
-test if the event was correctly recorded. It's easy as that.
+Either way, testing failure cases where the aggregate records a failed event is not different from testing normal event recording.
+Reconstitute the aggregate to move it to a certain point in the business process, provoke the recording of a failure event, and
+test if the event was correctly recorded. It's as easy as that.
 
 ## Links
 
