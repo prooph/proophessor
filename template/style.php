@@ -9,6 +9,12 @@
  */
 ?>
 <style>
+    /* Header Section */
+    header {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
     .prooph-logo {
         float: left;
         margin-left: 8px;
