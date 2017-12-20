@@ -254,6 +254,7 @@ And finally we add a new method to the `Basket` aggregate that we're going to te
 //...
 use App\Basket\Model\ERP\ProductId;
 use App\Basket\Model\Exception\ProductAddedTwice;
+use App\Basket\Model\Event\ProductAddedToBasket;
 
 final class Basket extends AggregateRoot
 {
