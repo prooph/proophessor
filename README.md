@@ -23,12 +23,10 @@ This means that if you want to work on the docs - fix spelling, add new pages, i
 then take a look at the root [bookdown.json](docs/bookdown.json) to see where the docs are pulled from. Head over to the target
 repository and apply your changes there. Send us a pull request and we manage the rest. Thank you for your help.
 
-## Deployment (maintainers only)
+## Docs Maintenance/Deployment (maintainers only)
 
-When generating the docs for getprooph.org deployment you have to add an additional config to the root bookdown.json:
-`"rootHref": "http://getprooph.org/docs/html/",`. See [bookdown.json.prod](docs/bookdown.json.prod).
-The docs are published under `http://getprooph.org/docs/html`. Checkout the `gh-pages` branch of prooph/proophessor and
-copy the generated html into `docs/html` of the gh-pages branch. Commit your changes and push the branch (write access required)
+Compiled docs (using docker cmd above) are managed in an extra repo [prooph/docs](https://github.com/prooph/docs).
+The repo README contains deployment instructions.
 
 ## Example Application
 
