@@ -32,12 +32,12 @@ use App\Basket\Model\Exception\UnknownProduct;
 interface ERP
 {
     /**
-     * Get stock information for given product
+     * Get stock information for given product.
      *
      * If stock information cannot be fetched from the ERP system
      * this method returns null.
      *
-     * If product is not known by the ERP system this method must throw an UnknownProduct exception
+     * If product is not known by the ERP system this method must throw an UnknownProduct exception.
      *
      * @param ProductId $productId
      * @return ProductStock|null
@@ -46,15 +46,15 @@ interface ERP
     public function getProductStock(ProductId $productId): ?ProductStock;
 }
 
-
 ```
 
 The `ERP` interface defines a method `getProductStock` which takes a `ProductId` as an argument and returns a
-`ProductStock` value object or null in case the request failed. You may have noticed that we use value objects a lot. In fact everything except our `Basket`
+`ProductStock` value object or null in case the request failed. You may have noticed that we use value objects a lot. 
+In fact everything except our `Basket`
 aggregate is modeled as a value object so far. It is a rule of thumb to model everything as value objects and only
 use an aggregate if the object really has a lifecycle in YOUR domain. Products have a lifecycle but in
 the ERP system and not in our basket domain. We only consume product data as read-only information. Hence, we are better
-off using value objects to represent different aspects of a product like its stock information.
+off using value objects to represent different aspects of a product like it's stock information.
 
 Having said this, let's add the value object.
 
@@ -186,8 +186,8 @@ final class UnknownProduct extends \InvalidArgumentException
 The `Basket` aggregate should use the `ERP` system to request stock information before adding a product to the basket.
 The aggregate should reject the product if it is out of stock.
 
-*Note: We keep the example simple. In a real world system this stock check would include many more variants, for example permanent or
-temporarily out of stock products, checkout even if a product is out of stock, and so on.*
+*Note: We'll keep the example simple. In a real world system this stock check would include many more variants, 
+for example permanent or temporarily out of stock products, allow checkout even if a product is out of stock, and so on.*
 
 But how do we get the `ERP` adapter into the aggregate? The answer is **Method Injection**. The `Basket::addProduct` defines
 the `ERP` system as a dependency for that method, and the caller of the method is responsible for providing an implementation.
@@ -217,7 +217,7 @@ final class Basket extends AggregateRoot
 
         //If the ERP system does not know the product an exception will be thrown here
         //which will stop the operation. The aggregate can not deal with that situation
-        //as this is one of these "this should never happen" situations
+        //as this is one of these "this should never happen" situations.
         //If we want an unbreakable domain model we would need to talk to the business
         //and work out a failover plan triggered by a UnknownProductAddedToBasket event.
         $productStock = $ERP->getProductStock($productId);
@@ -225,8 +225,8 @@ final class Basket extends AggregateRoot
         if(!$productStock) {
             $this->recordThat(ProductAddedToBasket::occur($this->basketId->toString(), [
                     'product_id' => $productId->toString(),
-                    //If we did not get a response, we add the product and check stock later again
-                    //the shopping session should not be blocked by a temporarily unavailable ERP system
+                    //If we did not get a response, we add the product and check stock again later
+                    //The shopping session should not be blocked by a temporarily unavailable ERP system
                     'stock_version' => null,
                     'stock_quantity'=> null,
                     'quantity' => 1,
@@ -276,7 +276,8 @@ check. Later in the checkout process we need to take care of this situation and 
 a quantity stock conflict during checkout the order is routed to a support team who needs to contact the customer and
 offer an alternative.
 
-If we got stock information from the ERP system we check quantity and throw a `ProductOutOfStock` exception if it is zero.
+If we were able to retrieve stock information from the ERP system, we check the stock quantity and throw a `ProductOutOfStock` exception 
+if it's zero.
 
 *File: ./Basket/src/Model/Exception/ProductOutOfStock.php*
 ```php
@@ -301,7 +302,7 @@ final class ProductOutOfStock extends \RuntimeException
 
 ```
 
-If everything is ok the `Basket` aggregate accepts the product and records the `ProductAddedToBasket` event but now
+If everything is ok, the `Basket` aggregate accepts the product and records the `ProductAddedToBasket` event, but now
 with additional information, so we need to add new getter methods to the event.
 
 *File: ./Baset/src/Model/Event/ProductAddedToBasket.php*
