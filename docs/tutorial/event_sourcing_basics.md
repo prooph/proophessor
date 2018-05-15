@@ -97,7 +97,7 @@ test namespace `App\BasketTest`.
 We've also added the package `prooph/event-sourcing` to the list of dependencies and told composer to install `phpunit/phpunit`
 when we're in dev mode.
 
-You can guess that `prooph/event-sourcing` provides the basic implementation needed to develop an event sourced domain model.
+`prooph/event-sourcing` provides the basic implementation needed to develop an event sourced domain model.
 
 Now it's time to define our first domain event. We place all events in `./Basket/src/Model/Event/`
 
@@ -123,7 +123,7 @@ final class ShoppingSessionStarted extends AggregateChanged
 
     public function shoppingSession(): ShoppingSession
     {
-        //Same here, return domain specific value object
+        //Same as basketId, return domain specific value object
         return ShoppingSession::fromString($this->payload['shopping_session']);
     }
 }
@@ -510,7 +510,7 @@ final class Basket extends AggregateRoot
 }
 
 ```
-Ok, those are the basics of Event Sourcing. Many new things to learn, right? But don't worry. You'll get used to it while
+Those are the basics of Event Sourcing. Many new things to learn, right? But don't worry. You'll get used to it while
 we look at some more aspects of Event Sourcing. In the next part we will look at testing event sourced aggregates,
 which is super easy when you have a clean and decoupled domain model.
 
