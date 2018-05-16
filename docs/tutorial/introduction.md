@@ -56,7 +56,7 @@ final class SayHello extends Command implements PayloadConstructable
 
     public function to(): string
     {
-        return $this->payload['to'];
+        return $this->payload()['to'];
     }
 }
 
