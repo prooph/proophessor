@@ -167,7 +167,7 @@ For the first test, we did not need the `reconstituteAggregateFromHistory()` tes
 method to the `Basket` aggregate that allows us to add a `Product`.
 
 We start simple in this chapter and leave a more complex implementation to the next chapter, "Aggregate Dependencies".
-First we need a new value object to reference a `Product`. Products are not part of our domain but are manged by an external ERP system.
+First we need a new value object to reference a `Product`. Products are not part of our domain but are managed by an external ERP system.
 
 *File: ./Basket/src/Model/ERP/ProductId.php*
 ```php
