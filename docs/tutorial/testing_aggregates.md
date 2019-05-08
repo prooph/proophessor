@@ -206,7 +206,7 @@ final class ProductId
             return false;
         }
 
-        return $this->id === $other->id;
+        return $this->toString() === $other->toString();
     }
 
     public function __toString(): string
