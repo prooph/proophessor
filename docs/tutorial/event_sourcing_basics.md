@@ -315,7 +315,7 @@ final class ShoppingSession
 
     private function __construct(string $shoppingSession)
     {
-        if($shoppingSession === '') {
+        if ($shoppingSession === '') {
             throw new \InvalidArgumentException("Shopping session must not be an empty string");
         }
 
@@ -329,7 +329,7 @@ final class ShoppingSession
 
     public function equals($other): bool
     {
-        if(!$other instanceof self) {
+        if (!$other instanceof self) {
             return false;
         }
 
@@ -364,7 +364,7 @@ final class BasketId
 
     private function __construct(string $basketId)
     {
-        if(!Uuid::isValid($basketId)) {
+        if (!Uuid::isValid($basketId)) {
             throw new \InvalidArgumentException("Given basket id is not a valid UUID. Got " . $basketId);
         }
 
@@ -378,7 +378,7 @@ final class BasketId
 
     public function equals($other): bool
     {
-        if(!$other instanceof self) {
+        if (!$other instanceof self) {
             return false;
         }
 
