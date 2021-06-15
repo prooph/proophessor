@@ -70,7 +70,7 @@ echo 'Hello ' . $sayHello->to();
 
 In the script above we created our first message of type `Command`.
 We also used `Prooph\Common\Messaging\PayloadTrait` in conjunction with the `Prooph\Common\Messaging\PayloadConstructable` interface
-to instantiating our command with a `payload` - a simple array - and get access to it using
+to instantiate our command with a `payload` - a simple array - and get access to it using
 `$this->payload` within the message.
 While this is a very easy and fast way to create message classes it is completely optional.
 The most important thing to note here is that `Prooph\Common\Messaging\Command` implements `Prooph\Common\Messaging\Message`
